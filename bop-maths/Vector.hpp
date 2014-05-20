@@ -39,6 +39,15 @@ namespace bop::maths {
 			T& y();
 			T& z();
 	};
+	
+	template<class T>
+	Vector<T> operator* (Vector<T>, const T);
+	template<class T>
+	Vector<T> operator/ (Vector<T>, const T);
+	template<class T>
+	Vector<T> operator+ (Vector<T>, Vector<T>&);
+	template<class T>
+	Vector<T> operator- (Vector<T>, Vector<T>&);
 
 }
 
