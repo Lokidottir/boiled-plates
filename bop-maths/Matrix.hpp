@@ -44,10 +44,39 @@ namespace bop {
 				Matrix<T>& operator-= (Matrix<T> &mat) {}
 				
 				//Information functions
-				inline unsigned int w() {}
-				inline unsigned int h() {}
-				inline unsigned int size() {}
-				std::string string() {}
+				inline unsigned int w() {
+					/*
+						Returns the width of the Matrix.
+					*/
+					return this->width;
+				}
+				
+				inline unsigned int h() {
+					/*
+						Returns the height of the Matrix.
+					*/
+					return this->height;
+				}
+				
+				inline bool square() {
+					/*
+						Determines if the Matrix is a square Matrix.
+					*/
+					return (this->width == this->height);
+				}
+				
+				std::string string(bool newlines = true) {
+					/*
+						Similar to the maths::Vector::string function, returns 
+						a human-readable representation of the Matrix.
+					*/
+					std::ostringstream mat_str;
+					for (int i = 0; i < this->height; i++) {
+						mat_str << '[' << this->data[i].string(false) << ']';
+						if (newlines) mat_str << '\n';
+					}
+					return mat_str.str();
+				}
 			
 		};
 		
@@ -72,7 +101,9 @@ namespace bop {
 		template<class T>
 		Matrix<T> identityMatrix(unsigned int size) {}
 		template<class T>
-		Matrix<T> inverseMatrix() {}
+		Matrix<T> inverseMatrix(Matrix<T> &mat) {}
+		template<class T>
+		Matrix<T> transposeMatrix(Matrix<T> &mat) {}
 	}
 }
 
