@@ -1,6 +1,7 @@
 #ifndef BOP_VECTOR_HPP
 #define BOP_VECTOR_HPP
 
+#include <memory>
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -21,7 +22,8 @@ namespace bop {
 				//Constructors
 				Vector(int width, T fill = 0) {
 					/*
-						Creates a new vector of a given width, setting each element as a given default.
+						Creates a new vector of a given width, setting each
+						element as a given default.
 						----pivot index is set as -1.
 					*/
 					this->pivot_index = -1;
@@ -77,6 +79,13 @@ namespace bop {
 					/*
 						Empty constructor, does nothing.
 					*/
+				}
+				
+				//Destructor
+				
+				~Vector() {
+					//Manual deleteion of data array.
+					delete this->data;
 				}
 				
 				//Operator Overloads
