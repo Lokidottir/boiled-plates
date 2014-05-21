@@ -5,6 +5,7 @@
 #include <initializer_list>
 #include <string>
 #include <sstream>
+#include <new>
 
 /*
 	bop::maths::Vector Class file
@@ -85,7 +86,7 @@ namespace bop {
 				
 				~Vector() {
 					//Manual deletion of data array.
-					delete this->data;
+					delete[] this->data;
 				}
 				
 				//Operator Overloads
@@ -225,7 +226,7 @@ namespace bop {
 				}
 				
 				/*
-					Coordinate functions, synonymous with Vector::operator[](0/1/2).
+					Coordinate functions, synonymous with Vector::operator[](0/1/2/3).
 					Checks that those indices exist before returning. 
 				*/
 				
@@ -241,6 +242,11 @@ namespace bop {
 				
 				inline T& z() {
 					if (this->width > 2) return this->data[2];
+					else return 0;
+				}
+				
+				inline T& w() {
+					if (this->width > 3) return this->data[3];
 					else return 0;
 				}
 		};
@@ -274,7 +280,6 @@ namespace bop {
 			return vec1;
 		}
 	}
-
 }
 
 #endif
