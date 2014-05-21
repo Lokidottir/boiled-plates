@@ -42,13 +42,11 @@ namespace bop {
 			Matrix<T>& operator+= (Matrix<T> &mat) {}
 			Matrix<T>& operator-= (Matrix<T> &mat) {}
 			
-			
 			//Information functions
 			unsigned int w() {}
 			unsigned int h() {}
 			unsigned int size() {}
 			std::string string() {}
-			
 			
 		};
 		

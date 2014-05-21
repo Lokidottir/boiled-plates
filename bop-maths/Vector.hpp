@@ -77,7 +77,7 @@ namespace bop {
 				
 				Vector() {
 					/*
-						Empty constructor, does nothing.
+						Empty constructor.
 					*/
 				}
 				
@@ -90,7 +90,7 @@ namespace bop {
 				
 				//Operator Overloads
 				
-				T& operator[] (const unsigned int index) const {
+				inline T& operator[] (const unsigned int index) const {
 					/*
 						Index operator, returns the data at the given index.
 						----synonymous to Vector::data[const unsigned int]
@@ -229,17 +229,17 @@ namespace bop {
 					Checks that those indices exist before returning. 
 				*/
 				
-				T& x() {
+				inline T& x() {
 					if (this->width > 0) return this->data[0];
 					else return 0;
 				}
 				
-				T& y() {
+				inline T& y() {
 					if (this->width > 1) return this->data[1];
 					else return 0;
 				}
 				
-				T& z() {
+				inline T& z() {
 					if (this->width > 2) return this->data[2];
 					else return 0;
 				}
