@@ -25,6 +25,7 @@ namespace bop {
 			Matrix(unsigned int size, T fill = 0) {}
 			Matrix(unsigned int width, unsigned int height, T fill = 0) {}
 			Matrix(std::initializer_list< std::initializer_list<T> > list) {}
+			Matrix(Matrix<T>& mat) {}
 			Matrix(Matrix<T>&& mat) {}
 			Matrix() {}
 			
@@ -32,8 +33,8 @@ namespace bop {
 			~Matrix() {}
 			
 			//Operator overloads
-			Vector<T>& operator[] (const unsigned int index) {}
-			Matrix<T> operator= (const Matrix<T> &mat) {}
+			inline Vector<T>& operator[] (const unsigned int index) {}
+			Matrix<T>& operator= (const Matrix<T> &mat) {}
 			
 			//Arithmetic overloads
 			Matrix<T>& operator*= (const T scalar) {}
@@ -43,12 +44,25 @@ namespace bop {
 			Matrix<T>& operator-= (Matrix<T> &mat) {}
 			
 			//Information functions
-			unsigned int w() {}
-			unsigned int h() {}
-			unsigned int size() {}
+			inline unsigned int w() {}
+			inline unsigned int h() {}
+			inline unsigned int size() {}
 			std::string string() {}
 			
 		};
+		
+		//External arithmetic overloads
+		
+		template<class T>
+		Matrix<T> operator* (Matrix<T> mat, const T scalar) {}
+		template<class T>
+		Matrix<T> operator* (Matrix<T> mat1, Matrix<T>& mat2) {}
+		template<class T>
+		Matrix<T> operator/ (Matrix<T> mat, const T scalar) {}
+		template<class T>
+		Matrix<T> operator+ (Matrix<T> mat1, Matrix<T>& mat2) {}
+		template<class T>
+		Matrix<T> operator- (Matrix<T> mat1, Matrix<T>& mat2) {}
 		
 		//Matrix related functions
 		template<class T>
