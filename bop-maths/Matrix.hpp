@@ -19,35 +19,35 @@ namespace bop {
 				unsigned int width;
 				unsigned int height;
 			public:
-			Vector<T>* data;
-			
-			//Constructors
-			Matrix(unsigned int size, T fill = 0) {}
-			Matrix(unsigned int width, unsigned int height, T fill = 0) {}
-			Matrix(std::initializer_list< std::initializer_list<T> > list) {}
-			Matrix(Matrix<T>& mat) {}
-			Matrix(Matrix<T>&& mat) {}
-			Matrix() {}
-			
-			//Destructor
-			~Matrix() {}
-			
-			//Operator overloads
-			inline Vector<T>& operator[] (const unsigned int index) {}
-			Matrix<T>& operator= (const Matrix<T> &mat) {}
-			
-			//Arithmetic overloads
-			Matrix<T>& operator*= (const T scalar) {}
-			Matrix<T>& operator*= (Matrix<T> &mat) {}
-			Matrix<T>& operator/= (const T scalar) {}
-			Matrix<T>& operator+= (Matrix<T> &mat) {}
-			Matrix<T>& operator-= (Matrix<T> &mat) {}
-			
-			//Information functions
-			inline unsigned int w() {}
-			inline unsigned int h() {}
-			inline unsigned int size() {}
-			std::string string() {}
+				Vector<T>* data;
+				
+				//Constructors
+				Matrix(unsigned int size, T fill = 0) {}
+				Matrix(unsigned int width, unsigned int height, T fill = 0) {}
+				Matrix(std::initializer_list< std::initializer_list<T> > list) {}
+				Matrix(Matrix<T>& mat) {}
+				Matrix(Matrix<T>&& mat) {}
+				Matrix() {}
+				
+				//Destructor
+				~Matrix() {}
+				
+				//Operator overloads
+				inline Vector<T>& operator[] (const unsigned int index) {}
+				Matrix<T>& operator= (const Matrix<T> &mat) {}
+				
+				//Arithmetic overloads
+				Matrix<T>& operator*= (const T scalar) {}
+				Matrix<T>& operator*= (Matrix<T> &mat) {}
+				Matrix<T>& operator/= (const T scalar) {}
+				Matrix<T>& operator+= (Matrix<T> &mat) {}
+				Matrix<T>& operator-= (Matrix<T> &mat) {}
+				
+				//Information functions
+				inline unsigned int w() {}
+				inline unsigned int h() {}
+				inline unsigned int size() {}
+				std::string string() {}
 			
 		};
 		
