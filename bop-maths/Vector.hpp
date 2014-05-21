@@ -84,7 +84,7 @@ namespace bop {
 				//Destructor
 				
 				~Vector() {
-					//Manual deleteion of data array.
+					//Manual deletion of data array.
 					delete this->data;
 				}
 				
