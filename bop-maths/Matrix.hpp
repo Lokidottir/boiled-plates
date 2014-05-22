@@ -209,27 +209,139 @@ namespace bop {
 		//External arithmetic overloads
 		
 		template<class T>
-		Matrix<T> operator* (Matrix<T> mat, const T scalar) {}
+		Matrix<T> operator* (Matrix<T> mat, const T scalar) {
+			mat *= scalar;
+			return mat;
+		}
+		
 		template<class T>
-		Matrix<T> operator* (Matrix<T> mat1, Matrix<T>& mat2) {}
+		Matrix<T> operator* (Matrix<T> mat1, Matrix<T>& mat2) {
+			mat1 *= mat2;
+			return mat1;
+		}
+		
 		template<class T>
-		Matrix<T> operator/ (Matrix<T> mat, const T scalar) {}
+		Matrix<T> operator/ (Matrix<T> mat, const T scalar) {
+			mat /= scalar;
+			return mat;
+		}
+		
 		template<class T>
-		Matrix<T> operator+ (Matrix<T> mat1, Matrix<T>& mat2) {}
+		Matrix<T> operator+ (Matrix<T> mat1, Matrix<T>& mat2) {
+			mat1 += mat2;
+			return mat1;
+		}
+		
 		template<class T>
-		Matrix<T> operator- (Matrix<T> mat1, Matrix<T>& mat2) {}
+		Matrix<T> operator- (Matrix<T> mat1, Matrix<T>& mat2) {
+			mat1 -= mat2;
+		}
 		
 		//Matrix related functions
 		template<class T>
-		T determinant(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {}
+		T determinant(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
+			/*
+				Recursive matrix determinant function.
+			*/
+			if (size == 2) {
+				//the  base case, finding the 2 by 2 matrix determinant
+				int c1 = -1, c2 = -1;
+				for (int i = 0; i < mat.w(); i++) {
+					if (allowed_cols[i]) {
+						if (c1 < 0) {
+							c1 = i;
+						}
+						else if (c2 < 0) {
+							c2 = i;
+						}
+						else {
+							break;
+						}
+					}
+				}
+				
+				return (mat[mat.h() - 2][c1] * mat[mat.h() - 1][c2]) - (mat[mat.h() - 2][c2] * mat[mat.h() - 1][c1]);
+				
+			}
+			else {
+				size--;
+				T product = 0;
+				T multi = 1;
+				
+				for (int i = 0; i < mat.w(); i++) {
+					if (!allowed_cols[i]) continue;
+					else {
+						allowed_cols[i] = false;
+						product += (multi * (mat[mat.h() - size][i] * determinant(mat, allowed_cols, size)));
+						multi *= -1;
+						allowed_cols[i] = true;
+						
+					}
+				}
+				
+				size++;
+				return product;
+			}
+		}
+		
 		template<class T>
-		T determinant(Matrix<T>& mat) {}
+		T determinant(Matrix<T>& mat) {
+			/*
+				Matrix determinant init function.
+			*/
+			if (mat.w() != mat.h()) return static_cast<T>(0);
+			else {
+				if (mat.w() == 2) {
+					//shortcut to determinant of a 2 by 2 matrix
+					return (mat[0][0] * mat[1][1]) - (mat[0][1] * mat[1][0]);
+				}
+				else {
+					Vector<bool> allowed_cols(mat.w(), true);
+					T product = 0;
+					T multi = 1;
+					int size = mat.h() - 1;
+					for (int i = 0; i < mat.w(); i++) {
+						allowed_cols[i] = false;
+						product += (multi * (mat[0][i] * determinant(mat, allowed_cols, size)));
+						multi *= -1;
+						allowed_cols[i] = true;
+					}
+					return product;
+				}
+			}
+		}
+		
 		template<class T>
-		Matrix<T> identityMatrix(unsigned int size) {}
+		Matrix<T> identityMatrix(unsigned int size) {
+			/*
+				Returns an Identity Matrix.
+			*/
+			Matrix<T> unit_m(size);
+			for (int i = 0; i < size; i++) {
+				unit_m[i] = 1;
+			}
+			return unit_m;
+		}
+		
 		template<class T>
-		Matrix<T> inverseMatrix(Matrix<T> &mat) {}
+		Matrix<T> inverseMatrix(Matrix<T> &mat) {
+			//Todo
+		}
+		
 		template<class T>
-		Matrix<T> transposeMatrix(Matrix<T> &mat) {}
+		Matrix<T> transposeMatrix(Matrix<T> &mat) {
+			/*
+				Returns a transposed matrix. 
+			*/
+			Matrix<T> trans(mat.h(), mat.w(), 0);
+			for (unsigned int y = 0; y < mat.h(); y++) {
+				for (unsigned int x = 0; x < mat.w(); x++) {
+					trans[x][y] = mat[y][x];
+				}
+			}
+			return trans;
+		}
+	
 	}
 }
 
