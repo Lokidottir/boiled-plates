@@ -130,7 +130,7 @@ namespace bop {
 							temp[r][c] = product;
 						}
 					}
-					delete this->data;
+					delete[] this->data;
 					this->data = temp;
 					this->width = mat.width;
 					return *this;
@@ -149,7 +149,8 @@ namespace bop {
 				
 				Matrix<T>& operator+= (Matrix<T> &mat) {
 					/*
-						Addition member operator, adds all the 
+						Addition member operator, adds all the elements of a
+						given matrix to the matrix.
 					*/	
 					for (int i = 0; i < this->height; i++) {
 						this->data[i] += mat[i];
@@ -158,6 +159,10 @@ namespace bop {
 				}
 				
 				Matrix<T>& operator-= (Matrix<T> &mat) {
+					/*
+						Subtraction member operator, subtracts the value of
+						each element in a given matrix from the matrix.
+					*/
 					for (int i = 0; i < this->height; i++) {
 						this->data[i] -= mat[i];
 					}
