@@ -132,6 +132,24 @@ namespace bop {
 					return *this;
 				}
 				
+				//Boolean Logic overloads
+				
+				bool operator== (const Vector<T>& vec) {
+					if (this->width == vec.width) {
+						//Non-elegant, but required for testing the Vector.
+						bool same = true;
+						for (unsigned int i = 0; i < this->width && same; i++) {
+							same = (this->data[i] == vec.data[i]);
+						}
+						return same;
+					}
+					else return false;
+				}
+				
+				bool operator!= (const Vector<T>& vec) {
+					return !(this->operator==(vec));
+				}
+				
 				//Arithmetic Operator Overloads
 				
 				Vector<T>& operator*= (const T scalar) {
