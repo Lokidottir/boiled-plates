@@ -136,7 +136,10 @@ namespace bop {
 				
 				bool operator== (const Vector<T>& vec) {
 					if (this->width == vec.width) {
-						//Non-elegant, but required for testing the Vector.
+						/*
+							Not the most elegant solution, then again for testing
+							an array there isn't much choice.
+						*/
 						bool same = true;
 						for (unsigned int i = 0; i < this->width && same; i++) {
 							same = (this->data[i] == vec.data[i]);
@@ -235,7 +238,7 @@ namespace bop {
 					*/
 					std::ostringstream vec_str;
 					if (brackets) vec_str << "(";
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						vec_str << this->data[i];
 						if (i + 1 < this->width) vec_str << ',';
 					}
@@ -245,7 +248,7 @@ namespace bop {
 				
 				/*
 					Coordinate functions, synonymous with Vector::operator[](0/1/2/3).
-					Checks that those indices exist before returning. 
+					Checks that those indices exist before returning.
 				*/
 				
 				inline T& x() {
@@ -267,6 +270,25 @@ namespace bop {
 					if (this->width > 3) return this->data[3];
 					else return 0;
 				}
+				
+				/*
+					Member swap function, intended for use in algorithms such
+					as Gauss-Jordan elimination, or whatever else may be in need
+					of the swapping of Vectors.
+				*/
+				
+				void swap(Vector<T>& vec) {
+					T* temp_arr = vec.data;
+					unsigned int temp_w = vec.width;
+					int temp_pivot = vec.pivot_index;
+					vec.data = this->data;
+					vec.width = this->width;
+					vec.pivot_index = this->pivot_index;
+					this->data = temp_arr;
+					this->width = temp_w;
+					this->pivot_index = temp_pivot;
+				}
+				
 		};
 		
 		/*
