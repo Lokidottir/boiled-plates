@@ -29,7 +29,7 @@ namespace bop {
 						the given fill value.
 					*/
 					this->data = new Vector<T>[size];
-					for (int i = 0; i < size; i++) {
+					for (unsigned int i = 0; i < size; i++) {
 						this->data[i] = Vector<T>(size, fill);
 					}
 					this->width = size;
@@ -87,6 +87,7 @@ namespace bop {
 				}
 				
 				Matrix() {
+					
 					/*
 						Empty constructor.
 					*/
@@ -98,8 +99,35 @@ namespace bop {
 				}
 				
 				//Operator overloads
-				inline Vector<T>& operator[] (const unsigned int index) {}
-				Matrix<T>& operator= (const Matrix<T> &mat) {}
+				inline Vector<T>& operator[] (const unsigned int index) {
+					return this->data[index];
+				}
+				
+				Matrix<T>& operator= (const Matrix<T> &mat) {
+					this->width = mat.width;
+					this->height = mat.height;
+					delete[] this->data;
+					this->data = new Vector<T>[this->height];
+					for (unsigned int i = 0; i < this->height; i++) {
+						this->data[i] = mat.data[i];
+					}
+				}
+				
+				//Boolean logic overloads
+				bool operator== (const Matrix<T>& mat) {
+					if (this->width == mat.width && this->height == mat.height) {
+						bool same = true;
+						for (unsigned int i = 0; i < this->height && same; i++) {
+							same = (this->data[i] == mat.data[i]);
+						}
+						return same;
+					}
+					else return false;
+				}
+				
+				bool operator!= (const Matrix<T>& mat) {
+					return !(this->operator==(mat));
+				}
 				
 				//Arithmetic overloads
 				Matrix<T>& operator*= (const T scalar) {
@@ -186,9 +214,26 @@ namespace bop {
 				
 				inline bool square() {
 					/*
-						Determines if the Matrix is a square Matrix.
+						Tests if the Matrix is a square Matrix.
 					*/
 					return (this->width == this->height);
+				}
+				
+				bool identity() {
+					/*
+						Tests if the matrix is an identity matrix.
+					*/
+					if (this->width == this->height) {
+						bool identity = true;
+						for (unsigned int y = 0; y < this->height && identity; y++) {
+							for (unsigned int x = 0; x < this->width && identity; x++) {
+								if (x == y) identity = (this->data[y][x] == 1);
+								else identity = (this->data[y][x] == 0);
+							}
+						}
+						return identity;
+					}
+					else return false;
 				}
 				
 				std::string string(bool newlines = true) {
@@ -197,13 +242,37 @@ namespace bop {
 						a human-readable representation of the Matrix.
 					*/
 					std::ostringstream mat_str;
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						mat_str << '[' << this->data[i].string(false) << ']';
 						if (newlines) mat_str << '\n';
 					}
 					return mat_str.str();
 				}
-			
+				
+				//Matrix manipulation functions.
+				
+				inline void swapRows(unsigned int index_a, unsigned int index_b) {
+					/*
+						Row swap function, for use in such algorithms as Gauss-Jordan
+						elimination.
+					*/
+					this->data[index_a].swap(this->data[index_b]);
+				}
+				
+				void swap(Matrix<T>& mat) {
+					/*
+						Matrix object swap function.
+					*/
+					Vector<T>* temp_arr = mat.data;
+					unsigned int temp_w = mat.width;
+					unsigned int temp_h = mat.height;
+					mat.data = this->data;
+					mat.width = this->width;
+					mat.height = this->height;
+					this->data = temp_arr;
+					this->width = temp_w;
+					this->height = temp_h;
+				}
 		};
 		
 		//External arithmetic overloads
@@ -235,6 +304,7 @@ namespace bop {
 		template<class T>
 		Matrix<T> operator- (Matrix<T> mat1, Matrix<T>& mat2) {
 			mat1 -= mat2;
+			return mat1;
 		}
 		
 		//Matrix related functions
@@ -246,7 +316,7 @@ namespace bop {
 			if (size == 2) {
 				//the  base case, finding the 2 by 2 matrix determinant
 				int c1 = -1, c2 = -1;
-				for (int i = 0; i < mat.w(); i++) {
+				for (unsigned int i = 0; i < mat.w(); i++) {
 					if (allowed_cols[i]) {
 						if (c1 < 0) {
 							c1 = i;
@@ -259,15 +329,12 @@ namespace bop {
 						}
 					}
 				}
-				
 				return (mat[mat.h() - 2][c1] * mat[mat.h() - 1][c2]) - (mat[mat.h() - 2][c2] * mat[mat.h() - 1][c1]);
-				
 			}
 			else {
 				size--;
 				T product = 0;
 				T multi = 1;
-				
 				for (int i = 0; i < mat.w(); i++) {
 					if (!allowed_cols[i]) continue;
 					else {
@@ -278,7 +345,6 @@ namespace bop {
 						
 					}
 				}
-				
 				size++;
 				return product;
 			}
@@ -289,7 +355,7 @@ namespace bop {
 			/*
 				Matrix determinant init function.
 			*/
-			if (mat.w() != mat.h()) return static_cast<T>(0);
+			if (!mat.square()) return static_cast<T>(0);
 			else {
 				if (mat.w() == 2) {
 					//shortcut to determinant of a 2 by 2 matrix
@@ -324,14 +390,34 @@ namespace bop {
 		}
 		
 		template<class T>
-		Matrix<T> inverseMatrix(Matrix<T> &mat) {
-			//Todo
+		bool invertable(Matrix<T> &mat) {
+			return (mat.square() && determinant(mat) != 0);
+		}
+		
+		template<class T>
+		Matrix<T> inverseMatrix(Matrix<T> mat, bool tested = true) {
+			/*
+				Matrix inverse by Gauss-Jordan method. Assumes that the
+				matrix has already been tested as invertible. takes a 
+				COPY of a matrix, as this method requires the manipulation
+				of the rows of the matrix.
+			*/
+			if (!tested && invertable(mat) == 0) {
+				/*
+					In the case that the matrix is not invertible, the function will
+					return an identity matrix with the height of the given matrix.
+				*/
+				return identityMatrix(mat.h());
+			}
+			else {
+				//todo
+			}
 		}
 		
 		template<class T>
 		Matrix<T> transposeMatrix(Matrix<T> &mat) {
 			/*
-				Returns a transposed matrix. 
+				Creates & returns a transposed version of the given matrix.
 			*/
 			Matrix<T> trans(mat.h(), mat.w(), 0);
 			for (unsigned int y = 0; y < mat.h(); y++) {
