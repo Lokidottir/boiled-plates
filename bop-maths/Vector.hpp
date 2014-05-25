@@ -218,7 +218,7 @@ namespace bop {
 					if (recalc || this->pivot_index < 0) {
 						this->pivot_index = -1;
 						for (int i = 0; i < this->width && this->pivot_index < 0; i++) {
-							if (this->data[i] != static_cast<T>(0)) this->pivot_index = i;
+							if (this->data[i] != 0) this->pivot_index = i;
 						}
 					}
 					return this->pivot_index;

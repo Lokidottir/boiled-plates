@@ -87,7 +87,6 @@ namespace bop {
 				}
 				
 				Matrix() {
-					
 					/*
 						Empty constructor.
 					*/
@@ -351,7 +350,7 @@ namespace bop {
 		}
 		
 		template<class T>
-		T determinant(Matrix<T>& mat) {
+		T determinant(const Matrix<T>& mat) {
 			/*
 				Matrix determinant init function.
 			*/
@@ -397,10 +396,10 @@ namespace bop {
 		template<class T>
 		Matrix<T> inverseMatrix(Matrix<T> mat, bool tested = true) {
 			/*
-				Matrix inverse by Gauss-Jordan method. Assumes that the
-				matrix has already been tested as invertible. takes a 
-				COPY of a matrix, as this method requires the manipulation
-				of the rows of the matrix.
+				Matrix inverse by Gauss-Jordan method ([A|I] -> [I|A']).
+				Assumes that the matrix has already been tested as invertible. 
+				takes a COPY of a matrix, as this method requires the 
+				manipulation of the rows of the matrix.
 			*/
 			if (!tested && invertable(mat) == 0) {
 				/*
@@ -410,7 +409,25 @@ namespace bop {
 				return identityMatrix(mat.h());
 			}
 			else {
-				//todo
+				if (mat.h() == 2) {
+					/*
+						2 by 2 matrix shortcut.
+					*/
+					T temp = mat[0][0];
+					mat[0][0] = mat[1][1];
+					mat[1][1] = temp;
+					temp = mat[1][0];
+					mat[1][0] = -mat[0][1];
+					mat[0][1] = -temp;
+					return mat;
+					
+				}
+				else {
+					Matrix<T> inverse = identityMatrix(mat.h());
+					/*
+						Sort the matrix rows by pivot index and 
+					*/
+				}
 			}
 		}
 		
