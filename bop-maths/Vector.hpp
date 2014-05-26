@@ -224,7 +224,7 @@ namespace bop {
 				
 				//Vector information functions
 				
-				int pivot(bool recalc = false) {
+				int pivot(bool recalc = true) {
 					/*
 						Returns the position of the first non-zero element in
 						the vector.

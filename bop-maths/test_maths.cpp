@@ -4,6 +4,7 @@
 using namespace bop::maths;
 
 int testVectors() {
+	std::cout << "####\n####\nmaths::bop::Vector testing\n####\n####" << std::endl;
 	/*
 		Testing Operators
 	*/
@@ -58,6 +59,6 @@ int testVectors() {
 }
 
 int main() {
-	std::cout << testVectors();
+	std::cout << "Vector test returned " << testVectors() << std::endl;
 	return 0;
 }
