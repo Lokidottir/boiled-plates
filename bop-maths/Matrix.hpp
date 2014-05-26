@@ -292,7 +292,7 @@ namespace bop {
 		
 		template<class T>
 		Matrix<T> operator/ (Matrix<T> &mat, const T scalar) {
-			Matrix<T> mat_p(mat)
+			Matrix<T> mat_p(mat);
 			mat_p /= scalar;
 			return mat_p;
 		}
