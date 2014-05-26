@@ -16,8 +16,22 @@ namespace bop {
 		template<class T>
 		class Vector {
 			protected:
+				T zero;
+				
+				inline T& checkZero() {
+					/*
+						Awful hack to get a reference to a value 0 for now.
+						Alternate route is not allowing alterations to values
+						retrieved by coordinate related functions which, while
+						seeming elegant, is infuriating.
+					*/
+					this->zero = 0;
+					return this->zero;
+				}
+				
 				unsigned int width;
 				int pivot_index;
+				
 			public:
 				T* data;
 				//Constructors
@@ -253,22 +267,25 @@ namespace bop {
 				
 				inline T& x() {
 					if (this->width > 0) return this->data[0];
-					else return 0;
+					else {
+						if (this->zero != 0) this->zero = 0;
+						return this->checkZero();
+					}
 				}
 				
 				inline T& y() {
 					if (this->width > 1) return this->data[1];
-					else return 0;
+					else return this->checkZero();
 				}
 				
 				inline T& z() {
 					if (this->width > 2) return this->data[2];
-					else return 0;
+					else return this->checkZero();
 				}
 				
 				inline T& w() {
 					if (this->width > 3) return this->data[3];
-					else return 0;
+					else return this->checkZero();
 				}
 				
 				/*
@@ -287,8 +304,7 @@ namespace bop {
 					this->data = temp_arr;
 					this->width = temp_w;
 					this->pivot_index = temp_pivot;
-				}
-				
+				}		
 		};
 		
 		/*
