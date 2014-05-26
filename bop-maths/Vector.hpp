@@ -62,7 +62,7 @@ namespace bop {
 					this->width = vec.width;
 					this->pivot_index = vec.pivot_index;
 					this->data = new T[this->width];
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] = vec.data[i];
 					}
 				}
@@ -161,7 +161,7 @@ namespace bop {
 						elements in a vector by the given scalar.
 					*/
 					if (scalar == 0) return *this;
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] *= scalar;
 					}
 					return *this;
@@ -174,7 +174,7 @@ namespace bop {
 						----synonymous with "vec *= 1/scalar"
 					*/
 					if (scalar == 0) return *this;
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] /= scalar;
 					}
 					return *this;
@@ -187,7 +187,7 @@ namespace bop {
 						corresponding elements of a subject vector.
 						----sets the pivot as needing to be recalculated.
 					*/
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] += vec[i];
 					}
 					this->pivot_index = -1;
@@ -201,7 +201,7 @@ namespace bop {
 						a subject vector.
 						----sets the pivot as needing to be recalculated.
 					*/
-					for (int i = 0; i < this->width; i++) {
+					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] -= vec[i];
 					}
 					this->pivot_index = -1;
@@ -217,7 +217,7 @@ namespace bop {
 					*/
 					if (recalc || this->pivot_index < 0) {
 						this->pivot_index = -1;
-						for (int i = 0; i < this->width && this->pivot_index < 0; i++) {
+						for (unsigned int i = 0; i < this->width && this->pivot_index < 0; i++) {
 							if (this->data[i] != 0) this->pivot_index = i;
 						}
 					}
