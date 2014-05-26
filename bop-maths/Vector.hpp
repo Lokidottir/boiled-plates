@@ -297,27 +297,31 @@ namespace bop {
 		*/
 		
 		template<class T>
-		Vector<T> operator* (Vector<T> vec, const T scalar) {
-			vec *= scalar;
-			return vec;
+		Vector<T> operator* (Vector<T> &vec, const T scalar) {
+			Vector<T> vec_p(vec);
+			vec_p *= scalar;
+			return vec_p;
 		}
 		
 		template<class T>
-		Vector<T> operator/ (Vector<T> vec, const T scalar) {
-			vec /= scalar;
-			return vec;
+		Vector<T> operator/ (Vector<T> &vec, const T scalar) {
+			Vector<T> vec_p(vec);
+			vec_p /= scalar;
+			return vec_p;
 		}
 		
 		template<class T>
-		Vector<T> operator+ (Vector<T> vec1, Vector<T>& vec2) {
-			vec1 += vec2;
-			return vec1;
+		Vector<T> operator+ (Vector<T> &vec1, Vector<T>& vec2) {
+			Vector<T> vec_p(vec1);
+			vec_p += vec2;
+			return vec_p;
 		}
 		
 		template<class T>
 		Vector<T> operator- (Vector<T> vec1, Vector<T>& vec2) {
-			vec1 -= vec2;
-			return vec1;
+			Vector<T> vec_p(vec1);
+			vec_p -= vec2;
+			return vec_p;
 		}
 	}
 }

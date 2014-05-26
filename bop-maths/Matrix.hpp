@@ -277,33 +277,38 @@ namespace bop {
 		//External arithmetic overloads
 		
 		template<class T>
-		Matrix<T> operator* (Matrix<T> mat, const T scalar) {
-			mat *= scalar;
-			return mat;
+		Matrix<T> operator* (Matrix<T> &mat, const T scalar) {
+			Matrix<T> mat_p(mat);
+			mat_p *= scalar;
+			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator* (Matrix<T> mat1, Matrix<T>& mat2) {
-			mat1 *= mat2;
-			return mat1;
+		Matrix<T> operator* (Matrix<T> &mat1, Matrix<T>& mat2) {
+			Matrix<T> mat_p(mat1);
+			mat_p *= mat2;
+			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator/ (Matrix<T> mat, const T scalar) {
-			mat /= scalar;
-			return mat;
+		Matrix<T> operator/ (Matrix<T> &mat, const T scalar) {
+			Matrix<T> mat_p(mat)
+			mat_p /= scalar;
+			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator+ (Matrix<T> mat1, Matrix<T>& mat2) {
-			mat1 += mat2;
-			return mat1;
+		Matrix<T> operator+ (Matrix<T> &mat1, Matrix<T>& mat2) {
+			Matrix<T> mat_sum(mat1);
+			mat_sum += mat2;
+			return mat_sum;
 		}
 		
 		template<class T>
-		Matrix<T> operator- (Matrix<T> mat1, Matrix<T>& mat2) {
-			mat1 -= mat2;
-			return mat1;
+		Matrix<T> operator- (Matrix<T> &mat1, Matrix<T>& mat2) {
+			Matrix<T> mat_sum(mat1);
+			mat_sum -= mat2;
+			return mat_sum;
 		}
 		
 		//Matrix related functions
@@ -427,6 +432,7 @@ namespace bop {
 					/*
 						Sort the matrix rows by pivot index and 
 					*/
+					
 				}
 			}
 		}
