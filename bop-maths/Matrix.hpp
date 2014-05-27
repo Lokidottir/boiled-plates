@@ -42,7 +42,7 @@ namespace bop {
 						the given fill value.
 					*/
 					this->data = new Vector<T>[height];
-					for (int i = 0; i < height; i++) {
+					for (unsigned int i = 0; i < height; i++) {
 						this->data[i] = Vector<T>(width, fill);
 					}
 					this->height = height;
@@ -56,7 +56,7 @@ namespace bop {
 					this->height = list.size();
 					this->data = new Vector<T>[this->height];
 					unsigned int min_w = list.begin()->size();
-					int i = 0;
+					unsigned int i = 0;
 					for (auto elem : list) {
 						if (elem.size() < min_w) min_w = elem.size();
 						this->data[i] = elem;
@@ -134,7 +134,7 @@ namespace bop {
 						Scalar multiplication member operator, multiplies all
 						elements by the given scalar.
 					*/
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						this->data[i] *= scalar;
 					}
 					return *this;
@@ -145,13 +145,13 @@ namespace bop {
 						Matrix multiplication member operator.
 					*/
 					Vector<T>* temp = new Vector<T>[this->height];
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						temp[i] = Vector<T>(mat.width);
 					}
-					for (int r = 0; r < this->height; r++) {
-						for (int c = 0; c < mat.width; c++) {
+					for (unsigned int r = 0; r < this->height; r++) {
+						for (unsigned int c = 0; c < mat.width; c++) {
 							T product = 0;
-							for (int i = 0; i < mat.width; i++) {
+							for (unsigned int i = 0; i < mat.width; i++) {
 								product += (this->data[r][i] * mat.data[i][c]);
 							}
 							temp[r][c] = product;
@@ -168,7 +168,7 @@ namespace bop {
 						Scalar division member operator, divides all elements
 						by the given scalar.
 					*/
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						this->data[i] /= scalar;
 					}
 					return *this;
@@ -179,7 +179,7 @@ namespace bop {
 						Addition member operator, adds all the elements of a
 						given matrix to the matrix.
 					*/	
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						this->data[i] += mat[i];
 					}
 					return *this;
@@ -190,7 +190,7 @@ namespace bop {
 						Subtraction member operator, subtracts the value of
 						each element in a given matrix from the matrix.
 					*/
-					for (int i = 0; i < this->height; i++) {
+					for (unsigned int i = 0; i < this->height; i++) {
 						this->data[i] -= mat[i];
 					}
 					return *this;
@@ -339,7 +339,7 @@ namespace bop {
 				size--;
 				T product = 0;
 				T multi = 1;
-				for (int i = 0; i < mat.w(); i++) {
+				for (unsigned int i = 0; i < mat.w(); i++) {
 					if (!allowed_cols[i]) continue;
 					else {
 						allowed_cols[i] = false;
@@ -370,7 +370,7 @@ namespace bop {
 					T product = 0;
 					T multi = 1;
 					int size = mat.h() - 1;
-					for (int i = 0; i < mat.w(); i++) {
+					for (unsigned int i = 0; i < mat.w(); i++) {
 						allowed_cols[i] = false;
 						product += (multi * (mat[0][i] * determinant(mat, allowed_cols, size)));
 						multi *= -1;
@@ -387,7 +387,7 @@ namespace bop {
 				Returns an Identity Matrix.
 			*/
 			Matrix<T> unit_m(size);
-			for (int i = 0; i < size; i++) {
+			for (unsigned int i = 0; i < size; i++) {
 				unit_m[i] = 1;
 			}
 			return unit_m;
