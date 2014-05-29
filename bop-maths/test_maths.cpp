@@ -97,7 +97,9 @@ int testMatrices() {
 	std::cout << "(mat1 != mat2) evaluates to: " << (bool_mat1 != bool_mat2) << std::endl;
 	std::cout << "(mat2 == mat3) evaluates to: " << (bool_mat2 == bool_mat3) << std::endl;
 	std::cout << "(mat2 != mat3) evaluates to: " << (bool_mat2 != bool_mat3) << std::endl;
-	
+	/*
+		Inverse test
+	*/
 	return 0;
 }
 
