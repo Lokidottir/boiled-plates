@@ -55,6 +55,13 @@ int testVectors() {
 	std::cout << "\n####\nSize Tests\n####" << std::endl;
 	Vector<double> vec_size = {5,6,9,3,8,5,7,11,993,1232,-6,2,1.000005,2};
 	std::cout << "Size of vector " << vec_size.string() << " is " << vec_size.size() << std::endl;
+	/*
+		Other tests
+	*/
+	Vector<double> vec_oth = vec_size;
+	vec_size = vec_oth;
+	vec_oth = vec_size;
+	std::cout << "the 3rd element of vector: " << vec_oth.string() << " is " << vec_oth[2] << std::endl;
 	return 0;
 }
 
@@ -97,9 +104,15 @@ int testMatrices() {
 	std::cout << "(mat1 != mat2) evaluates to: " << (bool_mat1 != bool_mat2) << std::endl;
 	std::cout << "(mat2 == mat3) evaluates to: " << (bool_mat2 == bool_mat3) << std::endl;
 	std::cout << "(mat2 != mat3) evaluates to: " << (bool_mat2 != bool_mat3) << std::endl;
+	std::cout << "mat1.identity() evaluates to: " << bool_mat1.identity() << std::endl;
 	/*
-		Inverse test
+		External function tests
 	*/
+	std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
+	Matrix<double> mat_ex1 = {{4,5},{9,1}};
+	std::cout << "the determinant of Matrix: " << std::endl << mat_ex1.string() << "is: " << (det(mat_ex1)) << std::endl;
+	std::cout << "the inverse of matrix: " << std::endl << mat_ex1.string() << "is: " << std::endl << inverseMatrix(mat_ex1).string() << std::endl;
+	
 	return 0;
 }
 
