@@ -59,7 +59,7 @@ namespace bop {
 					unsigned int i = 0;
 					for (auto elem : list) {
 						if (elem.size() < min_w) min_w = elem.size();
-						this->data[i] = elem;
+						this->data[i] = Vector<T>(elem);
 						i++;
 					}
 					this->width = min_w;
@@ -313,7 +313,7 @@ namespace bop {
 		
 		//Matrix related functions
 		template<class T>
-		T determinant(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
+		T det(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
 			/*
 				Recursive matrix determinant function.
 			*/
@@ -343,7 +343,7 @@ namespace bop {
 					if (!allowed_cols[i]) continue;
 					else {
 						allowed_cols[i] = false;
-						product += (multi * (mat[mat.h() - size][i] * determinant(mat, allowed_cols, size)));
+						product += (multi * (mat[mat.h() - size][i] * det(mat, allowed_cols, size)));
 						multi *= -1;
 						allowed_cols[i] = true;
 						
@@ -355,13 +355,14 @@ namespace bop {
 		}
 		
 		template<class T>
-		T determinant(const Matrix<T>& mat) {
+		T det(Matrix<T>& mat) {
 			/*
 				Matrix determinant init function.
 			*/
 			if (!mat.square()) return static_cast<T>(0);
 			else {
 				if (mat.w() == 2) {
+					
 					//shortcut to determinant of a 2 by 2 matrix
 					return (mat[0][0] * mat[1][1]) - (mat[0][1] * mat[1][0]);
 				}
@@ -369,10 +370,10 @@ namespace bop {
 					Vector<bool> allowed_cols(mat.w(), true);
 					T product = 0;
 					T multi = 1;
-					int size = mat.h() - 1;
+					unsigned int size = mat.h() - 1;
 					for (unsigned int i = 0; i < mat.w(); i++) {
 						allowed_cols[i] = false;
-						product += (multi * (mat[0][i] * determinant(mat, allowed_cols, size)));
+						product += (multi * (mat[0][i] * det(mat, allowed_cols, size)));
 						multi *= -1;
 						allowed_cols[i] = true;
 					}
@@ -395,11 +396,11 @@ namespace bop {
 		
 		template<class T>
 		bool invertable(Matrix<T> &mat) {
-			return (mat.square() && determinant(mat) != 0);
+			return (mat.square() && det(mat) != 0);
 		}
 		
 		template<class T>
-		Matrix<T> inverseMatrix(Matrix<T> mat, bool tested = true) {
+		Matrix<T> inverseMatrix(Matrix<T>& mat, bool tested = true) {
 			/*
 				Matrix inverse by Gauss-Jordan method ([A|I] -> [I|A']).
 				Assumes that the matrix has already been tested as invertible. 
@@ -411,28 +412,29 @@ namespace bop {
 					In the case that the matrix is not invertible, the function will
 					return an identity matrix with the height of the given matrix.
 				*/
-				return identityMatrix(mat.h());
+				return identityMatrix<T>(mat.h());
 			}
 			else {
+				T deter = det(mat);
 				if (mat.h() == 2) {
+					Matrix<T> inverse(2);
 					/*
 						2 by 2 matrix shortcut.
 					*/
-					T temp = mat[0][0];
-					mat[0][0] = mat[1][1];
-					mat[1][1] = temp;
-					temp = mat[1][0];
-					mat[1][0] = -mat[0][1];
-					mat[0][1] = -temp;
-					return mat;
+					inverse[0][0] = mat[1][1];
+					inverse[0][1] = -mat[0][1];
+					inverse[1][0] = -mat[1][0];
+					inverse[1][1] = mat[0][0];
 					
+					inverse /= deter;
+					return inverse;
 				}
 				else {
-					Matrix<T> inverse = identityMatrix(mat.h());
+					Matrix<T> inverse = identityMatrix<T>(mat.h());
 					/*
 						Sort the matrix rows by pivot index and 
 					*/
-					
+					return inverse;
 				}
 			}
 		}
