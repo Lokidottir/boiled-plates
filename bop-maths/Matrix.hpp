@@ -93,7 +93,7 @@ namespace bop {
 				}
 				
 				//Destructor
-				~Matrix() {
+				~Matrix() { 
 					delete[] this->data;
 				}
 				
@@ -168,8 +168,10 @@ namespace bop {
 						Scalar division member operator, divides all elements
 						by the given scalar.
 					*/
-					for (unsigned int i = 0; i < this->height; i++) {
-						this->data[i] /= scalar;
+					if (scalar != 0) {
+						for (unsigned int i = 0; i < this->height; i++) {
+							this->data[i] /= scalar;
+						}
 					}
 					return *this;
 				}
