@@ -2,6 +2,7 @@
 CC=g++
 CC_FLAGS=-static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
 LD=-I../
+
 all: maths-test
 
 maths-test: 

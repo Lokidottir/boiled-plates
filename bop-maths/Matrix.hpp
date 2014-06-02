@@ -93,7 +93,7 @@ namespace bop {
 				}
 				
 				//Destructor
-				~Matrix() { 
+				~Matrix() {
 					delete[] this->data;
 				}
 				
@@ -361,7 +361,7 @@ namespace bop {
 			/*
 				Matrix determinant init function.
 			*/
-			if (!mat.square()) return static_cast<T>(0);
+			if (!mat.square()) return 0;
 			else {
 				if (mat.w() == 2) {
 					
@@ -402,30 +402,22 @@ namespace bop {
 		}
 		
 		template<class T>
-		Matrix<T> inverseMatrix(Matrix<T>& mat, bool tested = true) {
+		Matrix<T> inverseMatrix(Matrix<T>& mat) {
 			/*
 				Matrix inverse by Gauss-Jordan method ([A|I] -> [I|A']).
-				Assumes that the matrix has already been tested as invertible. 
-				takes a COPY of a matrix, as this method requires the 
-				manipulation of the rows of the matrix.
+				Takes a matrix as reference, but copies it as this method 
+				requires the manipulation of the rows of the matrix.
 			*/
-			if (!tested && invertable(mat) == 0) {
-				/*
-					In the case that the matrix is not invertible, the function will
-					return an identity matrix with the height of the given matrix.
-				*/
-				return identityMatrix<T>(mat.h());
-			}
-			else {
-				T deter = det(mat);
+			T deter = det(mat);
+			if (deter != 0) {
 				if (mat.h() == 2) {
 					Matrix<T> inverse(2);
 					/*
 						2 by 2 matrix shortcut.
 					*/
 					inverse[0][0] = mat[1][1];
-					inverse[0][1] = -mat[0][1];
-					inverse[1][0] = -mat[1][0];
+					inverse[0][1] = (mat[0][1] * -1);
+					inverse[1][0] = (mat[1][0] * -1);
 					inverse[1][1] = mat[0][0];
 					
 					inverse /= deter;
@@ -434,10 +426,13 @@ namespace bop {
 				else {
 					Matrix<T> inverse = identityMatrix<T>(mat.h());
 					/*
-						Sort the matrix rows by pivot index and 
+						non-2x2 matrix inverse solution 
 					*/
 					return inverse;
 				}
+			}
+			else {
+				return identityMatrix<T>(mat.h());
 			}
 		}
 		
@@ -454,6 +449,8 @@ namespace bop {
 			}
 			return trans;
 		}
+		
+		
 	
 	}
 }
