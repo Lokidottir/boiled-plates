@@ -84,6 +84,7 @@ namespace bop {
 					this->width = mat.width;
 					this->height = mat.height;
 					this->data = mat.data;
+					mat.data = NULL;
 				}
 				
 				Matrix() {
@@ -405,7 +406,7 @@ namespace bop {
 		Matrix<T> inverseMatrix(Matrix<T>& mat) {
 			/*
 				Matrix inverse by Gauss-Jordan method ([A|I] -> [I|A']).
-				Takes a matrix as reference, but copies it as this method 
+				Takes a matrix as reference and copies it as this method 
 				requires the manipulation of the rows of the matrix.
 			*/
 			T deter = det(mat);
@@ -416,8 +417,8 @@ namespace bop {
 						2 by 2 matrix shortcut.
 					*/
 					inverse[0][0] = mat[1][1];
-					inverse[0][1] = (mat[0][1] * -1);
-					inverse[1][0] = (mat[1][0] * -1);
+					inverse[0][1] = (-mat[0][1]);
+					inverse[1][0] = (-mat[1][0]);
 					inverse[1][1] = mat[0][0];
 					
 					inverse /= deter;

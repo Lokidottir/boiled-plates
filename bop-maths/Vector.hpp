@@ -88,6 +88,7 @@ namespace bop {
 					this->width = vec.width;
 					this->pivot_index = vec.pivot_index;
 					this->data = vec.data;
+					vec.data = NULL;
 				}
 				
 				Vector() {

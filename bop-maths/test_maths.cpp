@@ -110,10 +110,9 @@ int testMatrices() {
 	*/
 	std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
 	Matrix<double> mat_ex1 = {{4,8},{9,1}};
-	//Matrix<double> mat_ex_i1 = inverseMatrix(mat_ex1);
-	std::cout << "the determinant of Matrix: " << std::endl << mat_ex1.string() << "is: " << (det(mat_ex1)) << std::endl;
-	//std::cout << "inverse:" << std::endl << mat_ex_i1.string() << std::endl;
+	Matrix<double> mat_ex_i1 = inverseMatrix(mat_ex1);
 	std::cout << "the inverse of matrix: " << std::endl << mat_ex1.string() << "is: " << std::endl << inverseMatrix(mat_ex1).string() << std::endl;
+	std::cout << "the product of the matrix and it's inverse is " << std::endl << (mat_ex1 * mat_ex_i1).string() << std::endl;
 	
 	return 0;
 }
