@@ -1,11 +1,9 @@
 #ifndef BOP_MATRIX_HPP
 #define BOP_MATRIX_HPP
 
-#include <memory>
 #include <initializer_list>
 #include <string>
 #include <sstream>
-#include <new>
 #include "Vector.hpp"
 
 /*
@@ -141,7 +139,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Matrix<T>& operator*= (Matrix<T> &mat) {
+				Matrix<T>& operator*= (Matrix<T>& mat) {
 					/*
 						Matrix multiplication member operator.
 					*/
@@ -162,6 +160,29 @@ namespace bop {
 					this->data = temp;
 					this->width = mat.width;
 					return *this;
+				}
+				
+				Vector<T>& operator*= (Vector<T>& vec) {
+					/*
+						Seemingly counter-intuitive multiplication
+						operation, although *= is being used with the
+						matrix as the left operand what is being
+						multiplied is the vector. The matrix is unaffected.
+					*/
+					if (vec.width == this->width) {
+						T* temp_data = new T[this->height];
+						for (unsigned int i = 0; i < this->height; i++) {
+							T product = 0;
+							for (unsigned int dot_index = 0; dot_index < vec.width; dot_index++) {
+								product += (vec.data[dot_index] * this->data[i][dot_index]);
+							}
+							temp_data[i] = product;
+						}
+						delete[] vec.data;
+						vec.data = temp_data;
+						vec.width = this->height;
+					}
+					return vec;
 				}
 				
 				Matrix<T>& operator/= (const T scalar) {
@@ -294,6 +315,13 @@ namespace bop {
 		}
 		
 		template<class T>
+		Vector<T> operator* (Matrix<T>& mat, Vector<T>& vec) {
+			Vector<T> vec_p(vec);
+			mat *= vec_p;
+			return vec_p;
+		}
+		
+		template<class T>
 		Matrix<T> operator/ (Matrix<T> &mat, const T scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p /= scalar;
@@ -417,8 +445,8 @@ namespace bop {
 						2 by 2 matrix shortcut.
 					*/
 					inverse[0][0] = mat[1][1];
-					inverse[0][1] = (-mat[0][1]);
-					inverse[1][0] = (-mat[1][0]);
+					inverse[0][1] = -mat[0][1];
+					inverse[1][0] = -mat[1][0];
 					inverse[1][1] = mat[0][0];
 					
 					inverse /= deter;
@@ -426,6 +454,7 @@ namespace bop {
 				}
 				else {
 					Matrix<T> inverse = identityMatrix<T>(mat.h());
+					Matrix<T> mat_copy(mat);
 					/*
 						non-2x2 matrix inverse solution 
 					*/

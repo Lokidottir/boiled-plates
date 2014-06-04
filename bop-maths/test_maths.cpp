@@ -80,6 +80,10 @@ int testMatrices() {
 	std::cout << "Matrix 1 multiplied by Matrix 2:" << std::endl << (mat1 * mat2).string() << std::endl;
 	std::cout << "Matrix 1 add Matrix 2:" << std::endl << (mat1 + mat2).string() << std::endl;
 	std::cout << "Matrix 1 subtract Matrix 2:" << std::endl << (mat1 - mat2).string() << std::endl;
+	Matrix<double> mat_withvec = {{2,0,0},{0,1,0},{0,0,2}};
+	Vector<double> vec_mat3 = {4,2,1};
+	std::cout << "Multiplying vector " << vec_mat3.string() << " by the matrix: " << std::endl << mat_withvec.string() << "gives the vector " << (mat_withvec * vec_mat3).string() << std::endl;
+	
 	/*
 		Swap tests
 	*/
@@ -109,10 +113,13 @@ int testMatrices() {
 		External function tests
 	*/
 	std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
-	Matrix<double> mat_ex1 = {{4,8},{9,1}};
+	Matrix<double> mat_ex1 = {{4,8},{0,1}};
 	Matrix<double> mat_ex_i1 = inverseMatrix(mat_ex1);
 	std::cout << "the inverse of matrix: " << std::endl << mat_ex1.string() << "is: " << std::endl << inverseMatrix(mat_ex1).string() << std::endl;
 	std::cout << "the product of the matrix and it's inverse is " << std::endl << (mat_ex1 * mat_ex_i1).string() << std::endl;
+	
+	Matrix<double> mat_nonsq = {{2,3,5},{6,1,9}};
+	std::cout << "the transpose of " << std::endl << mat_nonsq.string() << "is: " << std::endl << transposeMatrix(mat_nonsq).string() << std::endl;
 	
 	return 0;
 }

@@ -1,11 +1,9 @@
 #ifndef BOP_VECTOR_HPP
 #define BOP_VECTOR_HPP
 
-#include <memory>
 #include <initializer_list>
 #include <string>
 #include <sstream>
-#include <new>
 
 /*
 	bop::maths::Vector Class file
@@ -14,8 +12,11 @@
 namespace bop {
 	namespace maths {
 		template<class T>
+		class Matrix;
+		template<class T>
 		class Vector {
 			protected:
+				friend class Matrix<T>;
 				T zero;
 				
 				inline T& checkZero() {
