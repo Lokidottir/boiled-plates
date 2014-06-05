@@ -26,6 +26,7 @@ namespace bop {
 						Square matrix constructor, sets all values as
 						the given fill value.
 					*/
+					
 					this->data = new Vector<T>[size];
 					for (unsigned int i = 0; i < size; i++) {
 						this->data[i] = Vector<T>(size, fill);
@@ -89,11 +90,13 @@ namespace bop {
 					/*
 						Empty constructor.
 					*/
+					this->data = NULL;
 				}
 				
 				//Destructor
 				~Matrix() {
 					delete[] this->data;
+					this->data = NULL;
 				}
 				
 				//Operator overloads
@@ -420,10 +423,11 @@ namespace bop {
 			*/
 			Matrix<T> unit_m(size);
 			for (unsigned int i = 0; i < size; i++) {
-				unit_m[i] = 1;
+				unit_m[i][i] = 1;
 			}
 			return unit_m;
 		}
+		
 		
 		template<class T>
 		bool invertable(Matrix<T> &mat) {
@@ -458,6 +462,7 @@ namespace bop {
 					/*
 						non-2x2 matrix inverse solution 
 					*/
+					
 					return inverse;
 				}
 			}
@@ -479,9 +484,6 @@ namespace bop {
 			}
 			return trans;
 		}
-		
-		
-	
 	}
 }
 

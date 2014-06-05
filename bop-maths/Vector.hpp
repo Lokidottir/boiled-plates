@@ -96,6 +96,7 @@ namespace bop {
 					/*
 						Empty constructor.
 					*/
+					this->data = NULL;
 				}
 				
 				//Destructor
@@ -103,6 +104,7 @@ namespace bop {
 				~Vector() {
 					//Manual deletion of data array.
 					delete[] this->data;
+					this->data = NULL;
 				}
 				
 				//Operator Overloads
