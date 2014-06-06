@@ -505,7 +505,6 @@ namespace bop {
 							}
 						}
 					}
-					std::cout << "We do get here, you know\n";
 					for (unsigned int col = mat.h() - 1; col > 0; col--) {
 						for (unsigned int sub_row = 0; sub_row < col; sub_row++) {
 							T temp = mat[sub_row][col];
