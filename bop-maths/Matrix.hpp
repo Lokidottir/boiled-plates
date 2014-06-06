@@ -112,6 +112,7 @@ namespace bop {
 					for (unsigned int i = 0; i < this->height; i++) {
 						this->data[i] = mat.data[i];
 					}
+					return *this;
 				}
 				
 				//Boolean logic overloads
@@ -282,7 +283,9 @@ namespace bop {
 						Row swap function, for use in such algorithms as Gauss-Jordan
 						elimination.
 					*/
-					this->data[index_a].swap(this->data[index_b]);
+					if (index_a != index_b) {
+						this->data[index_a].swap(this->data[index_b]);
+					}
 				}
 				
 				void swap(Matrix<T>& mat) {
@@ -435,35 +438,96 @@ namespace bop {
 		}
 		
 		template<class T>
-		Matrix<T> inverseMatrix(Matrix<T>& mat) {
+		Matrix<T> inverseMatrix(Matrix<T> mat) {
 			/*
 				Matrix inverse by Gauss-Jordan method ([A|I] -> [I|A']).
-				Takes a matrix as reference and copies it as this method 
-				requires the manipulation of the rows of the matrix.
 			*/
 			T deter = det(mat);
 			if (deter != 0) {
 				if (mat.h() == 2) {
-					Matrix<T> inverse(2);
 					/*
 						2 by 2 matrix shortcut.
 					*/
-					inverse[0][0] = mat[1][1];
-					inverse[0][1] = -mat[0][1];
-					inverse[1][0] = -mat[1][0];
-					inverse[1][1] = mat[0][0];
-					
-					inverse /= deter;
-					return inverse;
+					T temp = mat[0][0];
+					mat[0][0] = mat[1][1];
+					mat[1][1] = temp;
+					mat[0][1] *= -1;
+					mat[1][0] *= -1;
+					mat /= deter;
+					return mat;
 				}
 				else {
+					#ifndef BOP_MATRIX_INVERSE_BY_COFACTOR
 					Matrix<T> inverse = identityMatrix<T>(mat.h());
-					Matrix<T> mat_copy(mat);
 					/*
 						non-2x2 matrix inverse solution 
 					*/
-					
+					for (unsigned int col = 0; col < mat.w(); col++) {
+						unsigned int row_index;
+						/*
+							Find the first row whose pivot index is the same as the
+							identity column (col) that needs representation. This is
+							the Pivot row.
+						*/
+						for (row_index = col; row_index < mat.h() && static_cast<unsigned int>(mat[row_index].pivot()) != col; row_index++);
+						/*
+							Simultaneously swap the rows in the given matrix and to-be
+							inverse matrix so that the Pivot row is at the index where
+							it's pivot index matches the row index.
+						*/
+						mat.swapRows(col, row_index);
+						inverse.swapRows(col, row_index);
+						/*
+							Divide the row at the Pivot row's index in the to-be inverse
+							by the value at the Pivot row's pivot value. Then, divide the
+							Pivot row by it's pivot value, making the pivot value in the
+							Pivot row 1.
+						*/
+						inverse[col] /= mat[col][col];
+						mat[col] /= mat[col][col];
+						for (unsigned int i = col + 1; i < mat.h(); i++) {
+							if (i == col || static_cast<unsigned int>(mat[i].pivot()) != col) continue;
+							else {
+								/*
+									For each row in the matrix with a pivot index identical to
+									the Pivot row's index, subtract the Pivot row multiplied by
+									their pivot's value from the row, leaving their pivot value
+									as 0. Mirror these actions on the to-be inverse Matrix.
+								*/
+								T temp = mat[i][col];
+								
+								mat[col] *= temp;
+								inverse[col] *= temp;
+								mat[i] -= mat[col];
+								inverse[i] -= inverse[col];
+								mat[col] /= temp;
+								inverse[col] /= temp;
+							}
+						}
+					}
+					std::cout << "We do get here, you know\n";
+					for (unsigned int col = mat.h() - 1; col > 0; col--) {
+						for (unsigned int sub_row = 0; sub_row < col; sub_row++) {
+							T temp = mat[sub_row][col];
+							/*
+								Now the matrix is in row echelon form, reduce it to an 
+								identity matrix.
+							*/
+							
+							if (temp != 0) {
+								mat[col] *= temp;
+								inverse[col] *= temp;
+								mat[sub_row] -= mat[col];
+								inverse[sub_row] -= inverse[col];
+								mat[col] /= temp;
+								inverse[col] /= temp;
+							}
+						}
+					}
 					return inverse;
+					#else
+					//todo: cofactor matrix solution 
+					#endif
 				}
 			}
 			else {

@@ -58,10 +58,13 @@ int testVectors() {
 	/*
 		Other tests
 	*/
+	std::cout << "\n####\nOther Tests\n####" << std::endl;
 	Vector<double> vec_oth = vec_size;
 	vec_size = vec_oth;
 	vec_oth = vec_size;
 	std::cout << "the 3rd element of vector: " << vec_oth.string() << " is " << vec_oth[2] << std::endl;
+	Vector<double> vec_norm(5);
+	std::cout << "vector produced by size init: " << vec_norm.string() << std::endl;
 	return 0;
 }
 
@@ -113,10 +116,20 @@ int testMatrices() {
 		External function tests
 	*/
 	std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
+	Matrix<double> unit_m = identityMatrix<double>(3);
+	std::cout << "Identity matrix: " << std::endl << unit_m.string();
 	Matrix<double> mat_ex1 = {{4,8},{0,1}};
 	Matrix<double> mat_ex_i1 = inverseMatrix(mat_ex1);
 	std::cout << "the inverse of matrix: " << std::endl << mat_ex1.string() << "is: " << std::endl << inverseMatrix(mat_ex1).string() << std::endl;
 	std::cout << "the product of the matrix and it's inverse is " << std::endl << (mat_ex1 * mat_ex_i1).string() << std::endl;
+	Matrix<double> mat_3_toinvert = {{1,2,3},{0,1,4},{7,3,0}};
+	std::cout << "the inverse of 3 by 3 matrix:\n" << mat_3_toinvert.string();
+	Matrix<double> mat_3_inverted = inverseMatrix(mat_3_toinvert);
+	std::cout << "is:\n" << mat_3_inverted.string();
+	std::cout << "when the matrix is multiplied by it's inverse:\n" << (mat_3_toinvert * mat_3_inverted).string() << std::endl;
+	
+	Matrix<double> mat_initbynum(5);
+	std::cout << "matrix produced by size init\n" << mat_initbynum.string() << std::endl;
 	
 	Matrix<double> mat_nonsq = {{2,3,5},{6,1,9}};
 	std::cout << "the transpose of " << std::endl << mat_nonsq.string() << "is: " << std::endl << transposeMatrix(mat_nonsq).string() << std::endl;
