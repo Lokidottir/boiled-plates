@@ -308,7 +308,13 @@ namespace bop {
 					this->data = temp_arr;
 					this->width = temp_w;
 					this->pivot_index = temp_pivot;
-				}		
+				}
+				
+				void impose(Vector<T>& vec, unsigned int offset = 0) {
+					for (unsigned int i = 0; i < vec.width && i + offset < this->width; i++) {
+						this->data[i + offset] = vec[i];
+					}
+				}
 		};
 		
 		/*

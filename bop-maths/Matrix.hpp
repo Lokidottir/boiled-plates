@@ -317,6 +317,12 @@ namespace bop {
 					this->width = temp_w;
 					this->height = temp_h;
 				}
+				
+				void impose(Matrix<T>& mat, unsigned int row_off = 0, unsigned int col_off = 0) {
+					for (unsigned int i = 0; i < mat.height && i + row_off < this->height; i++) {
+						this->data[i + row_off].impose(mat[i], col_off);
+					}
+				}
 		};
 		
 		//External arithmetic overloads
@@ -475,7 +481,7 @@ namespace bop {
 					#ifndef BOP_MATRIX_INVERSE_BY_COFACTOR
 					Matrix<T> inverse = identityMatrix<T>(mat.h());
 					/*
-						non-2x2 matrix inverse solution 
+						non-2x2 matrix inverse solution
 					*/
 					for (unsigned int col = 0; col < mat.w(); col++) {
 						unsigned int row_index;

@@ -66,6 +66,11 @@ int testVectors() {
 	std::cout << "the 3rd element of vector: " << vec_oth.string() << " is " << vec_oth[2] << std::endl;
 	Vector<double> vec_norm(5);
 	std::cout << "vector produced by size init: " << vec_norm.string() << std::endl;
+	Vector<double> vec_toimp = {0,0,0,2,4};
+	Vector<double> vec_beimp = {1.0/4.0,1.0/2.0,1};
+	std::cout << "imposing " << vec_beimp.string() << " on " << vec_toimp.string() << " for result: ";
+	vec_toimp.impose(vec_beimp);
+	std::cout << vec_toimp.string() << std::endl;
 	return 0;
 }
 
@@ -113,6 +118,16 @@ int testMatrices() {
 	std::cout << "(mat2 == mat3) evaluates to: " << (bool_mat2 == bool_mat3) << std::endl;
 	std::cout << "(mat2 != mat3) evaluates to: " << (bool_mat2 != bool_mat3) << std::endl;
 	std::cout << "mat1.identity() evaluates to: " << bool_mat1.identity() << std::endl;
+	/*
+		Other tests
+	*/
+	std::cout << "\n####\nOther Tests\n####" << std::endl;
+	Matrix<double> mat3_impose = {{2,0,0},{0,2,0},{0,0,2}};
+	Matrix<double> mat4_unit = identityMatrix<double>(4);
+	std::cout << "imposing:\n" << mat3_impose.string() << "on:\n" << mat4_unit.string() << "yeilds:\n";
+	mat4_unit.impose(mat3_impose);
+	std::cout << mat4_unit.string() << std::endl;
+
 	/*
 		External function tests
 	*/
