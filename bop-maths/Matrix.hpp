@@ -1,6 +1,8 @@
 #ifndef BOP_MATRIX_HPP
 #define BOP_MATRIX_HPP
-
+#ifndef BOP_MATRIX_DISCARD_BY
+#define BOP_MATRIX_DISCARD_BY 0xFFFF
+#endif
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -158,6 +160,15 @@ namespace bop {
 								product += (this->data[r][i] * mat.data[i][c]);
 							}
 							temp[r][c] = product;
+							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
+							/*
+								Hack to compensate for small values (e.g. at 10^-16) that
+								are leftover from the silliness of representing numbers as
+								a sequence of bits and the limits of precision.
+							*/
+							temp[r][c] += BOP_MATRIX_DISCARD_BY;
+							temp[r][c] -= BOP_MATRIX_DISCARD_BY;
+							#endif
 						}
 					}
 					delete[] this->data;
@@ -181,6 +192,10 @@ namespace bop {
 								product += (vec.data[dot_index] * this->data[i][dot_index]);
 							}
 							temp_data[i] = product;
+							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
+							temp_data[i] += BOP_MATRIX_DISCARD_BY;
+							temp_data[i] -= BOP_MATRIX_DISCARD_BY;
+							#endif
 						}
 						delete[] vec.data;
 						vec.data = temp_data;
@@ -512,7 +527,6 @@ namespace bop {
 								Now the matrix is in row echelon form, reduce it to an 
 								identity matrix.
 							*/
-							
 							if (temp != 0) {
 								mat[col] *= temp;
 								inverse[col] *= temp;
