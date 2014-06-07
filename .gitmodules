@@ -1,0 +1,3 @@
+[submodule "3rd-party/SDL2"]
+	path = 3rd-party/SDL2
+	url = https://github.com/zielmicha/SDL2
