@@ -7,3 +7,6 @@
 [submodule "3rd-party/SDL2-mirrored"]
 	path = 3rd-party/SDL2-mirrored
 	url = https://github.com/spurious/SDL-mirror
+[submodule "SOIL"]
+	path = SOIL
+	url = https://github.com/epatel/SOIL
