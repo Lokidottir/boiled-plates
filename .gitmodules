@@ -1,0 +1,12 @@
+[submodule "3rdparty/SDL2"]
+	path = 3rdparty/SDL2
+	url = https://github.com/spurious/SDL-mirror
+[submodule "3rdparty/glm"]
+	path = 3rdparty/glm
+	url = https://github.com/g-truc/glm
+[submodule "3rdparty/SOIL"]
+	path = 3rdparty/SOIL
+	url = https://github.com/kbranigan/Simple-OpenGL-Image-Library
+[submodule "3rdparty/luaJIT"]
+	path = 3rdparty/luaJIT
+	url = https://github.com/LuaDist/luajit
