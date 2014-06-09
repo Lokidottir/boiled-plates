@@ -1,6 +1,6 @@
 #include <iostream>
 #define BOP_MATRIX_MULTIPLY_DISCARD_TINY
-#include "maths.hpp"
+#include <bop-maths/maths.hpp>
 
 using namespace bop::maths;
 
