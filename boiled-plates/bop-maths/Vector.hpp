@@ -249,6 +249,19 @@ namespace bop {
 					return this->width;
 				}
 				
+				inline bool valid() {
+					//Vector's validity determined by the pointer's value.
+					return (this->data != NULL);
+				}
+				
+				operator bool() {
+					/*
+						Cast to bool as the validity of the vector. Allowing for "if (Vector) { ... }"
+						behaviour.
+					*/
+					return this->valid();
+				}
+				
 				std::string string(bool brackets = true) {
 					/*
 						Returns a string that represents the data in the Vector

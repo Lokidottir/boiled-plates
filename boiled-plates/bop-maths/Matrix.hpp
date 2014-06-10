@@ -291,6 +291,19 @@ namespace bop {
 					return mat_str.str();
 				}
 				
+				inline bool valid() {
+					//Matrix validity determined by the pointer's value.
+					return (this->data != NULL);
+				}
+				
+				operator bool() {
+					/*
+						Cast to bool as the validity of the matrix. Allowing for "if (Matrix) { ... }"
+						behaviour.
+					*/
+					return this->valid();
+				}
+				
 				//Matrix manipulation functions.
 				
 				inline void swapRows(unsigned int index_a, unsigned int index_b) {
@@ -385,8 +398,6 @@ namespace bop {
 						}
 						else if (c2 < 0) {
 							c2 = i;
-						}
-						else {
 							break;
 						}
 					}
@@ -566,6 +577,11 @@ namespace bop {
 				}
 			}
 			return trans;
+		}
+		
+		template<class T>
+		Matrix<T> rotationMatrix(double degrees, unsigned int size) {
+			
 		}
 	}
 }

@@ -71,6 +71,8 @@ int testVectors() {
 	std::cout << "imposing " << vec_beimp.string() << " on " << vec_toimp.string() << " for result: ";
 	vec_toimp.impose(vec_beimp);
 	std::cout << vec_toimp.string() << std::endl;
+	Vector<double> vec_invalid;
+	std::cout << "The validity of a vector constructed with no values is " << bool(vec_invalid) << std::endl;
 	return 0;
 }
 
@@ -127,7 +129,8 @@ int testMatrices() {
 	std::cout << "imposing:\n" << mat3_impose.string() << "on:\n" << mat4_unit.string() << "yeilds:\n";
 	mat4_unit.impose(mat3_impose);
 	std::cout << mat4_unit.string() << std::endl;
-
+	Matrix<double> mat_notvalid;
+	std::cout << "The validity of a matrix constructed with no values is " << bool(mat_notvalid) << std::endl;
 	/*
 		External function tests
 	*/
