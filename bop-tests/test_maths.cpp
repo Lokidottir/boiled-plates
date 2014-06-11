@@ -157,7 +157,9 @@ int testMatrices() {
 }
 
 int main() {
-	std::cout << "Vector test returned " << testVectors() << std::endl;
-	std::cout << "Matrix test returned " << testMatrices() << std::endl;
+	//std::cout << "Vector test returned " << testVectors() << std::endl;
+	//std::cout << "Matrix test returned " << testMatrices() << std::endl;
+	Matrix<double> mat1 = rotationMatrix<double>(180, 2);
+	std::cout << pi() << std::endl << mat1.string();
 	return 0;
 }
