@@ -207,18 +207,15 @@ namespace bop {
 		}
 		
 		template<class T>
-		Matrix<T> rotationMatrix(double angle, unsigned int size, bool clockwise = false, bool rads = false) {
+		Matrix<T> rotationMatrix(double angle, unsigned int size = 2, bool clockwise = false, bool rads = false) {
 			/*
 				Generates a rotation matrix for the angle and size given.
 			*/
+			if (clockwise) angle -= 180;
+			if (!rads) angle = ((pi()/180.0) * angle); //Convert the degrees to radiens
 			if (size == 2) {
-				Matrix<T> rotmat(size);
-				if (clockwise) angle -= 180;
-				if (!rads) angle = ((angle/360.0) * pi()); //Convert the degrees to radiens
-				rotmat[0][0] = cos(angle);
-				rotmat[1][1] = cos(angle);
-				rotmat[0][1] = -sin(angle);
-				rotmat[1][0] = sin(angle);
+				Matrix<T> rotmat = {{cos(angle), -sin(angle)},
+									{sin(angle), cos(angle)}};
 				return rotmat;
 			}
 			else {
