@@ -12,5 +12,6 @@ namespace bop {
 
 #include "Vector.hpp"
 #include "Matrix.hpp"
+#include "MatrixExt.hpp"
 
 #endif
