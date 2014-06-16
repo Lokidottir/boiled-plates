@@ -152,7 +152,7 @@ namespace bop {
 				
 				//Boolean Logic overloads
 				
-				bool operator== (const Vector<T>& vec) {
+				bool operator== (const Vector<T>& vec) const {
 					if (this->width == vec.width) {
 						/*
 							Not the most elegant solution, then again for testing
@@ -167,7 +167,7 @@ namespace bop {
 					else return false;
 				}
 				
-				bool operator!= (const Vector<T>& vec) {
+				bool operator!= (const Vector<T>& vec) const {
 					return !(this->operator==(vec));
 				}
 				
@@ -198,7 +198,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Vector<T>& operator+= (Vector<T>& vec) {
+				Vector<T>& operator+= (const Vector<T>& vec) {
 					/*
 						Member addition operator, adds the elements of
 						a given vector to the corresponding vector to the
@@ -212,7 +212,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Vector<T>& operator-= (Vector<T>& vec) {
+				Vector<T>& operator-= (const Vector<T>& vec) {
 					/*
 						Member subtraction operator, subtracts the elements
 						of a given vector from the corresponding elements of 
@@ -249,12 +249,12 @@ namespace bop {
 					return this->width;
 				}
 				
-				inline bool valid() {
+				inline bool valid() const {
 					//Vector's validity determined by the pointer's value.
 					return (this->data != NULL);
 				}
 				
-				operator bool() {
+				operator bool() const {
 					/*
 						Cast to bool as the validity of the vector. Allowing for "if (Vector) { ... }"
 						behaviour.
@@ -262,7 +262,7 @@ namespace bop {
 					return this->valid();
 				}
 				
-				std::string string(bool brackets = true) {
+				std::string string(bool brackets = true) const {
 					/*
 						Returns a string that represents the data in the Vector
 						in a human-readable format.

@@ -104,7 +104,7 @@ namespace bop {
 				}
 				
 				//Operator overloads
-				inline Vector<T>& operator[] (const unsigned int index) {
+				inline Vector<T>& operator[] (const unsigned int index) const {
 					return this->data[index];
 				}
 				
@@ -120,7 +120,7 @@ namespace bop {
 				}
 				
 				//Boolean logic overloads
-				bool operator== (const Matrix<T>& mat) {
+				bool operator== (const Matrix<T>& mat) const {
 					if (this->width == mat.width && this->height == mat.height) {
 						bool same = true;
 						for (unsigned int i = 0; i < this->height && same; i++) {
@@ -131,7 +131,7 @@ namespace bop {
 					else return false;
 				}
 				
-				bool operator!= (const Matrix<T>& mat) {
+				bool operator!= (const Matrix<T>& mat) const {
 					return !(this->operator==(mat));
 				}
 				
@@ -242,28 +242,28 @@ namespace bop {
 				}
 				
 				//Information functions
-				inline unsigned int w() {
+				inline unsigned int w() const {
 					/*
 						Returns the width of the Matrix.
 					*/
 					return this->width;
 				}
 				
-				inline unsigned int h() {
+				inline unsigned int h() const {
 					/*
 						Returns the height of the Matrix.
 					*/
 					return this->height;
 				}
 				
-				inline bool square() {
+				inline bool square() const {
 					/*
 						Tests if the Matrix is a square Matrix.
 					*/
 					return (this->width == this->height);
 				}
 				
-				bool identity() {
+				bool identity() const {
 					/*
 						Tests if the matrix is an identity matrix.
 					*/
@@ -280,7 +280,7 @@ namespace bop {
 					else return false;
 				}
 				
-				std::string string(bool newlines = true) {
+				std::string string(bool newlines = true) const {
 					/*
 						Similar to the maths::Vector::string function, returns 
 						a human-readable representation of the Matrix.
@@ -293,12 +293,12 @@ namespace bop {
 					return mat_str.str();
 				}
 				
-				inline bool valid() {
+				inline bool valid() const {
 					//Matrix validity determined by the pointer's value.
 					return (this->data != NULL);
 				}
 				
-				operator bool() {
+				operator bool() const {
 					/*
 						Cast to bool as the validity of the matrix. Allowing for "if (Matrix) { ... }"
 						behaviour.
