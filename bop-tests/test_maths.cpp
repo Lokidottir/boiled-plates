@@ -153,13 +153,20 @@ int testMatrices() {
 	Matrix<double> mat_nonsq = {{2,3,5},{6,1,9}};
 	std::cout << "the transpose of " << std::endl << mat_nonsq.string() << "is: " << std::endl << transposeMatrix(mat_nonsq).string() << std::endl;
 	
+	Matrix<double> matrot_1 = rotationMatrix<double>(90, 2);
+	std::cout << "A rotation matrix for 90 degrees:\n" << matrot_1.string() << std::endl;
+	Matrix<double> matrot_2 = { {2,5},
+							{4,7}};
+	Vector<double> vec1 = {4,6};
+	matrot_1 *= vec1;
+	matrot_2 *= matrot_1;
+	std::cout << "when applied to matrix" << std::endl << matrot_2.string() << "yeilds" << std::endl << (matrot_2 * matrot_1).string() << "and applied to vector " << vec1.string() << " yeilds " << (matrot_1 * vec1).string() << std::endl;
+	
 	return 0;
 }
 
 int main() {
-	//std::cout << "Vector test returned " << testVectors() << std::endl;
-	//std::cout << "Matrix test returned " << testMatrices() << std::endl;
-	Matrix<double> mat1 = rotationMatrix<double>(180, 2);
-	std::cout << pi() << std::endl << mat1.string();
+	std::cout << "Vector test returned " << testVectors() << std::endl;
+	std::cout << "Matrix test returned " << testMatrices() << std::endl;
 	return 0;
 }
