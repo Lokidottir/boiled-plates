@@ -5,9 +5,12 @@ CC_FLAGS=-static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
 3RDPARTY_LIBS=
 LD=-Iboiled-plates
 
-all: maths-test
+all: maths-test mat-benchmark
 
 maths-test: 
 	$(CC) $(CC_FLAGS) bop-tests/test_maths.cpp -o maths-test $(LD)
+
+mat-benchmark:
+	$(CC) $(CC_FLAGS) bop-tests/matrix_benchmark.cpp -o mat-benchmark $(LD)
 
 clean:
