@@ -42,6 +42,12 @@ void bop_bench_add() {
 	mat1 += mat2;
 }
 
+void bop_bench_vector_add() {
+	static Vector<double> vec1 = {1,2,3,4,5,6,7,8,9};
+	static Vector<double> vec2 = {9,8,7,6,5,4,3,2,1};
+	vec1 += vec2;
+}
+
 void bop_bench_subtract() {
 	static Matrix<double>mat1 = identityMatrix<double>(3);
 	static Matrix<double>mat2 = identityMatrix<double>(3);
@@ -62,11 +68,19 @@ void bop_bench_scalar_div() {
 
 void bop_bench_impose() {
 	static Matrix<double> mat1 = identityMatrix<double>(3);
-	static Matrix<double> mat2 = {{},{}};
+	static Matrix<double> mat2 = {{2,4},{6,8}};
+	mat1.impose(mat2);
+}
+
+void bop_bench_compare() {
+	static Matrix<double> mat1 = identityMatrix<double>(3);
+	static Matrix<double> mat2 = identityMatrix<double>(3);
+	mat1 == mat2;
 }
 
 int mat_tests() {
-	std::cout << "All matrix operations are performed on a 3 by 3 matrix unless otherwise specified" << std::endl;
+	std::cout << "\nAll matrix operations are performed on a 3 by 3 matrix unless otherwise specified" << std::endl;
+	std::cout << "The result is the average operation time in nanoseconds for " << TEST_COUNT << " iterations." << std::endl;
 	std::cout << "Matrix construction: " << gist::benchmark(TEST_COUNT, bop_bench_construct) << std::endl;
 	std::cout << "Matrix multiplication: " << gist::benchmark(TEST_COUNT, bop_bench_multiply) << std::endl;
 	std::cout << "Matrix determinant: " << gist::benchmark(TEST_COUNT, bop_bench_det) << std::endl;
@@ -74,9 +88,12 @@ int mat_tests() {
 	std::cout << "Matrix inverse (unit): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_unit) << std::endl;
 	std::cout << "Matrix inverse: " << gist::benchmark(TEST_COUNT, bop_bench_inverse) << std::endl;
 	std::cout << "Matrix addition: " << gist::benchmark(TEST_COUNT, bop_bench_add) << std::endl;
+	std::cout << "Vector (9) addition: " << gist::benchmark(TEST_COUNT, bop_bench_vector_add) << std::endl;
 	std::cout << "Matrix subtraction: " << gist::benchmark(TEST_COUNT, bop_bench_subtract) << std::endl;
 	std::cout << "Matrix scalar multiplication: " << gist::benchmark(TEST_COUNT, bop_bench_scalar) << std::endl;
 	std::cout << "Matrix scalar division: " << gist::benchmark(TEST_COUNT, bop_bench_scalar_div) << std::endl;
+	std::cout << "Matrix (2x2) imposition on (3x3): " << gist::benchmark(TEST_COUNT, bop_bench_scalar_div) << std::endl;
+	std::cout << "Matrix comparison (2 units): " << gist::benchmark(TEST_COUNT, bop_bench_compare) << std::endl;
 	return 0;
 }
 

@@ -12,5 +12,6 @@ maths-test:
 
 mat-benchmark:
 	$(CC) $(CC_FLAGS) bop-tests/matrix_benchmark.cpp -o mat-benchmark $(LD)
+	$(CC) $(CC_FLAGS) -O3 bop-tests/matrix_benchmark.cpp -o mat-benchmark-opti $(LD)
 
 clean:
