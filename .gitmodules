@@ -13,3 +13,6 @@
 [submodule "bop-tests/testlibs/funct_bench"]
 	path = bop-tests/testlibs/funct_bench
 	url = https://gist.github.com/Lokidottir/25bcd14ce1f4c5651496
+[submodule "doc"]
+	path = doc
+	url = https://github.com/Lokidottir/boiled-plates.wiki.git

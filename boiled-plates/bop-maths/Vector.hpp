@@ -36,7 +36,7 @@ namespace bop {
 			public:
 				T* data;
 				//Constructors
-				Vector(int width, T fill = 0) {
+				Vector(unsigned int size, T fill = 0) {
 					/*
 						Creates a new vector of a given width, setting each
 						element as a given default.
