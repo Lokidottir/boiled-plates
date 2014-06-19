@@ -43,8 +43,8 @@ namespace bop {
 						----pivot index is set as -1.
 					*/
 					this->pivot_index = -1;
-					this->data = new T[width];
-					this->width = width;
+					this->data = new T[size];
+					this->width = size;
 					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] = fill;
 					}
