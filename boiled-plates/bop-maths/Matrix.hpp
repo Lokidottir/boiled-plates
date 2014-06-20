@@ -314,23 +314,8 @@ namespace bop {
 						elimination.
 					*/
 					if (index_a != index_b) {
-						this->data[index_a].swap(this->data[index_b]);
+						std::swap(this->data[index_a], this->data[index_b]);
 					}
-				}
-				
-				void swap(Matrix<T>& mat) {
-					/*
-						Matrix object swap function.
-					*/
-					Vector<T>* temp_arr = mat.data;
-					unsigned int temp_w = mat.width;
-					unsigned int temp_h = mat.height;
-					mat.data = this->data;
-					mat.width = this->width;
-					mat.height = this->height;
-					this->data = temp_arr;
-					this->width = temp_w;
-					this->height = temp_h;
 				}
 				
 				void impose(Matrix<T>& mat, unsigned int row_off = 0, unsigned int col_off = 0) {

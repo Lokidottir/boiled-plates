@@ -1,6 +1,7 @@
 #ifndef BOP_MATRIX_EXT_HPP
 #define BOP_MATRIX_EXT_HPP
 #include <cmath>
+#include <utility>
 #include "Matrix.hpp"
 
 /*

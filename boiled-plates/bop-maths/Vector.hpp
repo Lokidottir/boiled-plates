@@ -242,7 +242,7 @@ namespace bop {
 					return this->pivot_index;
 				}
 				
-				const unsigned int size() const {
+				unsigned int size() const {
 					/*
 						Returns the width of the vector.
 					*/
@@ -310,19 +310,6 @@ namespace bop {
 					as Gauss-Jordan elimination, or whatever else may be in need
 					of the swapping of Vectors.
 				*/
-				
-				void swap(Vector<T>& vec) {
-					T* temp_arr = vec.data;
-					unsigned int temp_w = vec.width;
-					int temp_pivot = vec.pivot_index;
-					vec.data = this->data;
-					vec.width = this->width;
-					vec.pivot_index = this->pivot_index;
-					this->data = temp_arr;
-					this->width = temp_w;
-					this->pivot_index = temp_pivot;
-				}
-				
 				void impose(Vector<T>& vec, unsigned int offset = 0) {
 					for (unsigned int i = 0; i < vec.width && i + offset < this->width; i++) {
 						this->data[i + offset] = vec[i];

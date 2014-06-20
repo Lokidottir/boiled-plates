@@ -1,4 +1,5 @@
 #include <iostream>
+#include <utility>
 #define BOP_MATRIX_MULTIPLY_DISCARD_TINY
 #include <bop-maths/maths.hpp>
 
@@ -25,7 +26,7 @@ int testVectors() {
 	Vector<double> vec4 = {9,10,11,12};
 	std::cout << vec8.string() << " and " << vec4.string() << " shall be swapped!" << std::endl;
 	std::cout << "Algebradabra!" << std::endl;
-	vec8.swap(vec4);
+	std::swap(vec8,vec4);
 	std::cout << "The vector of 8 is now: " << vec8.string() << " and the vector of 4 is: " << vec4.string() << std::endl;
 	/*
 		Testing coords
@@ -73,6 +74,12 @@ int testVectors() {
 	std::cout << vec_toimp.string() << std::endl;
 	Vector<double> vec_invalid;
 	std::cout << "The validity of a vector constructed with no values is " << bool(vec_invalid) << std::endl;
+	Vector<double> vec_destruct = {3,5,7};
+	std::cout << "vector validity pre-destruct: " << bool(vec_destruct) << std::endl;
+	vec_destruct.~Vector();
+	std::cout << "vector validity post-destruct: " << bool(vec_destruct) << std::endl;
+	
+	std::swap(vec_oth, vec_size);
 	return 0;
 }
 
@@ -100,7 +107,7 @@ int testMatrices() {
 	*/
 	std::cout << "\n####\nSwap Tests\n####" << std::endl;
 	std::cout << "Matrix 1:" << std::endl << mat1.string() << std::endl << "to be swapped with Matrix 2:" << std::endl << mat2.string() << std::endl;
-	mat1.swap(mat2);
+	std::swap(mat1,mat2);
 	std::cout << "Matrix 1:" << std::endl << mat1.string() << std::endl << "Matrix 2:" << std::endl << mat2.string() << std::endl;
 	std::cout << "swapping rows 1 & 3 (non-zero index) of matrix 1:" << std::endl << mat1.string() <<std::endl;
 	mat1.swapRows(0,2);
