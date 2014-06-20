@@ -4,7 +4,7 @@
 #include <initializer_list>
 #include <string>
 #include <sstream>
-
+#include <iostream>
 /*
 	bop::maths::Vector Class file
 */
@@ -348,6 +348,12 @@ namespace bop {
 			Vector<T> vec_p(vec1);
 			vec_p -= vec2;
 			return vec_p;
+		}
+		
+		template <class T>
+		std::ostream& operator<< (std::ostream& stream, Vector<T>& vec) {
+			stream << vec.string();
+			return stream;
 		}
 	}
 }

@@ -12,11 +12,11 @@ int testVectors() {
 	*/
 	std::cout << "\n####\nOperator Tests\n####" << std::endl;
 	Vector<double> vec3 = {4,7,2};
-	std::cout << "vector " << vec3.string() << " multiplied by 4: " << (vec3 * 4.0).string() << std::endl;
-	std::cout << "vector " << vec3.string() << " divided by 4: " << (vec3 / 4.0).string() << std::endl;
+	std::cout << "vector " << vec3 << " multiplied by 4: " << (vec3 * 4.0) << std::endl;
+	std::cout << "vector " << vec3 << " divided by 4: " << (vec3 / 4.0) << std::endl;
 	Vector<double> vec3_1 = {7,2,9};
-	std::cout << "vector " << vec3.string() << " add: " << vec3_1.string() << " equals " << (vec3 + vec3_1).string() << std::endl;
-	std::cout << "vector " << vec3.string() << " subtract: " << vec3_1.string() << " equals " << (vec3 - vec3_1).string() << std::endl;
+	std::cout << "vector " << vec3 << " add: " << vec3_1 << " equals " << (vec3 + vec3_1) << std::endl;
+	std::cout << "vector " << vec3 << " subtract: " << vec3_1 << " equals " << (vec3 - vec3_1) << std::endl;
 	/*
 		Testing Swap
 	*/
@@ -24,21 +24,21 @@ int testVectors() {
 	std::cout << "I shall perform a magic trick! Watch as I change the positions of these vectors!" << std::endl;
 	Vector<double> vec8 = {1,2,3,4,5,6,7,8};
 	Vector<double> vec4 = {9,10,11,12};
-	std::cout << vec8.string() << " and " << vec4.string() << " shall be swapped!" << std::endl;
+	std::cout << vec8 << " and " << vec4 << " shall be swapped!" << std::endl;
 	std::cout << "Algebradabra!" << std::endl;
 	std::swap(vec8,vec4);
-	std::cout << "The vector of 8 is now: " << vec8.string() << " and the vector of 4 is: " << vec4.string() << std::endl;
+	std::cout << "The vector of 8 is now: " << vec8 << " and the vector of 4 is: " << vec4 << std::endl;
 	/*
 		Testing coords
 	*/
 	std::cout << "\n####\nCoordinate Tests\n####" << std::endl;
-	std::cout << "Coordinate vals of " << vec3.string() << " are x: " << vec3.x() << " y: " << vec3.y() << " z: " << vec3.z() << " with a w of: " << vec3.w() << std::endl;
+	std::cout << "Coordinate vals of " << vec3 << " are x: " << vec3.x() << " y: " << vec3.y() << " z: " << vec3.z() << " with a w of: " << vec3.w() << std::endl;
 	/*
 		Pivot test
 	*/
 	std::cout << "\n####\nPivot Tests\n####" << std::endl;
 	Vector<double> vec_pivot = {0,0,5,3};
-	std::cout << "The pivot col of vector " << vec_pivot.string() << " is: " << vec_pivot.pivot() << std::endl;
+	std::cout << "The pivot col of vector " << vec_pivot << " is: " << vec_pivot.pivot() << std::endl;
 	/*
 		Bool test
 	*/
@@ -46,7 +46,7 @@ int testVectors() {
 	Vector<double> vec_bool_1 = {4,2,1};
 	Vector<double> vec_bool_2 = {4,2,1};
 	Vector<double> vec_bool_3 = {9,3,1};
-	std::cout << "For the following vectors: " << vec_bool_1.string() << ", " << vec_bool_2.string() << ", " << vec_bool_3.string() <<std::endl;
+	std::cout << "For the following vectors: " << vec_bool_1 << ", " << vec_bool_2 << ", " << vec_bool_3 <<std::endl;
 	std::cout << "(vec_bool_1 == vec_bool_2) evaluates to " << (vec_bool_1 == vec_bool_2) << std::endl;
 	std::cout << "(vec_bool_1 != vec_bool_2) evaluates to " << (vec_bool_1 != vec_bool_2) << std::endl;
 	std::cout << "(vec_bool_2 == vec_bool_3) evaluates to " << (vec_bool_2 == vec_bool_3) << std::endl;
@@ -56,7 +56,7 @@ int testVectors() {
 	*/
 	std::cout << "\n####\nSize Tests\n####" << std::endl;
 	Vector<double> vec_size = {5,6,9,3,8,5,7,11,993,1232,-6,2,1.000005,2};
-	std::cout << "Size of vector " << vec_size.string() << " is " << vec_size.size() << std::endl;
+	std::cout << "Size of vector " << vec_size << " is " << vec_size.size() << std::endl;
 	/*
 		Other tests
 	*/
@@ -64,14 +64,14 @@ int testVectors() {
 	Vector<double> vec_oth = vec_size;
 	vec_size = vec_oth;
 	vec_oth = vec_size;
-	std::cout << "the 3rd element of vector: " << vec_oth.string() << " is " << vec_oth[2] << std::endl;
+	std::cout << "the 3rd element of vector: " << vec_oth << " is " << vec_oth[2] << std::endl;
 	Vector<double> vec_norm(5);
-	std::cout << "vector produced by size init: " << vec_norm.string() << std::endl;
+	std::cout << "vector produced by size init: " << vec_norm << std::endl;
 	Vector<double> vec_toimp = {0,0,0,2,4};
 	Vector<double> vec_beimp = {1.0/4.0,1.0/2.0,1};
-	std::cout << "imposing " << vec_beimp.string() << " on " << vec_toimp.string() << " for result: ";
+	std::cout << "imposing " << vec_beimp << " on " << vec_toimp << " for result: ";
 	vec_toimp.impose(vec_beimp);
-	std::cout << vec_toimp.string() << std::endl;
+	std::cout << vec_toimp << std::endl;
 	Vector<double> vec_invalid;
 	std::cout << "The validity of a vector constructed with no values is " << bool(vec_invalid) << std::endl;
 	Vector<double> vec_destruct = {3,5,7};
