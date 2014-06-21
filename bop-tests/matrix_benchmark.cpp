@@ -10,6 +10,10 @@ void bop_bench_construct() {
 	Matrix<double> mat1(3);
 }
 
+void bop_bench_constr_inlist() {
+	Matrix<double> mat1 = {{1,2,3},{4,5,6},{7,8,9}};
+}
+
 void bop_bench_construct_vec() {
 	Vector<double> vec(9);
 }
@@ -86,6 +90,7 @@ int mat_tests() {
 	std::cout << "\nAll matrix operations are performed on a 3 by 3 matrix unless otherwise specified" << std::endl;
 	std::cout << "The result is the average operation time in nanoseconds for " << TEST_COUNT << " iterations." << std::endl;
 	std::cout << "Matrix construction: " << gist::benchmark(TEST_COUNT, bop_bench_construct) << std::endl;
+	std::cout << "Matrix construction by init list: " << gist::benchmark(TEST_COUNT, bop_bench_constr_inlist) << std::endl;
 	std::cout << "Vector (9) construction: " << gist::benchmark(TEST_COUNT, bop_bench_construct_vec) << std::endl;
 	std::cout << "Matrix multiplication: " << gist::benchmark(TEST_COUNT, bop_bench_multiply) << std::endl;
 	std::cout << "Matrix determinant: " << gist::benchmark(TEST_COUNT, bop_bench_det) << std::endl;
