@@ -19,7 +19,7 @@ namespace bop {
 			if (size == 2) {
 				//the  base case, finding the 2 by 2 matrix determinant
 				int c1 = -1, c2 = -1;
-				for (unsigned int i = 0; i < mat.w(); i++) {
+				for (unsigned int i = 0; i < mat.width(); i++) {
 					if (allowed_cols[i]) {
 						if (c1 < 0) {
 							c1 = i;
@@ -30,17 +30,17 @@ namespace bop {
 						}
 					}
 				}
-				return (mat[mat.h() - 2][c1] * mat[mat.h() - 1][c2]) - (mat[mat.h() - 2][c2] * mat[mat.h() - 1][c1]);
+				return (mat[mat.height() - 2][c1] * mat[mat.height() - 1][c2]) - (mat[mat.height() - 2][c2] * mat[mat.height() - 1][c1]);
 			}
 			else {
 				size--;
 				T product = 0;
 				T multi = 1;
-				for (unsigned int i = 0; i < mat.w(); i++) {
+				for (unsigned int i = 0; i < mat.width(); i++) {
 					if (!allowed_cols[i]) continue;
 					else {
 						allowed_cols[i] = false;
-						product += (multi * (mat[mat.h() - size][i] * det(mat, allowed_cols, size)));
+						product += (multi * (mat[mat.height() - size][i] * det(mat, allowed_cols, size)));
 						multi *= -1;
 						allowed_cols[i] = true;
 						
@@ -58,17 +58,17 @@ namespace bop {
 			*/
 			if (!mat.square()) return 0;
 			else {
-				if (mat.w() == 2) {
+				if (mat.width() == 2) {
 					
 					//shortcut to determinant of a 2 by 2 matrix
 					return (mat[0][0] * mat[1][1]) - (mat[0][1] * mat[1][0]);
 				}
 				else {
-					Vector<bool> allowed_cols(mat.w(), true);
+					Vector<bool> allowed_cols(mat.width(), true);
 					T product = 0;
 					T multi = 1;
-					unsigned int size = mat.h() - 1;
-					for (unsigned int i = 0; i < mat.w(); i++) {
+					unsigned int size = mat.height() - 1;
+					for (unsigned int i = 0; i < mat.width(); i++) {
 						allowed_cols[i] = false;
 						product += (multi * (mat[0][i] * det(mat, allowed_cols, size)));
 						multi *= -1;
@@ -104,7 +104,7 @@ namespace bop {
 			*/
 			T deter = det(mat);
 			if (deter != 0) {
-				if (mat.h() == 2) {
+				if (mat.height() == 2) {
 					/*
 						2 by 2 matrix shortcut.
 					*/
@@ -118,18 +118,18 @@ namespace bop {
 				}
 				else {
 					#ifndef BOP_MATRIX_INVERSE_BY_COFACTOR
-					Matrix<T> inverse = identityMatrix<T>(mat.h());
+					Matrix<T> inverse = identityMatrix<T>(mat.height());
 					/*
 						non-2x2 matrix inverse solution
 					*/
-					for (unsigned int col = 0; col < mat.w(); col++) {
+					for (unsigned int col = 0; col < mat.width(); col++) {
 						unsigned int row_index;
 						/*
 							Find the first row whose pivot index is the same as the
 							identity column (col) that needs representation. This is
 							the Pivot row.
 						*/
-						for (row_index = col; row_index < mat.h() && static_cast<unsigned int>(mat[row_index].pivot()) != col; row_index++);
+						for (row_index = col; row_index < mat.height() && static_cast<unsigned int>(mat[row_index].pivot()) != col; row_index++);
 						/*
 							Simultaneously swap the rows in the given matrix and to-be
 							inverse matrix so that the Pivot row is at the index where
@@ -145,7 +145,7 @@ namespace bop {
 						*/
 						inverse[col] /= mat[col][col];
 						mat[col] /= mat[col][col];
-						for (unsigned int i = col + 1; i < mat.h(); i++) {
+						for (unsigned int i = col + 1; i < mat.height(); i++) {
 							if (i == col || static_cast<unsigned int>(mat[i].pivot()) != col) continue;
 							else {
 								/*
@@ -165,7 +165,7 @@ namespace bop {
 							}
 						}
 					}
-					for (unsigned int col = mat.h() - 1; col > 0; col--) {
+					for (unsigned int col = mat.height() - 1; col > 0; col--) {
 						for (unsigned int sub_row = 0; sub_row < col; sub_row++) {
 							T temp = mat[sub_row][col];
 							/*
@@ -189,7 +189,7 @@ namespace bop {
 				}
 			}
 			else {
-				return identityMatrix<T>(mat.h());
+				return identityMatrix<T>(mat.height());
 			}
 		}
 		
@@ -198,9 +198,9 @@ namespace bop {
 			/*
 				Creates & returns a transposed version of the given matrix.
 			*/
-			Matrix<T> trans(mat.h(), mat.w(), 0);
-			for (unsigned int y = 0; y < mat.h(); y++) {
-				for (unsigned int x = 0; x < mat.w(); x++) {
+			Matrix<T> trans(mat.height(), mat.width(), 0);
+			for (unsigned int y = 0; y < mat.height(); y++) {
+				for (unsigned int x = 0; x < mat.width(); x++) {
 					trans[x][y] = mat[y][x];
 				}
 			}

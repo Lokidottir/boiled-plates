@@ -6,7 +6,7 @@
 
 namespace bop {
 	namespace maths {
-		constexpr double pi() { return std::atan(1)*4; } 
+		constexpr double pi() { return std::atan(1)*4; }
 	}
 }
 

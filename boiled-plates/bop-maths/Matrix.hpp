@@ -18,65 +18,72 @@ namespace bop {
 		template<class T>
 		class Matrix {
 			protected:
-				unsigned int width;
-				unsigned int height;
-			public:
-			public:
+				unsigned int _width;
+				unsigned int _height;
 				Vector<T>* data;
+				void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
+					if (delete_ptr) delete[] this->data;
+					this->_width = width;
+					this->_height = height;
+					this->data = new Vector<T>[this->height()];
+					for (unsigned int row = 0; row < this->height(); row++) {
+						this->data[row] = Vector<T>(width);
+					}
+				}
+			public:
 				
 				//Constructors
-				Matrix(unsigned int size, T fill = 0) {
+				Matrix() {
 					/*
-						Square matrix constructor, sets all values as
-						the given fill value.
+						Empty constructor.
 					*/
-					
-					this->data = new Vector<T>[size];
-					for (unsigned int i = 0; i < size; i++) {
-						this->data[i] = Vector<T>(size, fill);
-					}
-					this->width = size;
-					this->height = size;
+					this->data = NULL;
 				}
 				
-				Matrix(unsigned int width, unsigned int height, T fill = 0) {
+				Matrix(unsigned int width, unsigned int height, T fill = 0) : Matrix() {
 					/*
 						Non-square matrix constructor, sets all values as 
 						the given fill value.
 					*/
-					this->data = new Vector<T>[height];
-					for (unsigned int i = 0; i < height; i++) {
-						this->data[i] = Vector<T>(width, fill);
+					this->setData(width,height,false);
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) = fill;
+						}
 					}
-					this->height = height;
-					this->width = width;
 				}
 				
-				Matrix(std::initializer_list< std::initializer_list<T> > list) {
+				Matrix(unsigned int size, T fill = 0) : Matrix(size, size, fill)  {
+					/*
+						Square matrix constructor, calls Matrix(uint, uint, T).
+					*/
+				}
+				
+				Matrix(std::initializer_list< std::initializer_list<T> > list) : Matrix() {
 					/*
 						Creates a matrix from a 2-dimensional initializer_list.
 					*/
-					this->height = list.size();
-					this->data = new Vector<T>[this->height];
-					unsigned int min_w = list.begin()->size();
-					unsigned int i = 0;
-					for (auto elem : list) {
-						if (elem.size() < min_w) min_w = elem.size();
-						this->data[i] = Vector<T>(elem);
-						i++;
+					this->setData(list.size(), list.begin()->size(), false);
+					unsigned int row = 0;
+					for (auto sublist : list) {
+						unsigned int col = 0;
+						for (auto element : sublist) {
+							this->element(row,col) = element;
+							col++;
+						}
+						row++;
 					}
-					this->width = min_w;
 				}
 				
 				Matrix(Matrix<T>& mat) {
 					/*
 						Copy constructor.
 					*/
-					this->width = mat.width;
-					this->height = mat.height;
-					this->data = new Vector<T>[this->height];
-					for (unsigned int i = 0; i < this->width; i++) {
-						this->data[i] = mat.data[i];
+					this->setData(mat.width(),mat.height(),false);
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) = mat.element(row,col);
+						}
 					}
 				}
 				
@@ -84,17 +91,10 @@ namespace bop {
 					/*
 						Move constructor.
 					*/
-					this->width = mat.width;
-					this->height = mat.height;
+					this->_width = mat._width;
+					this->_height = mat._height;
 					this->data = mat.data;
 					mat.data = NULL;
-				}
-				
-				Matrix() {
-					/*
-						Empty constructor.
-					*/
-					this->data = NULL;
 				}
 				
 				//Destructor
@@ -109,22 +109,23 @@ namespace bop {
 				}
 				
 				Matrix<T>& operator= (const Matrix<T> &mat) {
-					this->width = mat.width;
-					this->height = mat.height;
-					delete[] this->data;
-					this->data = new Vector<T>[this->height];
-					for (unsigned int i = 0; i < this->height; i++) {
-						this->data[i] = mat.data[i];
+					this->setData(mat.width(), mat.height());
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) = mat.element(row,col);
+						}
 					}
 					return *this;
 				}
 				
 				//Boolean logic overloads
 				bool operator== (const Matrix<T>& mat) const {
-					if (this->width == mat.width && this->height == mat.height) {
+					if (this->width() == mat.width() && this->height() == mat.height()) {
 						bool same = true;
-						for (unsigned int i = 0; i < this->height && same; i++) {
-							same = (this->data[i] == mat.data[i]);
+						for (unsigned int row = 0; row < this->height() && same; row++) {
+							for (unsigned int col = 0; col < this->width() && same; col++) {
+								same = this->element(row,col) == this->element(row,col);
+							}
 						}
 						return same;
 					}
@@ -132,7 +133,7 @@ namespace bop {
 				}
 				
 				bool operator!= (const Matrix<T>& mat) const {
-					return !(this->operator==(mat));
+					return !((*this) == (mat));
 				}
 				
 				//Arithmetic overloads
@@ -141,8 +142,10 @@ namespace bop {
 						Scalar multiplication member operator, multiplies all
 						elements by the given scalar.
 					*/
-					for (unsigned int i = 0; i < this->height; i++) {
-						this->data[i] *= scalar;
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) *= scalar;
+						}
 					}
 					return *this;
 				}
@@ -151,31 +154,31 @@ namespace bop {
 					/*
 						Matrix multiplication member operator.
 					*/
-					Vector<T>* temp = new Vector<T>[this->height];
-					for (unsigned int i = 0; i < this->height; i++) {
-						temp[i] = Vector<T>(mat.width);
+					Vector<T>* temp = new Vector<T>[this->height()];
+					for (unsigned int i = 0; i < this->height(); i++) {
+						temp[i] = Vector<T>(mat.width());
 					}
-					for (unsigned int r = 0; r < this->height; r++) {
-						for (unsigned int c = 0; c < mat.width; c++) {
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < mat.width(); col++) {
 							T product = 0;
-							for (unsigned int i = 0; i < mat.width; i++) {
-								product += (this->data[r][i] * mat.data[i][c]);
+							for (unsigned int iter = 0; iter < mat.width(); iter++) {
+								product += this->element(row,iter) * mat.element(iter,col);
 							}
-							temp[r][c] = product;
+							temp[row][col] = product;
 							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
 							/*
 								Hack to compensate for small values (e.g. at 10^-16) that
 								are leftover from the silliness of representing numbers as
 								a sequence of bits and the limits of precision.
 							*/
-							temp[r][c] += BOP_MATRIX_DISCARD_BY;
-							temp[r][c] -= BOP_MATRIX_DISCARD_BY;
+							temp[row][col] += BOP_MATRIX_DISCARD_BY;
+							temp[row][col] -= BOP_MATRIX_DISCARD_BY;
 							#endif
 						}
 					}
 					delete[] this->data;
 					this->data = temp;
-					this->width = mat.width;
+					this->_width = mat._width;
 					return *this;
 				}
 				
@@ -186,12 +189,12 @@ namespace bop {
 						matrix as the left operand what is being
 						multiplied is the vector. The matrix is unaffected.
 					*/
-					if (vec.width == this->width) {
-						T* temp_data = new T[this->height];
-						for (unsigned int i = 0; i < this->height; i++) {
+					if (vec.width == this->width()) {
+						T* temp_data = new T[this->height()];
+						for (unsigned int i = 0; i < this->height(); i++) {
 							T product = 0;
-							for (unsigned int dot_index = 0; dot_index < vec.width; dot_index++) {
-								product += (vec.data[dot_index] * this->data[i][dot_index]);
+							for (unsigned int dot_index = 0; dot_index < vec.size(); dot_index++) {
+								product += vec[dot_index] * this->element(i,dot_index);
 							}
 							temp_data[i] = product;
 							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
@@ -201,7 +204,7 @@ namespace bop {
 						}
 						delete[] vec.data;
 						vec.data = temp_data;
-						vec.width = this->height;
+						vec.width = this->height();
 					}
 					return vec;
 				}
@@ -212,8 +215,10 @@ namespace bop {
 						by the given scalar.
 					*/
 					if (scalar != 0) {
-						for (unsigned int i = 0; i < this->height; i++) {
-							this->data[i] /= scalar;
+						for (unsigned int row = 0; row < this->height(); row++) {
+							for (unsigned int col = 0; col < this->width(); col++) { 
+								this->element(row,col) /= scalar;
+							}
 						}
 					}
 					return *this;
@@ -224,8 +229,10 @@ namespace bop {
 						Addition member operator, adds all the elements of a
 						given matrix to the matrix.
 					*/	
-					for (unsigned int i = 0; i < this->height; i++) {
-						this->data[i] += mat[i];
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) += mat.element(row,col);
+						}
 					}
 					return *this;
 				}
@@ -235,44 +242,51 @@ namespace bop {
 						Subtraction member operator, subtracts the value of
 						each element in a given matrix from the matrix.
 					*/
-					for (unsigned int i = 0; i < this->height; i++) {
-						this->data[i] -= mat[i];
+					for (unsigned int row = 0; row < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width(); col++) {
+							this->element(row,col) -= mat.element(row,col);
+						}
 					}
 					return *this;
 				}
 				
 				//Information functions
-				inline unsigned int w() const {
+				
+				inline T& element(unsigned int row, unsigned int col) const {
+					return this->data[row][col];
+				}
+				
+				inline unsigned int width() const {
 					/*
 						Returns the width of the Matrix.
 					*/
-					return this->width;
+					return this->_width;
 				}
 				
-				inline unsigned int h() const {
+				inline unsigned int height() const {
 					/*
 						Returns the height of the Matrix.
 					*/
-					return this->height;
+					return this->_height;
 				}
 				
 				inline bool square() const {
 					/*
 						Tests if the Matrix is a square Matrix.
 					*/
-					return (this->width == this->height);
+					return (this->width() == this->height());
 				}
 				
 				bool identity() const {
 					/*
 						Tests if the matrix is an identity matrix.
 					*/
-					if (this->width == this->height) {
+					if (this->width() == this->height()) {
 						bool identity = true;
-						for (unsigned int y = 0; y < this->height && identity; y++) {
-							for (unsigned int x = 0; x < this->width && identity; x++) {
-								if (x == y) identity = (this->data[y][x] == 1);
-								else identity = (this->data[y][x] == 0);
+						for (unsigned int row = 0; row < this->height() && identity; row++) {
+							for (unsigned int col = 0; col < this->width() && identity; col++) {
+								if (row == col) identity = (this->element(row,col) == 1);
+								else identity = (this->element(row,col) == 0);
 							}
 						}
 						return identity;
@@ -286,8 +300,13 @@ namespace bop {
 						a human-readable representation of the Matrix.
 					*/
 					std::ostringstream mat_str;
-					for (unsigned int i = 0; i < this->height; i++) {
-						mat_str << '[' << this->data[i].string(false) << ']';
+					for (unsigned int row = 0; row < this->height(); row++) {
+						mat_str << '[';
+						for (unsigned int col = 0; col < this->width(); col++) {
+							mat_str << this->element(row,col);
+							if (col + 1 < this->width()) mat_str << ',';
+						}
+						mat_str << ']';
 						if (newlines) mat_str << '\n';
 					}
 					return mat_str.str();
@@ -314,13 +333,17 @@ namespace bop {
 						elimination.
 					*/
 					if (index_a != index_b) {
-						std::swap(this->data[index_a], this->data[index_b]);
+						for (unsigned int col = 0; col < this->width(); col++) {
+							std::swap(this->element(index_a,col), this->element(index_b,col));
+						}
 					}
 				}
 				
 				void impose(Matrix<T>& mat, unsigned int row_off = 0, unsigned int col_off = 0) {
-					for (unsigned int i = 0; i < mat.height && i + row_off < this->height; i++) {
-						this->data[i + row_off].impose(mat[i], col_off);
+					for (unsigned int row = 0; row < this->height() && row + row_off < this->height(); row++) {
+						for (unsigned int col = 0; col < this->width() && col + col_off < this->width(); col++) {
+							this->element(row + row_off, col + col_off) = mat.element(row,col);
+						}
 					}
 				}
 		};
