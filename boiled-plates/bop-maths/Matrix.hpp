@@ -20,20 +20,44 @@ namespace bop {
 			protected:
 				unsigned int _width;
 				unsigned int _height;
-				Vector<T>* data;
+				T* data;
 				void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
 					if (delete_ptr) delete[] this->data;
 					this->_width = width;
 					this->_height = height;
-					this->data = new Vector<T>[this->height()];
-					for (unsigned int row = 0; row < this->height(); row++) {
-						this->data[row] = Vector<T>(width);
-					}
+					this->data = new T[width * height];
 				}
+				
+				class MatrixIndexHandler {
+					/*
+						Internal handler class for translating [row][col]
+						to (row * width) + col for row-major order.
+					*/
+					public:
+						unsigned int temp_index;
+						Matrix<T>& matrix;
+						
+						MatrixIndexHandler(Matrix<T>& mat) : matrix(mat)  {
+							this->temp_index = 0;
+						}
+						
+						unsigned int pivot() {
+							unsigned int col;
+							for (col = 0; col < this->matrix.width(); col++) {
+								if (this->matrix.element(this->temp_index,col) != 0) break;
+							}
+							return col;
+						}
+						
+						inline T& operator[](unsigned int index) {
+							return this->matrix.element(this->temp_index, index);
+						}
+				};
+				MatrixIndexHandler handler;
 			public:
 				
 				//Constructors
-				Matrix() {
+				Matrix() : handler(*this) {
 					/*
 						Empty constructor.
 					*/
@@ -46,10 +70,8 @@ namespace bop {
 						the given fill value.
 					*/
 					this->setData(width,height,false);
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) = fill;
-						}
+					for (unsigned int elem = 0; elem < this->width() * this->height(); elem++) {
+						this->element(0,elem);
 					}
 				}
 				
@@ -63,6 +85,7 @@ namespace bop {
 					/*
 						Creates a matrix from a 2-dimensional initializer_list.
 					*/
+					
 					this->setData(list.size(), list.begin()->size(), false);
 					unsigned int row = 0;
 					for (auto sublist : list) {
@@ -75,7 +98,7 @@ namespace bop {
 					}
 				}
 				
-				Matrix(Matrix<T>& mat) {
+				Matrix(Matrix<T>& mat) : Matrix() {
 					/*
 						Copy constructor.
 					*/
@@ -87,7 +110,7 @@ namespace bop {
 					}
 				}
 				
-				Matrix(Matrix<T>&& mat) {
+				Matrix(Matrix<T>&& mat) : Matrix() {
 					/*
 						Move constructor.
 					*/
@@ -104,11 +127,12 @@ namespace bop {
 				}
 				
 				//Operator overloads
-				inline Vector<T>& operator[] (const unsigned int index) const {
-					return this->data[index];
+				inline MatrixIndexHandler& operator[] (const unsigned int index) {
+					this->handler.temp_index = index;
+					return this->handler;
 				}
 				
-				Matrix<T>& operator= (const Matrix<T> &mat) {
+				Matrix<T>& operator= (const Matrix<T>& mat) {
 					this->setData(mat.width(), mat.height());
 					for (unsigned int row = 0; row < this->height(); row++) {
 						for (unsigned int col = 0; col < this->width(); col++) {
@@ -154,25 +178,22 @@ namespace bop {
 					/*
 						Matrix multiplication member operator.
 					*/
-					Vector<T>* temp = new Vector<T>[this->height()];
-					for (unsigned int i = 0; i < this->height(); i++) {
-						temp[i] = Vector<T>(mat.width());
-					}
+					T* temp = new T[this->height() * mat.width()];
 					for (unsigned int row = 0; row < this->height(); row++) {
 						for (unsigned int col = 0; col < mat.width(); col++) {
 							T product = 0;
 							for (unsigned int iter = 0; iter < mat.width(); iter++) {
 								product += this->element(row,iter) * mat.element(iter,col);
 							}
-							temp[row][col] = product;
+							temp[(row * mat.width()) + col] = product;
 							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
 							/*
 								Hack to compensate for small values (e.g. at 10^-16) that
 								are leftover from the silliness of representing numbers as
 								a sequence of bits and the limits of precision.
 							*/
-							temp[row][col] += BOP_MATRIX_DISCARD_BY;
-							temp[row][col] -= BOP_MATRIX_DISCARD_BY;
+							temp[(row * mat.width()) + col] += BOP_MATRIX_DISCARD_BY;
+							temp[(row * mat.width()) + col] -= BOP_MATRIX_DISCARD_BY;
 							#endif
 						}
 					}
@@ -253,7 +274,7 @@ namespace bop {
 				//Information functions
 				
 				inline T& element(unsigned int row, unsigned int col) const {
-					return this->data[row][col];
+					return this->data[(row * this->width()) + col];
 				}
 				
 				inline unsigned int width() const {
@@ -340,9 +361,9 @@ namespace bop {
 				}
 				
 				void impose(Matrix<T>& mat, unsigned int row_off = 0, unsigned int col_off = 0) {
-					for (unsigned int row = 0; row < this->height() && row + row_off < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width() && col + col_off < this->width(); col++) {
-							this->element(row + row_off, col + col_off) = mat.element(row,col);
+					for (unsigned int row = 0; row < mat.height() && row + row_off < this->height(); row++) {
+						for (unsigned int col = 0; col < mat.width() && col + col_off < this->width(); col++) {
+							this->element(row + row_off, col + col_off) = T(mat.element(row,col));
 						}
 					}
 				}

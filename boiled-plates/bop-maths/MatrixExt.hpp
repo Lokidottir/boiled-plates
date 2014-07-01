@@ -108,9 +108,7 @@ namespace bop {
 					/*
 						2 by 2 matrix shortcut.
 					*/
-					T temp = mat[0][0];
-					mat[0][0] = mat[1][1];
-					mat[1][1] = temp;
+					std::swap(mat[1][1], mat[0][0]);
 					mat[0][1] *= -1;
 					mat[1][0] *= -1;
 					mat /= deter;
@@ -143,8 +141,12 @@ namespace bop {
 							Pivot row by it's pivot value, making the pivot value in the
 							Pivot row 1.
 						*/
-						inverse[col] /= mat[col][col];
-						mat[col] /= mat[col][col];
+						T div_temp = mat[col][col];
+						for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
+							inverse[col][div_col] /= div_temp;
+							mat[col][div_col] /= div_temp;
+						}
+						
 						for (unsigned int i = col + 1; i < mat.height(); i++) {
 							if (i == col || static_cast<unsigned int>(mat[i].pivot()) != col) continue;
 							else {
@@ -155,13 +157,18 @@ namespace bop {
 									as 0. Mirror these actions on the to-be inverse Matrix.
 								*/
 								T temp = mat[i][col];
-								
-								mat[col] *= temp;
-								inverse[col] *= temp;
-								mat[i] -= mat[col];
-								inverse[i] -= inverse[col];
-								mat[col] /= temp;
-								inverse[col] /= temp;
+								for (unsigned int multi_col = 0; multi_col < mat.width(); multi_col++) {
+									mat[col][multi_col] *= temp;
+									inverse[col][multi_col] *= temp;
+								}
+								for (unsigned int subt_col = 0; subt_col < mat.width(); subt_col++) {
+									mat[i][subt_col] -= mat[col][subt_col];
+									inverse[i][subt_col] -= inverse[col][subt_col];
+								}
+								for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
+									mat[col][div_col] /= temp;
+									inverse[col][div_col] /= temp;
+								}
 							}
 						}
 					}
@@ -173,12 +180,18 @@ namespace bop {
 								identity matrix.
 							*/
 							if (temp != 0) {
-								mat[col] *= temp;
-								inverse[col] *= temp;
-								mat[sub_row] -= mat[col];
-								inverse[sub_row] -= inverse[col];
-								mat[col] /= temp;
-								inverse[col] /= temp;
+								for (unsigned int multi_col = 0; multi_col < mat.width(); multi_col++) {
+									mat[col][multi_col] *= temp;
+									inverse[col][multi_col] *= temp;
+								}
+								for (unsigned int subt_col = 0; subt_col < mat.width(); subt_col++) {
+									mat[sub_row][subt_col] -= mat[col][subt_col];
+									inverse[sub_row][subt_col] -= inverse[col][subt_col];
+								}
+								for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
+									mat[col][div_col] /= temp;
+									inverse[col][div_col] /= temp;
+								}
 							}
 						}
 					}
