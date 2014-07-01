@@ -21,7 +21,7 @@ namespace bop {
 				unsigned int _width;
 				unsigned int _height;
 				T* data;
-				void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
+				inline void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
 					if (delete_ptr) delete[] this->data;
 					this->_width = width;
 					this->_height = height;
@@ -71,7 +71,7 @@ namespace bop {
 					*/
 					this->setData(width,height,false);
 					for (unsigned int elem = 0; elem < this->width() * this->height(); elem++) {
-						this->element(0,elem);
+						this->data[elem] = fill;
 					}
 				}
 				
@@ -103,10 +103,8 @@ namespace bop {
 						Copy constructor.
 					*/
 					this->setData(mat.width(),mat.height(),false);
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) = mat.element(row,col);
-						}
+					for (unsigned int elem = 0; elem < this->width() * this->height(); elem++) {
+						this->data[elem] = mat.data[elem];
 					}
 				}
 				
@@ -148,7 +146,7 @@ namespace bop {
 						bool same = true;
 						for (unsigned int row = 0; row < this->height() && same; row++) {
 							for (unsigned int col = 0; col < this->width() && same; col++) {
-								same = this->element(row,col) == this->element(row,col);
+								same = this->element(row,col) == mat.element(row,col);
 							}
 						}
 						return same;
@@ -166,10 +164,8 @@ namespace bop {
 						Scalar multiplication member operator, multiplies all
 						elements by the given scalar.
 					*/
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) *= scalar;
-						}
+					for (unsigned int elem = 0; elem < this->height() * this->width(); elem++) {
+						this->data[elem] *= scalar;
 					}
 					return *this;
 				}
@@ -181,20 +177,10 @@ namespace bop {
 					T* temp = new T[this->height() * mat.width()];
 					for (unsigned int row = 0; row < this->height(); row++) {
 						for (unsigned int col = 0; col < mat.width(); col++) {
-							T product = 0;
+							temp[(row * mat.width()) + col] = 0;
 							for (unsigned int iter = 0; iter < mat.width(); iter++) {
-								product += this->element(row,iter) * mat.element(iter,col);
+								temp[(row * mat.width()) + col] += this->element(row,iter) * mat.element(iter,col);
 							}
-							temp[(row * mat.width()) + col] = product;
-							#ifdef BOP_MATRIX_MULTIPLY_DISCARD_TINY
-							/*
-								Hack to compensate for small values (e.g. at 10^-16) that
-								are leftover from the silliness of representing numbers as
-								a sequence of bits and the limits of precision.
-							*/
-							temp[(row * mat.width()) + col] += BOP_MATRIX_DISCARD_BY;
-							temp[(row * mat.width()) + col] -= BOP_MATRIX_DISCARD_BY;
-							#endif
 						}
 					}
 					delete[] this->data;
@@ -236,11 +222,7 @@ namespace bop {
 						by the given scalar.
 					*/
 					if (scalar != 0) {
-						for (unsigned int row = 0; row < this->height(); row++) {
-							for (unsigned int col = 0; col < this->width(); col++) { 
-								this->element(row,col) /= scalar;
-							}
-						}
+						(*this) *= (1/scalar);
 					}
 					return *this;
 				}
@@ -249,10 +231,17 @@ namespace bop {
 					/*
 						Addition member operator, adds all the elements of a
 						given matrix to the matrix.
-					*/	
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) += mat.element(row,col);
+					*/
+					if (this->width() == mat.width() && this->height() == mat.height()) {
+						for (unsigned int elem = 0; elem < this->height() * this->width(); elem++) {
+							this->data[elem] += mat.data[elem];
+						}
+					}
+					else {
+						for (unsigned int row = 0; row < this->height(); row++) {
+							for (unsigned int col = 0; col < this->width(); col++) {
+								this->element(row,col) += mat.element(row,col);
+							}
 						}
 					}
 					return *this;

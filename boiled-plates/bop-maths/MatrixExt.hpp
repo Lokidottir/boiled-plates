@@ -127,7 +127,7 @@ namespace bop {
 							identity column (col) that needs representation. This is
 							the Pivot row.
 						*/
-						for (row_index = col; row_index < mat.height() && static_cast<unsigned int>(mat[row_index].pivot()) != col; row_index++);
+						for (row_index = col; row_index < mat.height() && mat[row_index].pivot() != col; row_index++);
 						/*
 							Simultaneously swap the rows in the given matrix and to-be
 							inverse matrix so that the Pivot row is at the index where
@@ -157,17 +157,9 @@ namespace bop {
 									as 0. Mirror these actions on the to-be inverse Matrix.
 								*/
 								T temp = mat[i][col];
-								for (unsigned int multi_col = 0; multi_col < mat.width(); multi_col++) {
-									mat[col][multi_col] *= temp;
-									inverse[col][multi_col] *= temp;
-								}
-								for (unsigned int subt_col = 0; subt_col < mat.width(); subt_col++) {
-									mat[i][subt_col] -= mat[col][subt_col];
-									inverse[i][subt_col] -= inverse[col][subt_col];
-								}
-								for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
-									mat[col][div_col] /= temp;
-									inverse[col][div_col] /= temp;
+								for (unsigned int elem = 0; elem < mat.width(); elem++) {
+									mat[i][elem] -= mat[col][elem] * temp;
+									inverse[i][elem] -= inverse[col][elem] * temp;
 								}
 							}
 						}
@@ -180,17 +172,9 @@ namespace bop {
 								identity matrix.
 							*/
 							if (temp != 0) {
-								for (unsigned int multi_col = 0; multi_col < mat.width(); multi_col++) {
-									mat[col][multi_col] *= temp;
-									inverse[col][multi_col] *= temp;
-								}
-								for (unsigned int subt_col = 0; subt_col < mat.width(); subt_col++) {
-									mat[sub_row][subt_col] -= mat[col][subt_col];
-									inverse[sub_row][subt_col] -= inverse[col][subt_col];
-								}
-								for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
-									mat[col][div_col] /= temp;
-									inverse[col][div_col] /= temp;
+								for (unsigned int elem = 0; elem < mat.width(); elem++) {
+									mat[sub_row][elem] -= mat[col][elem] * temp;
+									inverse[sub_row][elem] -= inverse[col][elem] * temp;
 								}
 							}
 						}
