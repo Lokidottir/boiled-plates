@@ -21,6 +21,7 @@ namespace bop {
 				unsigned int _width;
 				unsigned int _height;
 				T* data;
+				
 				inline void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
 					if (delete_ptr) delete[] this->data;
 					this->_width = width;
@@ -425,6 +426,12 @@ namespace bop {
 			Matrix<T> mat_sum(mat1);
 			mat_sum -= mat2;
 			return mat_sum;
+		}
+		
+		template <class T>
+		std::ostream& operator<< (std::ostream& stream, Matrix<T>& mat) {
+			stream << mat.string();
+			return stream;
 		}
 	}
 }
