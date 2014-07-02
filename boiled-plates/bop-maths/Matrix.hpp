@@ -81,7 +81,8 @@ namespace bop {
 					*/
 				}
 				
-				Matrix(std::initializer_list< std::initializer_list<T> > list) : Matrix() {
+				template<class A>
+				Matrix(std::initializer_list< std::initializer_list<A> > list) : Matrix() {
 					/*
 						Creates a matrix from a 2-dimensional initializer_list.
 					*/
@@ -98,7 +99,8 @@ namespace bop {
 					}
 				}
 				
-				Matrix(Matrix<T>& mat) : Matrix() {
+				template<class A>
+				Matrix(Matrix<A>& mat) : Matrix() {
 					/*
 						Copy constructor.
 					*/
@@ -252,12 +254,27 @@ namespace bop {
 						Subtraction member operator, subtracts the value of
 						each element in a given matrix from the matrix.
 					*/
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) -= mat.element(row,col);
+					if (this->width() == mat.width() && this->height() == mat.height()) {
+						for (unsigned int elem = 0; elem < this->height() * this->width(); elem++) {
+							this->data[elem] -= mat.data[elem];
+						}
+					}
+					else {
+						for (unsigned int row = 0; row < this->height(); row++) {
+							for (unsigned int col = 0; col < this->width(); col++) {
+								this->element(row,col) -= mat.element(row,col);
+							}
 						}
 					}
 					return *this;
+				}
+				
+				Matrix<T> operator- () {
+					Matrix<T> mat(*this);
+					for (unsigned int elem = 0; elem < this->width() * this->height(); elem++) {
+						mat.data[elem] *= -1;
+					}
+					return mat;
 				}
 				
 				//Information functions
@@ -352,16 +369,24 @@ namespace bop {
 				void impose(Matrix<T>& mat, unsigned int row_off = 0, unsigned int col_off = 0) {
 					for (unsigned int row = 0; row < mat.height() && row + row_off < this->height(); row++) {
 						for (unsigned int col = 0; col < mat.width() && col + col_off < this->width(); col++) {
-							this->element(row + row_off, col + col_off) = T(mat.element(row,col));
+							this->element(row + row_off, col + col_off) = mat.element(row,col);
 						}
+					}
+				}
+				
+				void impose(Vector<T>& vec, unsigned int row_off = 0, unsigned int col_off = 0) {
+					for (unsigned int col = 0; col < vec.size() && col + col_off < this->width(); col++) {
+						this->element(row_off, col + col_off) = vec[col];
 					}
 				}
 		};
 		
+		typedef Matrix<BOP_MATHS_DEFAULT_TYPE> matrix;
+		
 		//External arithmetic overloads
 		
-		template<class T>
-		Matrix<T> operator* (Matrix<T> &mat, const T scalar) {
+		template<class T, class A>
+		Matrix<T> operator* (Matrix<T> &mat, const A scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p *= scalar;
 			return mat_p;
@@ -381,8 +406,8 @@ namespace bop {
 			return vec_p;
 		}
 		
-		template<class T>
-		Matrix<T> operator/ (Matrix<T> &mat, const T scalar) {
+		template<class T, class A>
+		Matrix<T> operator/ (Matrix<T> &mat, const A scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p /= scalar;
 			return mat_p;

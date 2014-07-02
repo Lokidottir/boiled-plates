@@ -80,10 +80,22 @@ void bop_bench_impose() {
 	mat1.impose(mat2);
 }
 
+void bop_bench_impose_vec() {
+	static Matrix<double> mat = {{2,2,2},{3,4,5},{1,1,2}};
+	static Vector<double> vec = {3,3,-1};
+	mat.impose(vec);
+}
+
 void bop_bench_compare() {
 	static Matrix<double> mat1 = identityMatrix<double>(3);
 	static Matrix<double> mat2 = identityMatrix<double>(3);
 	mat1 == mat2;
+}
+
+void bop_bench_swap() {
+	static Matrix<double> mat1 = identityMatrix(3);
+	static Matrix<double> mat2 = identityMatrix(3);
+	std::swap(mat1,mat2);
 }
 
 int mat_tests() {
@@ -104,6 +116,9 @@ int mat_tests() {
 	std::cout << "Matrix scalar division: " << gist::benchmark(TEST_COUNT, bop_bench_scalar_div) << std::endl;
 	std::cout << "Matrix (2x2) imposition on (3x3): " << gist::benchmark(TEST_COUNT, bop_bench_scalar_div) << std::endl;
 	std::cout << "Matrix comparison (2 units): " << gist::benchmark(TEST_COUNT, bop_bench_compare) << std::endl;
+	std::cout << "Matrix on matrix imposition: " << gist::benchmark(TEST_COUNT, bop_bench_impose) << std::endl;
+	std::cout << "Vector on matrix imposition: " << gist::benchmark(TEST_COUNT, bop_bench_impose_vec) << std::endl;
+	std::cout << "Matrix swap: " << gist::benchmark(TEST_COUNT, bop_bench_swap) << std::endl;
 	return 0;
 }
 

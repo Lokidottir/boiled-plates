@@ -226,6 +226,18 @@ namespace bop {
 					return *this;
 				}
 				
+				Vector<T> operator- () {
+					/*
+						Member negation operator, returns a vector identical to
+						the vector but with all elements multiplied by -1.
+					*/
+					Vector<T> vec(*this);
+					for (unsigned int elem = 0; elem < vec.size(); elem++) {
+						vec[elem] *= -1;
+					}
+					return vec;
+				}
+				
 				//Vector information functions
 				
 				int pivot(bool recalc = true) {
@@ -316,6 +328,8 @@ namespace bop {
 					}
 				}
 		};
+		
+		typedef Vector<double> vector;
 		
 		/*
 			External arithmetic operators, return a vector separate from

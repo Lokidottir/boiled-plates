@@ -12,7 +12,7 @@ namespace bop {
 	namespace maths{
 		//Matrix related functions
 		template<class T>
-		T det(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
+		inline T det(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
 			/*
 				Recursive matrix determinant function.
 			*/
@@ -52,7 +52,7 @@ namespace bop {
 		}
 		
 		template<class T>
-		T det(Matrix<T>& mat) {
+		inline T det(Matrix<T>& mat) {
 			/*
 				Matrix determinant init function.
 			*/
@@ -79,7 +79,7 @@ namespace bop {
 			}
 		}
 		
-		template<class T>
+		template<class T = BOP_MATHS_DEFAULT_TYPE>
 		Matrix<T> identityMatrix(unsigned int size) {
 			/*
 				Returns an Identity Matrix.
@@ -91,10 +91,26 @@ namespace bop {
 			return unit_m;
 		}
 		
+		template<class T = BOP_MATHS_DEFAULT_TYPE>
+		Matrix<T> identityMatrix(unsigned int width, unsigned int height) {
+			/*
+				Returns an Identity Matrix.
+			*/
+			Matrix<T> unit_m(width, height);
+			for (unsigned int i = 0; i < width && i < height; i++) {
+				unit_m[i][i] = 1;
+			}
+			return unit_m;
+		}
+		
+		template <class T = BOP_MATHS_DEFAULT_TYPE>
+		Matrix<T> identityMatrix(Matrix<T>& mat) {
+			return identityMatrix<T>(mat.width(), mat.height());
+		}
 		
 		template<class T>
-		bool invertable(Matrix<T> &mat) {
-			return (mat.square() && det(mat) != 0);
+		bool invertable(Matrix<T>& mat) {
+			return (det(mat) != 0);
 		}
 		
 		template<class T>
@@ -148,7 +164,7 @@ namespace bop {
 						}
 						
 						for (unsigned int i = col + 1; i < mat.height(); i++) {
-							if (i == col || static_cast<unsigned int>(mat[i].pivot()) != col) continue;
+							if (i == col || mat[i].pivot() != col) continue;
 							else {
 								/*
 									For each row in the matrix with a pivot index identical to
@@ -171,12 +187,11 @@ namespace bop {
 								Now the matrix is in row echelon form, reduce it to an 
 								identity matrix.
 							*/
-							if (temp != 0) {
-								for (unsigned int elem = 0; elem < mat.width(); elem++) {
-									mat[sub_row][elem] -= mat[col][elem] * temp;
-									inverse[sub_row][elem] -= inverse[col][elem] * temp;
-								}
+							for (unsigned int elem = 0; elem < mat.width(); elem++) {
+								mat[sub_row][elem] -= mat[col][elem] * temp;
+								inverse[sub_row][elem] -= inverse[col][elem] * temp;
 							}
+							
 						}
 					}
 					return inverse;
@@ -204,16 +219,19 @@ namespace bop {
 			return trans;
 		}
 		
-		template<class T>
+		template<class T = BOP_MATHS_DEFAULT_TYPE>
 		Matrix<T> rotationMatrix(double angle, unsigned int size = 2, bool clockwise = false, bool rads = false) {
 			/*
 				Generates a rotation matrix for the angle and size given.
 			*/
-			if (clockwise) angle -= 180;
-			if (!rads) angle = ((pi()/180.0) * angle); //Convert the degrees to radiens
+			
+			if (!rads) {
+				if (clockwise) angle -= 180;
+				angle = ((pi()/180.0) * angle); //Convert the degrees to radiens
+			}
 			if (size == 2) {
-				Matrix<T> rotmat = {{cos(angle), -sin(angle)},
-									{sin(angle), cos(angle)}};
+				Matrix<T> rotmat = {{static_cast<T>(cos(angle)), static_cast<T>(-sin(angle))},
+									{static_cast<T>(sin(angle)), static_cast<T>(cos(angle))}};
 				return rotmat;
 			}
 			else {
