@@ -365,7 +365,9 @@ namespace bop {
 						it as an identity matrix.
 					*/
 					for (unsigned int elem = 0; elem < this->width() && elem < this->height(); elem++) {
-						LU_pair.second[elem][elem] = 1;
+						for () {
+							LU_pair.second[elem][elem];
+						}
 					}
 					/*
 						With the matrices initialised, the Upper matrix to-be needs to be reduced, 

@@ -1,6 +1,12 @@
 # Auto detect text files and perform LF normalization
 * text=auto
 
+#we have to force these?
+*.c text
+*.cpp text
+*.h text
+*.hpp text
+
 # Custom for Visual Studio
 *.cs     diff=csharp
 *.sln    merge=union
