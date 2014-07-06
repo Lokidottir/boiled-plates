@@ -2,10 +2,10 @@
 * text=auto
 
 #we have to force these?
-*.c text
-*.cpp text
-*.h text
-*.hpp text
+*.c diff
+*.cpp diff
+*.h diff
+*.hpp diff
 
 # Custom for Visual Studio
 *.cs     diff=csharp
