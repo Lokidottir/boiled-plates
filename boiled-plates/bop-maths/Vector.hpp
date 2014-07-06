@@ -121,16 +121,20 @@ namespace bop {
 					/*
 						Copy assignment, synonymous to the copy constructor.
 					*/
+					if (this->size() < vec.size()) {
+						delete[] this->data;
+						this->data = new T[this->width];
+					}
 					this->width = vec.width;
 					this->pivot_index = vec.pivot_index;
-					this->data = new T[this->width];
 					for (unsigned int i = 0; i < this->width; i++) {
 						this->data[i] = vec.data[i];
 					}
 					return *this;
 				}
 				
-				Vector<T>& operator= (std::initializer_list<T> list) {
+				template<class A>
+				Vector<T>& operator= (std::initializer_list<A> list) {
 					/*
 						Initializer list assignment operator, synonymous
 						with the constructor that takes the same argument.
@@ -287,6 +291,14 @@ namespace bop {
 					}
 					if (brackets) vec_str << ")";
 					return vec_str.str();
+				}
+				
+				T mag() {
+					T magnitude = 0;
+					for (unsigned int elem = 0; elem < this->size(); elem++) {
+						magnitude += (*this)[elem] * (*this)[elem];
+					}
+					return static_cast<T>(sqrt(magnitude));
 				}
 				
 				/*

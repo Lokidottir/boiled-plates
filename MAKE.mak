@@ -5,7 +5,7 @@ CC_FLAGS=-static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
 3RDPARTY_LIBS=
 LD=-Iboiled-plates
 
-all: maths-test mat-benchmark lin-matrix
+all: maths-test mat-benchmark
 
 maths-test: 
 	$(CC) $(CC_FLAGS) bop-tests/test_maths.cpp -o maths-test $(LD)

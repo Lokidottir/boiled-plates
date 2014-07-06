@@ -64,17 +64,45 @@ namespace bop {
 					return (mat[0][0] * mat[1][1]) - (mat[0][1] * mat[1][0]);
 				}
 				else {
-					Vector<bool> allowed_cols(mat.width(), true);
-					T product = 0;
-					T multi = 1;
-					unsigned int size = mat.height() - 1;
-					for (unsigned int i = 0; i < mat.width(); i++) {
-						allowed_cols[i] = false;
-						product += (multi * (mat[0][i] * det(mat, allowed_cols, size)));
-						multi *= -1;
-						allowed_cols[i] = true;
+					/*
+						Complexity comparison between LU decomposition and 
+						recursive determinant methods.
+					*/
+					/*
+					if (factorial(mat.width()) < pow(mat.width(),2.376)) {
+					*/
+					if (mat.width() < 5) {
+						Vector<bool> allowed_cols(mat.width(), true);
+						T product = 0;
+						T multi = 1;
+						unsigned int size = mat.height() - 1;
+						for (unsigned int i = 0; i < mat.width(); i++) {
+							if (mat[0][i] != 0) {
+								allowed_cols[i] = false;
+								product += (multi * (mat[0][i] * det(mat, allowed_cols, size)));
+								multi *= -1;
+								allowed_cols[i] = true;
+							}
+						}
+						return product;
 					}
-					return product;
+					else {
+						/*
+							As we are simply finding the product of the pivots
+							on an upper triangular matrix, we can generate just
+							the upper matrix as the determinant of the lower matrix
+							is always one, and the product of the lower and upper
+							matrix determinants is equal to the determinant of the
+							original matrix.
+						*/
+						Matrix<T> upper(mat);
+						for (unsigned int row = 1; row < mat.height(); row++) {
+							
+						}
+						T deter = 1;
+						for (unsigned int elem = 0; elem < mat.height(); elem++) deter *= mat[elem][elem];
+						return deter;
+					}
 				}
 			}
 		}
@@ -191,7 +219,6 @@ namespace bop {
 								mat[sub_row][elem] -= mat[col][elem] * temp;
 								inverse[sub_row][elem] -= inverse[col][elem] * temp;
 							}
-							
 						}
 					}
 					return inverse;

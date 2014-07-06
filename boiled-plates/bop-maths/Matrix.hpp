@@ -128,8 +128,12 @@ namespace bop {
 				}
 				
 				//Operator overloads
+				#ifndef BOP_MATHS_MATRIX_MT_COMPAT_INDEX
 				inline MatrixIndexHandler& operator[] (const unsigned int index) {
-					this->handler.temp_index = index;
+				#else
+				inline MatrixIndexHandler operator[] (const unsigned int index) {
+				#endif
+				this->handler.temp_index = index;
 					return this->handler;
 				}
 				
@@ -351,6 +355,26 @@ namespace bop {
 						behaviour.
 					*/
 					return this->valid();
+				}
+				
+				std::pair< Matrix<T>, Matrix<T> > LU() {
+					std::pair< Matrix<T>,  Matrix<T> > LU_pair(Matrix<T>(*this), Matrix<T>(this->width(), this->height()));
+					/*
+						Setting up the first element of the pair as the Upper matrix by copying this
+						matrix into it, and the second element as the Lower matrix by initialising
+						it as an identity matrix.
+					*/
+					for (unsigned int elem = 0; elem < this->width() && elem < this->height(); elem++) {
+						LU_pair.second[elem][elem] = 1;
+					}
+					/*
+						With the matrices initialised, the Upper matrix to-be needs to be reduced, 
+						with the scalar of each row reduction placed in the Lower matrix.
+					*/
+					for (unsigned int ind_col = 0; ind_col < this->width() && ind_col < this->height(); ind_col++) {
+						
+					}
+					return LU_pair;
 				}
 				
 				//Matrix manipulation functions.
