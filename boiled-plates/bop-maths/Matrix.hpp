@@ -23,10 +23,12 @@ namespace bop {
 				T* data;
 				
 				inline void setData(unsigned int width, unsigned int height, bool delete_ptr = true) {
-					if (delete_ptr) delete[] this->data;
+					if (this->data == nullptr || (delete_ptr && (width * height) > (this->width() * this->height()))) {
+						delete[] this->data;
+						this->data = new T[width * height];
+					}
 					this->_width = width;
 					this->_height = height;
-					this->data = new T[width * height];
 				}
 				
 				class MatrixIndexHandler {
@@ -100,15 +102,12 @@ namespace bop {
 					}
 				}
 				
-				template<class A>
-				Matrix(Matrix<A>& mat) : Matrix() {
+				Matrix(Matrix<T>& mat) : Matrix() {
 					/*
 						Copy constructor.
 					*/
 					this->setData(mat.width(),mat.height(),false);
-					for (unsigned int elem = 0; elem < this->width() * this->height(); elem++) {
-						this->data[elem] = mat.data[elem];
-					}
+					memcpy(this->data, mat.data, mat.width() * mat.height() * sizeof(T));
 				}
 				
 				Matrix(Matrix<T>&& mat) : Matrix() {
@@ -139,11 +138,7 @@ namespace bop {
 				
 				Matrix<T>& operator= (const Matrix<T>& mat) {
 					this->setData(mat.width(), mat.height());
-					for (unsigned int row = 0; row < this->height(); row++) {
-						for (unsigned int col = 0; col < this->width(); col++) {
-							this->element(row,col) = mat.element(row,col);
-						}
-					}
+					memcpy(this->data, mat.data, this->width() * this->height() * sizeof(T));
 					return *this;
 				}
 				

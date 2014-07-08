@@ -1,6 +1,7 @@
 #ifndef BOP_VECTOR_HPP
 #define BOP_VECTOR_HPP
 
+#include <cstring>
 #include <initializer_list>
 #include <string>
 #include <sstream>
@@ -51,6 +52,7 @@ namespace bop {
 					}
 				}
 				
+				
 				Vector(std::initializer_list<T> list) : Vector() {
 					/*
 						Creates a new Vector from an initializer list.
@@ -61,8 +63,8 @@ namespace bop {
 					this->pivot_index = -1;
 					this->data = new T[this->width];
 					int i = 0;
-					for (T elem : list) {
-						this->data[i] = elem;
+					for (auto elem : list) {
+						this->data[i] = static_cast<T>(elem);
 						if (this->pivot_index < 0 && elem != 0) {
 							this->pivot_index = i;
 						}
@@ -78,9 +80,7 @@ namespace bop {
 					this->width = vec.width;
 					this->pivot_index = vec.pivot_index;
 					this->data = new T[this->width];
-					for (unsigned int i = 0; i < this->width; i++) {
-						this->data[i] = vec.data[i];
-					}
+					memcpy(this->data, vec.data, vec.size() * sizeof(T));
 				}
 				
 				Vector(Vector<T>&& vec) : Vector() {
@@ -119,13 +119,17 @@ namespace bop {
 					return this->data[index];
 				}
 				
-				Vector<T>& operator= (Vector<T> vec) {
+				Vector<T>& operator= (const Vector<T>& vec) {
 					/*
 						Copy assignment, synonymous to the copy constructor.
 					*/
-					std::swap(this->data,vec.data);
-					std::swap(this->pivot_index,vec.pivot_index);
-					std::swap(this->width,vec.width);
+					if (this->size() < vec.size() || !this->valid()) {
+						delete[] this->data;
+						this->data = new T[vec.size()];
+					}
+					memcpy(this->data, vec.data, vec.size() * sizeof(T));
+					this->pivot_index = vec.pivot_index;
+					this->width = vec.width;
 					return *this;
 				}
 				
@@ -141,7 +145,7 @@ namespace bop {
 					this->data = new T[this->width];
 					int i = 0;
 					for (T elem : list) {
-						this->data[i] = elem;
+						this->data[i] = static_cast<T>(elem);
 						if (this->pivot_index < 0 && elem != 0) {
 							this->pivot_index = i;
 						}
