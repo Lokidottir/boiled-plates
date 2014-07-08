@@ -74,12 +74,6 @@ int testVectors() {
 	std::cout << vec_toimp << std::endl;
 	Vector<double> vec_invalid;
 	std::cout << "The validity of a vector constructed with no values is " << bool(vec_invalid) << std::endl;
-	Vector<double> vec_destruct = {3,5,7};
-	std::cout << "vector validity pre-destruct: " << bool(vec_destruct) << std::endl;
-	vec_destruct.~Vector();
-	std::cout << "vector validity post-destruct: " << bool(vec_destruct) << std::endl;
-	
-	std::swap(vec_oth, vec_size);
 	return 0;
 }
 

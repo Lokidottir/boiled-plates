@@ -14,8 +14,7 @@ mat-benchmark:
 	$(CC) $(CC_FLAGS) bop-tests/matrix_benchmark.cpp -o mat-benchmark $(LD)
 	$(CC) $(CC_FLAGS) -O3 bop-tests/matrix_benchmark.cpp -o mat-benchmark-opti $(LD)
 
-lin-matrix:
-	$(CC) $(CC_FLAGS) bop-tests/sq_to_lin_mapping.cpp -o lin-matrix $(LD)
-	$(CC) $(CC_FLAGS) -O3 bop-tests/sq_to_lin_mapping.cpp -o lin-matrix-opti $(LD)
-
 clean:
+	rm maths-test
+	rm mat-benchmark
+	rm mat-benchmark-opti

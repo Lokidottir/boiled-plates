@@ -5,6 +5,7 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <utility>
 /*
 	bop::maths::Vector Class file
 */
@@ -36,7 +37,7 @@ namespace bop {
 			public:
 				T* data;
 				//Constructors
-				Vector(unsigned int size, T fill = 0) {
+				Vector(unsigned int size, T fill = 0) : Vector() {
 					/*
 						Creates a new vector of a given width, setting each
 						element as a given default.
@@ -50,7 +51,7 @@ namespace bop {
 					}
 				}
 				
-				Vector(std::initializer_list<T> list) {
+				Vector(std::initializer_list<T> list) : Vector() {
 					/*
 						Creates a new Vector from an initializer list.
 						----pivot_index is determined during construction.
@@ -69,7 +70,7 @@ namespace bop {
 					}
 				}
 				
-				Vector(const Vector<T>& vec) {
+				Vector(const Vector<T>& vec) : Vector() {
 					/*
 						Creates a new Vector from a Vector, a copy constructor.
 						----copies all data from the Vector, incl. deep copy of data array pointer.
@@ -82,29 +83,30 @@ namespace bop {
 					}
 				}
 				
-				Vector(Vector<T>&& vec) {
+				Vector(Vector<T>&& vec) : Vector() {
 					/*
 						Move constructor.
 					*/
 					this->width = vec.width;
 					this->pivot_index = vec.pivot_index;
-					this->data = vec.data;
-					vec.data = NULL;
+					std::swap(this->data, vec.data);
 				}
 				
 				Vector() {
 					/*
 						Empty constructor.
 					*/
-					this->data = NULL;
+					this->data = nullptr;
+					this->pivot_index = 0;
+					this->zero = 0;
+					this->width = 0;
 				}
 				
 				//Destructor
 				
 				~Vector() {
 					//Manual deletion of data array.
-					delete[] this->data;
-					this->data = NULL;
+					if (this->data != nullptr) delete[] this->data;
 				}
 				
 				//Operator Overloads
@@ -117,19 +119,13 @@ namespace bop {
 					return this->data[index];
 				}
 				
-				Vector<T>& operator= (const Vector<T>& vec) {
+				Vector<T>& operator= (Vector<T> vec) {
 					/*
 						Copy assignment, synonymous to the copy constructor.
 					*/
-					if (this->size() < vec.size()) {
-						delete[] this->data;
-						this->data = new T[this->width];
-					}
-					this->width = vec.width;
-					this->pivot_index = vec.pivot_index;
-					for (unsigned int i = 0; i < this->width; i++) {
-						this->data[i] = vec.data[i];
-					}
+					std::swap(this->data,vec.data);
+					std::swap(this->pivot_index,vec.pivot_index);
+					std::swap(this->width,vec.width);
 					return *this;
 				}
 				
@@ -267,7 +263,7 @@ namespace bop {
 				
 				inline bool valid() const {
 					//Vector's validity determined by the pointer's value.
-					return (this->data != NULL);
+					return (this->data != nullptr);
 				}
 				
 				operator bool() const {
@@ -284,12 +280,14 @@ namespace bop {
 						in a human-readable format.
 					*/
 					std::ostringstream vec_str;
-					if (brackets) vec_str << "(";
-					for (unsigned int i = 0; i < this->width; i++) {
-						vec_str << this->data[i];
-						if (i + 1 < this->width) vec_str << ',';
+					if (this->valid()) {
+						if (brackets) vec_str << "(";
+						for (unsigned int i = 0; i < this->width; i++) {
+							vec_str << this->data[i];
+							if (i + 1 < this->width) vec_str << ',';
+						}
+						if (brackets) vec_str << ")";
 					}
-					if (brackets) vec_str << ")";
 					return vec_str.str();
 				}
 				
@@ -340,6 +338,7 @@ namespace bop {
 					}
 				}
 		};
+		
 		
 		typedef Vector<double> vector;
 		

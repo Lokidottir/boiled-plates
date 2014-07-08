@@ -62,7 +62,7 @@ namespace bop {
 					/*
 						Empty constructor.
 					*/
-					this->data = NULL;
+					this->data = nullptr;
 				}
 				
 				Matrix(unsigned int width, unsigned int height, T fill = 0) : Matrix() {
@@ -118,13 +118,13 @@ namespace bop {
 					this->_width = mat._width;
 					this->_height = mat._height;
 					this->data = mat.data;
-					mat.data = NULL;
+					mat.data = nullptr;
 				}
 				
 				//Destructor
 				~Matrix() {
 					delete[] this->data;
-					this->data = NULL;
+					this->data = nullptr;
 				}
 				
 				//Operator overloads
@@ -346,7 +346,7 @@ namespace bop {
 				
 				inline bool valid() const {
 					//Matrix validity determined by the pointer's value.
-					return (this->data != NULL);
+					return (this->data != nullptr);
 				}
 				
 				operator bool() const {
@@ -365,9 +365,7 @@ namespace bop {
 						it as an identity matrix.
 					*/
 					for (unsigned int elem = 0; elem < this->width() && elem < this->height(); elem++) {
-						for () {
-							LU_pair.second[elem][elem];
-						}
+						LU_pair.second[elem][elem] = 1;	
 					}
 					/*
 						With the matrices initialised, the Upper matrix to-be needs to be reduced, 
