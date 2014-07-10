@@ -157,11 +157,15 @@ int testMatrices() {
 	Matrix<double> matrot_1 = rotationMatrix<double>(90, 2);
 	std::cout << "A rotation matrix for 90 degrees:\n" << matrot_1.string() << std::endl;
 	Matrix<double> matrot_2 = { {2,5},
-							{4,7}};
+								{4,7}};
 	Vector<double> vec1 = {4,6};
 	matrot_1 *= vec1;
 	matrot_2 *= matrot_1;
 	std::cout << "when applied to matrix" << std::endl << matrot_2.string() << "yeilds" << std::endl << (matrot_2 * matrot_1).string() << "and applied to vector " << vec1.string() << " yeilds " << (matrot_1 * vec1).string() << std::endl;
+	
+	Matrix<double> mat_LU = {{3,4,5},{1,7,2},{6,6,13}};
+	auto LU_decomp = mat_LU.decompose();
+	std::cout << "the matrix:\n" << mat_LU.string() << "has the LU decomposition of\n" << LU_decomp.lower.string() << "and\n" << LU_decomp.upper.string() << std::endl; 
 	
 	return 0;
 }
