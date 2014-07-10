@@ -13,6 +13,11 @@
 
 namespace bop {
 	namespace maths {
+		#ifndef BOP_MATHS_DEFAULT_TYPES
+		#define BOP_MATHS_DEFAULT_TYPES
+		typedef double prec_type;
+		typedef uint64_t uint_type;
+		#endif
 		template<class T>
 		class Matrix;
 		template<class T>
@@ -32,13 +37,13 @@ namespace bop {
 					return this->zero;
 				}
 				
-				unsigned int width;
+				uint_type width;
 				int pivot_index;
 				
 			public:
 				T* data;
 				//Constructors
-				Vector(unsigned int size, T fill = 0) : Vector() {
+				Vector(uint_type size, T fill = 0) : Vector() {
 					/*
 						Creates a new vector of a given width, setting each
 						element as a given default.
@@ -47,7 +52,7 @@ namespace bop {
 					this->pivot_index = -1;
 					this->data = new T[size];
 					this->width = size;
-					for (unsigned int i = 0; i < this->width; i++) {
+					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] = fill;
 					}
 				}
@@ -111,7 +116,7 @@ namespace bop {
 				
 				//Operator Overloads
 				
-				inline T& operator[] (const unsigned int index) const {
+				inline T& operator[] (const uint_type index) const {
 					/*
 						Index operator, returns the data at the given index.
 						----synonymous to Vector::data[const unsigned int]
@@ -163,7 +168,7 @@ namespace bop {
 							an array there isn't much choice.
 						*/
 						bool same = true;
-						for (unsigned int i = 0; i < this->width && same; i++) {
+						for (uint_type i = 0; i < this->width && same; i++) {
 							same = (this->data[i] == vec.data[i]);
 						}
 						return same;
@@ -183,7 +188,7 @@ namespace bop {
 						elements in a vector by the given scalar.
 					*/
 					if (scalar == 0) return *this;
-					for (unsigned int i = 0; i < this->width; i++) {
+					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] *= scalar;
 					}
 					return *this;
@@ -196,7 +201,7 @@ namespace bop {
 						----synonymous with "vec *= 1/scalar"
 					*/
 					if (scalar == 0) return *this;
-					for (unsigned int i = 0; i < this->width; i++) {
+					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] /= scalar;
 					}
 					return *this;
@@ -209,7 +214,7 @@ namespace bop {
 						corresponding elements of a subject vector.
 						----sets the pivot as needing to be recalculated.
 					*/
-					for (unsigned int i = 0; i < this->width; i++) {
+					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] += vec[i];
 					}
 					this->pivot_index = -1;
@@ -223,7 +228,7 @@ namespace bop {
 						a subject vector.
 						----sets the pivot as needing to be recalculated.
 					*/
-					for (unsigned int i = 0; i < this->width; i++) {
+					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] -= vec[i];
 					}
 					this->pivot_index = -1;
@@ -236,7 +241,7 @@ namespace bop {
 						the vector but with all elements multiplied by -1.
 					*/
 					Vector<T> vec(*this);
-					for (unsigned int elem = 0; elem < vec.size(); elem++) {
+					for (uint_type elem = 0; elem < vec.size(); elem++) {
 						vec[elem] *= -1;
 					}
 					return vec;
@@ -251,14 +256,14 @@ namespace bop {
 					*/
 					if (recalc || this->pivot_index < 0) {
 						this->pivot_index = -1;
-						for (unsigned int i = 0; i < this->width && this->pivot_index < 0; i++) {
+						for (uint_type i = 0; i < this->width && this->pivot_index < 0; i++) {
 							if (this->data[i] != 0) this->pivot_index = i;
 						}
 					}
 					return this->pivot_index;
 				}
 				
-				unsigned int size() const {
+				uint_type size() const {
 					/*
 						Returns the width of the vector.
 					*/
@@ -286,7 +291,7 @@ namespace bop {
 					std::ostringstream vec_str;
 					if (this->valid()) {
 						if (brackets) vec_str << "(";
-						for (unsigned int i = 0; i < this->width; i++) {
+						for (uint_type i = 0; i < this->width; i++) {
 							vec_str << this->data[i];
 							if (i + 1 < this->width) vec_str << ',';
 						}
@@ -297,7 +302,7 @@ namespace bop {
 				
 				T mag() {
 					T magnitude = 0;
-					for (unsigned int elem = 0; elem < this->size(); elem++) {
+					for (uint_type elem = 0; elem < this->size(); elem++) {
 						magnitude += (*this)[elem] * (*this)[elem];
 					}
 					return static_cast<T>(sqrt(magnitude));
@@ -336,8 +341,8 @@ namespace bop {
 					as Gauss-Jordan elimination, or whatever else may be in need
 					of the swapping of Vectors.
 				*/
-				void impose(Vector<T>& vec, unsigned int offset = 0) {
-					for (unsigned int i = 0; i < vec.width && i + offset < this->width; i++) {
+				void impose(Vector<T>& vec, uint_type offset = 0) {
+					for (uint_type i = 0; i < vec.width && i + offset < this->width; i++) {
 						this->data[i + offset] = vec[i];
 					}
 				}

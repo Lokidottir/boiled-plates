@@ -10,16 +10,21 @@
 
 namespace bop {
 	namespace maths{
+		#ifndef BOP_MATHS_DEFAULT_TYPES
+		#define BOP_MATHS_DEFAULT_TYPES
+		typedef double prec_type;
+		typedef uint64_t uint_type;
+		#endif
 		//Matrix related functions
 		template<class T>
-		inline T det(Matrix<T>& mat, Vector<bool>& allowed_cols, unsigned int& size) {
+		inline T det(Matrix<T>& mat, Vector<bool>& allowed_cols, uint_type& size) {
 			/*
 				Recursive matrix determinant function.
 			*/
 			if (size == 2) {
 				//the  base case, finding the 2 by 2 matrix determinant
 				int c1 = -1, c2 = -1;
-				for (unsigned int i = 0; i < mat.width(); i++) {
+				for (uint_type i = 0; i < mat.width(); i++) {
 					if (allowed_cols[i]) {
 						if (c1 < 0) {
 							c1 = i;
@@ -36,7 +41,7 @@ namespace bop {
 				size--;
 				T product = 0;
 				T multi = 1;
-				for (unsigned int i = 0; i < mat.width(); i++) {
+				for (uint_type i = 0; i < mat.width(); i++) {
 					if (!allowed_cols[i]) continue;
 					else {
 						allowed_cols[i] = false;
@@ -75,8 +80,8 @@ namespace bop {
 						Vector<bool> allowed_cols(mat.width(), true);
 						T product = 0;
 						T multi = 1;
-						unsigned int size = mat.height() - 1;
-						for (unsigned int i = 0; i < mat.width(); i++) {
+						uint_type size = mat.height() - 1;
+						for (uint_type i = 0; i < mat.width(); i++) {
 							if (mat[0][i] != 0) {
 								allowed_cols[i] = false;
 								product += (multi * (mat[0][i] * det(mat, allowed_cols, size)));
@@ -96,42 +101,42 @@ namespace bop {
 							original matrix.
 						*/
 						Matrix<T> upper(mat);
-						for (unsigned int row = 1; row < mat.height(); row++) {
+						for (uint_type row = 1; row < mat.height(); row++) {
 							
 						}
 						T deter = 1;
-						for (unsigned int elem = 0; elem < mat.height(); elem++) deter *= mat[elem][elem];
+						for (uint_type elem = 0; elem < mat.height(); elem++) deter *= mat[elem][elem];
 						return deter;
 					}
 				}
 			}
 		}
 		
-		template<class T = BOP_MATHS_DEFAULT_TYPE>
-		Matrix<T> identityMatrix(unsigned int size) {
+		template<class T = prec_type>
+		Matrix<T> identityMatrix(uint_type size) {
 			/*
 				Returns an Identity Matrix.
 			*/
 			Matrix<T> unit_m(size);
-			for (unsigned int i = 0; i < size; i++) {
+			for (uint_type i = 0; i < size; i++) {
 				unit_m[i][i] = 1;
 			}
 			return unit_m;
 		}
 		
-		template<class T = BOP_MATHS_DEFAULT_TYPE>
-		Matrix<T> identityMatrix(unsigned int width, unsigned int height) {
+		template<class T = prec_type>
+		Matrix<T> identityMatrix(uint_type width, uint_type height) {
 			/*
 				Returns an Identity Matrix.
 			*/
 			Matrix<T> unit_m(width, height);
-			for (unsigned int i = 0; i < width && i < height; i++) {
+			for (uint_type i = 0; i < width && i < height; i++) {
 				unit_m[i][i] = 1;
 			}
 			return unit_m;
 		}
 		
-		template <class T = BOP_MATHS_DEFAULT_TYPE>
+		template <class T = prec_type>
 		Matrix<T> identityMatrix(Matrix<T>& mat) {
 			return identityMatrix<T>(mat.width(), mat.height());
 		}
@@ -164,8 +169,8 @@ namespace bop {
 					/*
 						non-2x2 matrix inverse solution
 					*/
-					for (unsigned int col = 0; col < mat.width(); col++) {
-						unsigned int row_index;
+					for (uint_type col = 0; col < mat.width(); col++) {
+						uint_type row_index;
 						/*
 							Find the first row whose pivot index is the same as the
 							identity column (col) that needs representation. This is
@@ -186,12 +191,12 @@ namespace bop {
 							Pivot row 1.
 						*/
 						T div_temp = mat[col][col];
-						for (unsigned int div_col = 0; div_col < mat.width(); div_col++) {
+						for (uint_type div_col = 0; div_col < mat.width(); div_col++) {
 							inverse[col][div_col] /= div_temp;
 							mat[col][div_col] /= div_temp;
 						}
 						
-						for (unsigned int i = col + 1; i < mat.height(); i++) {
+						for (uint_type i = col + 1; i < mat.height(); i++) {
 							if (i == col || mat[i].pivot() != col) continue;
 							else {
 								/*
@@ -201,21 +206,21 @@ namespace bop {
 									as 0. Mirror these actions on the to-be inverse Matrix.
 								*/
 								T temp = mat[i][col];
-								for (unsigned int elem = 0; elem < mat.width(); elem++) {
+								for (uint_type elem = 0; elem < mat.width(); elem++) {
 									mat[i][elem] -= mat[col][elem] * temp;
 									inverse[i][elem] -= inverse[col][elem] * temp;
 								}
 							}
 						}
 					}
-					for (unsigned int col = mat.height() - 1; col > 0; col--) {
-						for (unsigned int sub_row = 0; sub_row < col; sub_row++) {
+					for (uint_type col = mat.height() - 1; col > 0; col--) {
+						for (uint_type sub_row = 0; sub_row < col; sub_row++) {
 							T temp = mat[sub_row][col];
 							/*
 								Now the matrix is in row echelon form, reduce it to an 
 								identity matrix.
 							*/
-							for (unsigned int elem = 0; elem < mat.width(); elem++) {
+							for (uint_type elem = 0; elem < mat.width(); elem++) {
 								mat[sub_row][elem] -= mat[col][elem] * temp;
 								inverse[sub_row][elem] -= inverse[col][elem] * temp;
 							}
@@ -238,16 +243,16 @@ namespace bop {
 				Creates & returns a transposed version of the given matrix.
 			*/
 			Matrix<T> trans(mat.height(), mat.width(), 0);
-			for (unsigned int y = 0; y < mat.height(); y++) {
-				for (unsigned int x = 0; x < mat.width(); x++) {
+			for (uint_type y = 0; y < mat.height(); y++) {
+				for (uint_type x = 0; x < mat.width(); x++) {
 					trans[x][y] = mat[y][x];
 				}
 			}
 			return trans;
 		}
 		
-		template<class T = BOP_MATHS_DEFAULT_TYPE>
-		Matrix<T> rotationMatrix(double angle, unsigned int size = 2, bool clockwise = false, bool rads = false) {
+		template<class T = prec_type>
+		Matrix<T> rotationMatrix(prec_type angle, uint_type size = 2, bool clockwise = false, bool rads = false) {
 			/*
 				Generates a rotation matrix for the angle and size given.
 			*/

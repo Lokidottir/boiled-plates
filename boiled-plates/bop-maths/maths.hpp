@@ -18,14 +18,13 @@ namespace bop {
 			}
 			return fact;
 		}
+		#ifndef BOP_MATHS_DEFAULT_TYPES
+		#define BOP_MATHS_DEFAULT_TYPES
+		typedef double prec_type;
+		typedef uint64_t uint_type;
+		#endif
 	}
 }
-
-
-
-#ifndef BOP_MATHS_DEFAULT_TYPE
-#define BOP_MATHS_DEFAULT_TYPE double
-#endif
 
 #include "Vector.hpp"
 #include "Matrix.hpp"
