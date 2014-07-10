@@ -22,7 +22,7 @@ namespace bop {
 				Recursive matrix determinant function.
 			*/
 			if (size == 2) {
-				//the  base case, finding the 2 by 2 matrix determinant
+				//the base case, finding the 2 by 2 matrix determinant
 				int c1 = -1, c2 = -1;
 				for (uint_type i = 0; i < mat.width(); i++) {
 					if (allowed_cols[i]) {
@@ -57,7 +57,7 @@ namespace bop {
 		}
 		
 		template<class T>
-		inline T det(Matrix<T>& mat) {
+		inline T det(Matrix<T>& mat, bool force_recursive = false) {
 			/*
 				Matrix determinant init function.
 			*/
@@ -76,7 +76,7 @@ namespace bop {
 					/*
 					if (factorial(mat.width()) < pow(mat.width(),2.376)) {
 					*/
-					if (mat.width() < 5) {
+					if (mat.width() < 5 || force_recursive) {
 						Vector<bool> allowed_cols(mat.width(), true);
 						T product = 0;
 						T multi = 1;
@@ -101,8 +101,14 @@ namespace bop {
 							original matrix.
 						*/
 						Matrix<T> upper(mat);
-						for (uint_type row = 1; row < mat.height(); row++) {
-							
+						for (uint_type ind_col = 0; ind_col < mat.width() && ind_col < mat.height(); ind_col++) {
+							for (uint_type row_red = ind_col + 1; row_red < mat.height() && row_red < mat.width(); row_red++) {
+								if (upper[row_red][ind_col] == 0) continue;
+								T temp = upper[row_red][ind_col] / upper[ind_col][ind_col];
+								for (uint_type elem = ind_col; elem < mat.width(); elem++) {
+									upper[row_red][elem] -= temp * upper[ind_col][elem];
+								}
+							}
 						}
 						T deter = 1;
 						for (uint_type elem = 0; elem < mat.height(); elem++) deter *= mat[elem][elem];

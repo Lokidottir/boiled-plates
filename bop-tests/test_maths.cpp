@@ -166,7 +166,10 @@ int testMatrices() {
 	Matrix<double> mat_LU = {{3,4,5},{1,7,2},{6,6,13}};
 	auto LU_decomp = mat_LU.decompose();
 	std::cout << "the matrix:\n" << mat_LU.string() << "has the LU decomposition of\n" << LU_decomp.lower.string() << "and\n" << LU_decomp.upper.string() << std::endl; 
-	
+	Matrix<double> LU_product = LU_decomp.lower * LU_decomp.upper;
+	std::cout << "the product of the upper/lower matrices is:\n" << LU_product.string() << std::endl;
+	std::cout << "the determinant of the upper matrix is: " << det(LU_decomp.upper) << std::endl;
+	std::cout << "the determinant of the original matrix is: " << det(mat_LU) << std::endl;
 	return 0;
 }
 
