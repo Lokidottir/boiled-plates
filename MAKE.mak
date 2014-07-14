@@ -14,6 +14,9 @@ mat-benchmark:
 	$(CC) $(CC_FLAGS) bop-tests/matrix_benchmark.cpp -o mat-benchmark $(LD)
 	$(CC) $(CC_FLAGS) -O3 bop-tests/matrix_benchmark.cpp -o mat-benchmark-opti $(LD)
 
+profile:
+	$(CC_FLAGS) += -pg
+
 clean:
 	rm maths-test
 	rm mat-benchmark

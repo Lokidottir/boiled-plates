@@ -85,27 +85,27 @@ int testMatrices() {
 	std::cout << "\n####\nOperator Tests\n####" << std::endl;
 	Matrix<double> mat1 = {{2,6,-1},{-1,9,6},{4,2,9}};
 	Matrix<double> mat2 = {{3,7,2},{-1,-1,-1},{5,2,-6}};
-	std::cout << "Matrix 1:" << std::endl << mat1.string() << std::endl;
-	std::cout << "Matrix 1 multiplied by 4:" << std::endl << (mat1 * 4.0).string() << std::endl;
-	std::cout << "Matrix 1 divided by 4:" << std::endl << (mat1 / 4.0).string() << std::endl;
-	std::cout << "Matrix 2:" << std::endl << mat2.string() << std::endl;
-	std::cout << "Matrix 1 multiplied by Matrix 2:" << std::endl << (mat1 * mat2).string() << std::endl;
-	std::cout << "Matrix 1 add Matrix 2:" << std::endl << (mat1 + mat2).string() << std::endl;
-	std::cout << "Matrix 1 subtract Matrix 2:" << std::endl << (mat1 - mat2).string() << std::endl;
+	std::cout << "Matrix 1:" << std::endl << mat1 << std::endl;
+	std::cout << "Matrix 1 multiplied by 4:" << std::endl << (mat1 * 4.0) << std::endl;
+	std::cout << "Matrix 1 divided by 4:" << std::endl << (mat1 / 4.0) << std::endl;
+	std::cout << "Matrix 2:" << std::endl << mat2 << std::endl;
+	std::cout << "Matrix 1 multiplied by Matrix 2:" << std::endl << (mat1 * mat2) << std::endl;
+	std::cout << "Matrix 1 add Matrix 2:" << std::endl << (mat1 + mat2) << std::endl;
+	std::cout << "Matrix 1 subtract Matrix 2:" << std::endl << (mat1 - mat2) << std::endl;
 	Matrix<double> mat_withvec = {{2,0,0},{0,1,0},{0,0,2}};
 	Vector<double> vec_mat3 = {4,2,1};
-	std::cout << "Multiplying vector " << vec_mat3.string() << " by the matrix: " << std::endl << mat_withvec.string() << "gives the vector " << (mat_withvec * vec_mat3).string() << std::endl;
+	std::cout << "Multiplying vector " << vec_mat3 << " by the matrix: " << std::endl << mat_withvec << "gives the vector " << (mat_withvec * vec_mat3) << std::endl;
 	
 	/*
 		Swap tests
 	*/
 	std::cout << "\n####\nSwap Tests\n####" << std::endl;
-	std::cout << "Matrix 1:" << std::endl << mat1.string() << std::endl << "to be swapped with Matrix 2:" << std::endl << mat2.string() << std::endl;
+	std::cout << "Matrix 1:" << std::endl << mat1 << std::endl << "to be swapped with Matrix 2:" << std::endl << mat2 << std::endl;
 	std::swap(mat1,mat2);
-	std::cout << "Matrix 1:" << std::endl << mat1.string() << std::endl << "Matrix 2:" << std::endl << mat2.string() << std::endl;
-	std::cout << "swapping rows 1 & 3 (non-zero index) of matrix 1:" << std::endl << mat1.string() <<std::endl;
+	std::cout << "Matrix 1:" << std::endl << mat1 << std::endl << "Matrix 2:" << std::endl << mat2 << std::endl;
+	std::cout << "swapping rows 1 & 3 (non-zero index) of matrix 1:" << std::endl << mat1 <<std::endl;
 	mat1.swapRows(0,2);
-	std::cout << "Matrix 1 is now:" << std::endl << mat1.string();
+	std::cout << "Matrix 1 is now:" << std::endl << mat1;
 	/*
 		Bool test
 	*/
@@ -113,9 +113,9 @@ int testMatrices() {
 	Matrix<double> bool_mat1 = {{3,7},{-1,2}};
 	Matrix<double> bool_mat2 = {{3,7},{-1,2}};
 	Matrix<double> bool_mat3 = {{10,3},{5,-7}};
-	std::cout << "Bool matrix 1:" << std::endl << bool_mat1.string() << std::endl;
-	std::cout << "Bool matrix 2:" << std::endl << bool_mat2.string() << std::endl;
-	std::cout << "Bool matrix 3:" << std::endl << bool_mat3.string() << std::endl;
+	std::cout << "Bool matrix 1:" << std::endl << bool_mat1 << std::endl;
+	std::cout << "Bool matrix 2:" << std::endl << bool_mat2 << std::endl;
+	std::cout << "Bool matrix 3:" << std::endl << bool_mat3 << std::endl;
 	std::cout << "(mat1 == mat2) evaluates to: " << (bool_mat1 == bool_mat2) << std::endl;
 	std::cout << "(mat1 != mat2) evaluates to: " << (bool_mat1 != bool_mat2) << std::endl;
 	std::cout << "(mat2 == mat3) evaluates to: " << (bool_mat2 == bool_mat3) << std::endl;
@@ -127,9 +127,9 @@ int testMatrices() {
 	std::cout << "\n####\nOther Tests\n####" << std::endl;
 	Matrix<double> mat3_impose = {{2,0,0},{0,2,0},{0,0,2}};
 	Matrix<double> mat4_unit = identityMatrix<double>(4);
-	std::cout << "imposing:\n" << mat3_impose.string() << "on:\n" << mat4_unit.string() << "yeilds:\n";
+	std::cout << "imposing:\n" << mat3_impose << "on:\n" << mat4_unit << "yeilds:\n";
 	mat4_unit.impose(mat3_impose);
-	std::cout << mat4_unit.string() << std::endl;
+	std::cout << mat4_unit << std::endl;
 	Matrix<double> mat_notvalid;
 	std::cout << "The validity of a matrix constructed with no values is " << bool(mat_notvalid) << std::endl;
 	/*
@@ -137,37 +137,37 @@ int testMatrices() {
 	*/
 	std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
 	Matrix<double> unit_m = identityMatrix<double>(3);
-	std::cout << "Identity matrix: " << std::endl << unit_m.string();
+	std::cout << "Identity matrix: " << std::endl << unit_m;
 	Matrix<double> mat_ex1 = {{4,8},{0,1}};
 	Matrix<double> mat_ex_i1 = inverseMatrix(mat_ex1);
-	std::cout << "the inverse of matrix: " << std::endl << mat_ex1.string() << "is: " << std::endl << inverseMatrix(mat_ex1).string() << std::endl;
-	std::cout << "the product of the matrix and it's inverse is " << std::endl << (mat_ex1 * mat_ex_i1).string() << std::endl;
+	std::cout << "the inverse of matrix: " << std::endl << mat_ex1 << "is: " << std::endl << inverseMatrix(mat_ex1) << std::endl;
+	std::cout << "the product of the matrix and it's inverse is " << std::endl << (mat_ex1 * mat_ex_i1) << std::endl;
 	Matrix<double> mat_3_toinvert = {{1,2,3},{0,1,4},{7,3,0}};
-	std::cout << "the inverse of 3 by 3 matrix:\n" << mat_3_toinvert.string();
+	std::cout << "the inverse of 3 by 3 matrix:\n" << mat_3_toinvert;
 	Matrix<double> mat_3_inverted = inverseMatrix(mat_3_toinvert);
-	std::cout << "is:\n" << mat_3_inverted.string();
-	std::cout << "when the matrix is multiplied by it's inverse:\n" << (mat_3_toinvert * mat_3_inverted).string() << std::endl;
+	std::cout << "is:\n" << mat_3_inverted;
+	std::cout << "when the matrix is multiplied by it's inverse:\n" << (mat_3_toinvert * mat_3_inverted) << std::endl;
 	
 	Matrix<double> mat_initbynum(5);
-	std::cout << "matrix produced by size init\n" << mat_initbynum.string() << std::endl;
+	std::cout << "matrix produced by size init\n" << mat_initbynum << std::endl;
 	
 	Matrix<double> mat_nonsq = {{2,3,5},{6,1,9}};
-	std::cout << "the transpose of " << std::endl << mat_nonsq.string() << "is: " << std::endl << transposeMatrix(mat_nonsq).string() << std::endl;
+	std::cout << "the transpose of " << std::endl << mat_nonsq << "is: " << std::endl << transposeMatrix(mat_nonsq) << std::endl;
 	
 	Matrix<double> matrot_1 = rotationMatrix<double>(90, 2);
-	std::cout << "A rotation matrix for 90 degrees:\n" << matrot_1.string() << std::endl;
+	std::cout << "A rotation matrix for 90 degrees:\n" << matrot_1 << std::endl;
 	Matrix<double> matrot_2 = { {2,5},
 								{4,7}};
 	Vector<double> vec1 = {4,6};
 	matrot_1 *= vec1;
 	matrot_2 *= matrot_1;
-	std::cout << "when applied to matrix" << std::endl << matrot_2.string() << "yeilds" << std::endl << (matrot_2 * matrot_1).string() << "and applied to vector " << vec1.string() << " yeilds " << (matrot_1 * vec1).string() << std::endl;
+	std::cout << "when applied to matrix" << std::endl << matrot_2 << "yeilds" << std::endl << (matrot_2 * matrot_1) << "and applied to vector " << vec1 << " yeilds " << (matrot_1 * vec1) << std::endl;
 	
 	Matrix<double> mat_LU = {{3,4,5},{1,7,2},{6,6,13}};
 	auto LU_decomp = mat_LU.decompose();
-	std::cout << "the matrix:\n" << mat_LU.string() << "has the LU decomposition of\n" << LU_decomp.lower.string() << "and\n" << LU_decomp.upper.string() << std::endl; 
+	std::cout << "the matrix:\n" << mat_LU << "has the LU decomposition of\n" << LU_decomp.lower << "and\n" << LU_decomp.upper << std::endl; 
 	Matrix<double> LU_product = LU_decomp.lower * LU_decomp.upper;
-	std::cout << "the product of the upper/lower matrices is:\n" << LU_product.string() << std::endl;
+	std::cout << "the product of the upper/lower matrices is:\n" << LU_product << std::endl;
 	std::cout << "the determinant of the upper matrix is: " << det(LU_decomp.upper) << std::endl;
 	std::cout << "the determinant of the original matrix is: " << det(mat_LU) << std::endl;
 	return 0;

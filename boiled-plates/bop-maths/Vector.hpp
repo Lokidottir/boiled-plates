@@ -275,7 +275,7 @@ namespace bop {
 					return (this->data != nullptr);
 				}
 				
-				operator bool() const {
+				explicit operator bool() const {
 					/*
 						Cast to bool as the validity of the vector. Allowing for "if (Vector) { ... }"
 						behaviour.
@@ -299,6 +299,9 @@ namespace bop {
 					}
 					return vec_str.str();
 				}
+				
+				template <class T_>
+				friend std::ostream& operator<< (std::ostream& stream, const Vector<T_>& vec);
 				
 				T mag() {
 					T magnitude = 0;
@@ -378,17 +381,18 @@ namespace bop {
 		}
 		
 		template<class T>
-		Vector<T> operator- (Vector<T> vec1, Vector<T>& vec2) {
+		Vector<T> operator- (Vector<T> &vec1, Vector<T>& vec2) {
 			Vector<T> vec_p(vec1);
 			vec_p -= vec2;
 			return vec_p;
 		}
 		
 		template <class T>
-		std::ostream& operator<< (std::ostream& stream, Vector<T>& vec) {
+		std::ostream& operator<< (std::ostream& stream, const Vector<T>& vec) {
 			stream << vec.string();
 			return stream;
 		}
+		
 	}
 }
 

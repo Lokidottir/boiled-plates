@@ -30,6 +30,11 @@ void bop_bench_det() {
 	det(mat1);
 }
 
+void bop_bench_det_15x15() {
+	static Matrix<double> mat = identityMatrix(15);
+	det(mat);
+}
+
 void bop_bench_multiply() {
 	static Matrix<double> mat1 = identityMatrix<double>(3);
 	static Matrix<double> mat2 = {{2,3,4},{6,1,7},{3,4,5}};
@@ -105,6 +110,12 @@ void bop_bench_swap() {
 	std::swap(mat1,mat2);
 }
 
+void bop_bench_largemat() {
+	static Matrix<double> mat1 = identityMatrix(15);
+	static Matrix<double> mat2 = identityMatrix(15);
+	mat1 *= mat2;
+}
+
 int mat_tests() {
 	std::cout << "\nAll matrix operations are performed on a 3 by 3 matrix unless otherwise specified" << std::endl;
 	std::cout << "The result is the average operation time in nanoseconds for " << TEST_COUNT << " iterations." << std::endl;
@@ -113,7 +124,9 @@ int mat_tests() {
 	std::cout << "Matrix construction by copy: " << gist::benchmark(TEST_COUNT, bop_bench_copy) << std::endl;
 	std::cout << "Vector (9) construction: " << gist::benchmark(TEST_COUNT, bop_bench_construct_vec) << std::endl;
 	std::cout << "Matrix multiplication: " << gist::benchmark(TEST_COUNT, bop_bench_multiply) << std::endl;
+	std::cout << "Matrix multiplication (15x15): " << gist::benchmark(TEST_COUNT, bop_bench_largemat) << std::endl;
 	std::cout << "Matrix determinant: " << gist::benchmark(TEST_COUNT, bop_bench_det) << std::endl;
+	std::cout << "Matrix determinant (15x15): " << gist::benchmark(TEST_COUNT, bop_bench_det_15x15) << std::endl;
 	std::cout << "Matrix inverse (2x2): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_2x2) << std::endl;
 	std::cout << "Matrix inverse (unit): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_unit) << std::endl;
 	std::cout << "Matrix inverse: " << gist::benchmark(TEST_COUNT, bop_bench_inverse) << std::endl;

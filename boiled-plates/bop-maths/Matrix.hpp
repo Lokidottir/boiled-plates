@@ -95,7 +95,6 @@ namespace bop {
 					/*
 						Creates a matrix from a 2-dimensional initializer_list.
 					*/
-					
 					this->setData(list.size(), list.begin()->size(), false);
 					uint_type row = 0;
 					for (auto sublist : list) {
@@ -184,10 +183,11 @@ namespace bop {
 					return *this;
 				}
 				
-				Matrix<T>& operator*= (Matrix<T>& mat) {
+				Matrix<T>& operator*= (const Matrix<T>& mat) {
 					/*
 						Matrix multiplication member operator.
 					*/
+					
 					T* temp = new T[this->height() * mat.width()];
 					for (uint_type row = 0; row < this->height(); row++) {
 						for (uint_type col = 0; col < mat.width(); col++) {
@@ -351,12 +351,15 @@ namespace bop {
 					return mat_str.str();
 				}
 				
+				template<class T_>
+				friend std::ostream& operator<< (std::ostream& stream, const Matrix<T_>& mat);
+				
 				inline bool valid() const {
 					//Matrix validity determined by the pointer's value.
 					return (this->data != nullptr);
 				}
 				
-				operator bool() const {
+				explicit operator bool() const {
 					/*
 						Cast to bool as the validity of the matrix. Allowing for "if (Matrix) { ... }"
 						behaviour.
@@ -477,8 +480,8 @@ namespace bop {
 			return mat_sum;
 		}
 		
-		template <class T>
-		std::ostream& operator<< (std::ostream& stream, Matrix<T>& mat) {
+		template<class T_>
+		std::ostream& operator<< (std::ostream& stream, const Matrix<T_>& mat) {
 			stream << mat.string();
 			return stream;
 		}
