@@ -185,9 +185,8 @@ namespace bop {
 				
 				Matrix<T>& operator*= (const Matrix<T>& mat) {
 					/*
-						Matrix multiplication member operator.
+						Naive matrix multiplication implementation
 					*/
-					
 					T* temp = new T[this->height() * mat.width()];
 					for (uint_type row = 0; row < this->height(); row++) {
 						for (uint_type col = 0; col < mat.width(); col++) {
@@ -197,6 +196,17 @@ namespace bop {
 							}
 						}
 					}
+					/*
+					//This method is actually slower, surprisingly.
+					for (uint_type elem = 0; elem < mat.width() * this->height(); elem++) {
+						//equation for col = elem % mat.width()
+						//equation for row = (elem - col) / mat.width()
+						temp[elem] = 0;
+						for (uint_type iter = 0; iter < mat.width(); iter++) {
+							temp[elem] += this->element((elem - (elem % mat.width())) / mat.width(), iter) * mat.element(iter, elem % mat.width());
+						}
+					}
+					*/
 					delete[] this->data;
 					this->data = temp;
 					this->_width = mat._width;
