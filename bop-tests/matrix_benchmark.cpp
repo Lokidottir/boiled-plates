@@ -124,7 +124,7 @@ int mat_tests() {
 	std::cout << "Matrix construction by copy: " << gist::benchmark(TEST_COUNT, bop_bench_copy) << std::endl;
 	std::cout << "Vector (9) construction: " << gist::benchmark(TEST_COUNT, bop_bench_construct_vec) << std::endl;
 	std::cout << "Matrix multiplication: " << gist::benchmark(TEST_COUNT, bop_bench_multiply) << std::endl;
-	std::cout << "Matrix multiplication (15x15): " << gist::benchmark(TEST_COUNT, bop_bench_largemat) << std::endl;
+	std::cout << "Matrix multiplication (15x15): " << gist::benchmark(TEST_COUNT/10, bop_bench_largemat) << std::endl;
 	std::cout << "Matrix determinant: " << gist::benchmark(TEST_COUNT, bop_bench_det) << std::endl;
 	std::cout << "Matrix determinant (15x15): " << gist::benchmark(TEST_COUNT, bop_bench_det_15x15) << std::endl;
 	std::cout << "Matrix inverse (2x2): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_2x2) << std::endl;
