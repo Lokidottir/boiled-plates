@@ -80,7 +80,7 @@ namespace bop {
 					*/
 					this->setData(width,height,false);
 					for (uint_type elem = 0; elem < this->width() * this->height(); elem++) {
-						this->data[elem] = fill;
+						this->element(elem) = fill;
 					}
 				}
 				
@@ -168,7 +168,7 @@ namespace bop {
 				}
 				
 				bool operator!= (const Matrix<T>& mat) const {
-					return !((*this) == (mat));
+					return !((*this) == mat);
 				}
 				
 				//Arithmetic overloads
@@ -178,7 +178,7 @@ namespace bop {
 						elements by the given scalar.
 					*/
 					for (uint_type elem = 0; elem < this->height() * this->width(); elem++) {
-						this->data[elem] *= scalar;
+						this->element(elem) *= scalar;
 					}
 					return *this;
 				}
@@ -258,7 +258,7 @@ namespace bop {
 					*/
 					if (this->width() == mat.width() && this->height() == mat.height()) {
 						for (uint_type elem = 0; elem < this->height() * this->width(); elem++) {
-							this->data[elem] += mat.data[elem];
+							this->element(elem) += mat.element(elem);
 						}
 					}
 					else {
@@ -278,7 +278,7 @@ namespace bop {
 					*/
 					if (this->width() == mat.width() && this->height() == mat.height()) {
 						for (uint_type elem = 0; elem < this->height() * this->width(); elem++) {
-							this->data[elem] -= mat.data[elem];
+							this->element(elem) -= mat.element(elem);
 						}
 					}
 					else {
@@ -294,7 +294,7 @@ namespace bop {
 				Matrix<T> operator- () {
 					Matrix<T> mat(*this);
 					for (uint_type elem = 0; elem < this->width() * this->height(); elem++) {
-						mat.data[elem] *= -1;
+						mat.element(elem) *= -1;
 					}
 					return mat;
 				}
@@ -302,7 +302,12 @@ namespace bop {
 				//Information functions
 				
 				inline T& element(uint_type row, uint_type col) const {
-					return this->data[(row * this->width()) + col];
+					if (row == 0) return this->data[col];
+					else return this->data[(row * this->width()) + col];
+				}
+				
+				inline T& element(uint_type elem) const {
+					return this->data[elem];
 				}
 				
 				inline uint_type width() const {
