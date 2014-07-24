@@ -12,6 +12,9 @@ int testMultiArr() {
 	IndexHandler<int, 5> arr(2,2,2,2,2);
 	std::cout << "arr5_2.size() returns " << arr.size() << std::endl;
 	std::cout << "arr5_2.fullSize() returns " << arr.fullSize() << std::endl;
+	std::cout << "setting [0][1][1][0][1] as 4" << std::endl;
+	arr[0][1][1][0][1] = 4;
+	std::cout << arr[0][1][1][0][1] << std::endl;
 	
 	return 0;
 }
