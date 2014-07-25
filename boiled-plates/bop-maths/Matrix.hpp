@@ -412,12 +412,42 @@ namespace bop {
 									LU_pair.upper.element(row_red,elem) -= LU_pair.lower.element(row_red,ind_col) * LU_pair.upper.element(ind_col, elem);
 								}
 							}
-							else {
-								return LU_pair;
-							}
 						}
 					}
 					return LU_pair;
+				}
+				
+				T det() {
+					
+					if (!this->square()) return 0;
+					else if (this->width() == 2) {
+						return (this->element() * this->element(1,1)) - (this->element(0,1) * this->element(1,0))
+					}
+					else if (this->width < 5) {
+						
+					}
+					else {
+						
+					}
+				}
+				
+			private:
+				
+				T det_tailrec() {
+					
+				}
+				
+			public:
+				
+				Matrix<T>& invert() {
+					
+					return *this;
+				}
+				
+				Matrix<T> inverse() {
+					Matrix<T> mat(*this);
+					mat.invert();
+					return mat;
 				}
 				
 				//Matrix manipulation functions.
@@ -495,8 +525,8 @@ namespace bop {
 			return mat_sum;
 		}
 		
-		template<class T_>
-		std::ostream& operator<< (std::ostream& stream, const Matrix<T_>& mat) {
+		template<class T>
+		std::ostream& operator<< (std::ostream& stream, const Matrix<T>& mat) {
 			stream << mat.string();
 			return stream;
 		}

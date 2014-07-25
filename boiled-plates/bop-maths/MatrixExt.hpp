@@ -234,7 +234,7 @@ namespace bop {
 					}
 					return inverse;
 					#else
-					//todo: cofactor matrix solution 
+					//to-not-do: cofactor matrix complexity is O(n!) with a coefficient of presumably n^2.
 					#endif
 				}
 			}
@@ -258,7 +258,7 @@ namespace bop {
 		}
 		
 		template<class T = prec_type>
-		Matrix<T> rotationMatrix(prec_type angle, uint_type size = 2, bool clockwise = false, bool rads = false) {
+		Matrix<T> rotationMatrix(double angle, uint_type size = 2, bool clockwise = false, bool rads = false) {
 			/*
 				Generates a rotation matrix for the angle and size given.
 			*/
