@@ -26,39 +26,44 @@ void bop_bench_construct_vec() {
 }
 
 void bop_bench_det() {
-	static Matrix<double> mat1 = identityMatrix<double>(3);
-	det(mat1);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
+	mat1.det();
 }
 
 void bop_bench_det_15x15() {
-	static Matrix<double> mat = identityMatrix(15);
-	det(mat);
+	static Matrix<double> mat = IdentityMatrix<double>::make(15);
+	mat.det();
 }
 
 void bop_bench_multiply() {
-	static Matrix<double> mat1 = identityMatrix<double>(3);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
 	static Matrix<double> mat2 = {{2,3,4},{6,1,7},{3,4,5}};
 	mat2 *= mat1;
 }
 
 void bop_bench_inverse_2x2() {
 	static Matrix<double> mat = {{2,4},{1,7}};
-	inverseMatrix(mat);
+	mat.inverted();
 }
 
 void bop_bench_inverse_unit() {
-	static Matrix<double> mat = identityMatrix<double>(3);
-	inverseMatrix(mat);
+	static Matrix<double> mat = IdentityMatrix<double>::make(3);
+	mat.inverted();
 }
 
 void bop_bench_inverse() {
 	static Matrix<double> mat = {{3,2,4},{2,7,2},{-1,2,5}};
-	inverseMatrix(mat);
+	mat.inverted();
+}
+
+void bop_bench_inverse_self() {
+	static Matrix<double> mat = {{3,2,4},{2,7,2},{-1,2,5}};
+	mat.invert();
 }
 
 void bop_bench_add() {
-	static Matrix<double>mat1 = identityMatrix<double>(3);
-	static Matrix<double>mat2 = identityMatrix<double>(3);
+	static Matrix<double>mat1 = IdentityMatrix<double>::make(3);
+	static Matrix<double>mat2 = IdentityMatrix<double>::make(3);
 	mat1 += mat2;
 }
 
@@ -69,25 +74,25 @@ void bop_bench_vector_add() {
 }
 
 void bop_bench_subtract() {
-	static Matrix<double>mat1 = identityMatrix<double>(3);
-	static Matrix<double>mat2 = identityMatrix<double>(3);
+	static Matrix<double>mat1 = IdentityMatrix<double>::make(3);
+	static Matrix<double>mat2 = IdentityMatrix<double>::make(3);
 	mat1 -= mat2;
 }
 
 void bop_bench_scalar() {
-	static Matrix<double> mat = identityMatrix<double>(3);
+	static Matrix<double> mat = IdentityMatrix<double>::make(3);
 	static double scalar = 2;
 	mat *= scalar;
 }
 
 void bop_bench_scalar_div() {
-	static Matrix<double> mat = identityMatrix<double>(3);
+	static Matrix<double> mat = IdentityMatrix<double>::make(3);
 	static double scalar = 2;
 	mat /= scalar;
 }
 
 void bop_bench_impose() {
-	static Matrix<double> mat1 = identityMatrix<double>(3);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
 	static Matrix<double> mat2 = {{2,4},{6,8}};
 	mat1.impose(mat2);
 }
@@ -99,20 +104,20 @@ void bop_bench_impose_vec() {
 }
 
 void bop_bench_compare() {
-	static Matrix<double> mat1 = identityMatrix<double>(3);
-	static Matrix<double> mat2 = identityMatrix<double>(3);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
+	static Matrix<double> mat2 = IdentityMatrix<double>::make(3);
 	mat1 == mat2;
 }
 
 void bop_bench_swap() {
-	static Matrix<double> mat1 = identityMatrix(3);
-	static Matrix<double> mat2 = identityMatrix(3);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
+	static Matrix<double> mat2 = IdentityMatrix<double>::make(3);
 	std::swap(mat1,mat2);
 }
 
 void bop_bench_largemat() {
-	static Matrix<double> mat1 = identityMatrix(15);
-	static Matrix<double> mat2 = identityMatrix(15);
+	static Matrix<double> mat1 = IdentityMatrix<double>::make(15);
+	static Matrix<double> mat2 = IdentityMatrix<double>::make(15);
 	mat1 *= mat2;
 }
 
@@ -130,6 +135,7 @@ int mat_tests() {
 	std::cout << "Matrix inverse (2x2): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_2x2) << std::endl;
 	std::cout << "Matrix inverse (unit): " << gist::benchmark(TEST_COUNT, bop_bench_inverse_unit) << std::endl;
 	std::cout << "Matrix inverse: " << gist::benchmark(TEST_COUNT, bop_bench_inverse) << std::endl;
+	std::cout << "Matrix invert self: " << gist::benchmark(TEST_COUNT, bop_bench_inverse_self) << std::endl;
 	std::cout << "Matrix addition: " << gist::benchmark(TEST_COUNT, bop_bench_add) << std::endl;
 	std::cout << "Vector (9) addition: " << gist::benchmark(TEST_COUNT, bop_bench_vector_add) << std::endl;
 	std::cout << "Matrix subtraction: " << gist::benchmark(TEST_COUNT, bop_bench_subtract) << std::endl;

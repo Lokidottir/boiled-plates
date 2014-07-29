@@ -7,6 +7,8 @@
 #include <string>
 #include <sstream>
 #include <cmath>
+#include <unordered_map>
+#include "MathsExtra.hpp"
 #include "Vector.hpp"
 
 /*
@@ -28,7 +30,7 @@ namespace bop {
 				T* data;
 				
 				inline void setData(uint_type width, uint_type height, bool delete_ptr = true) {
-					if (this->data == nullptr || (delete_ptr && (width * height) > (this->width() * this->height()))) {
+					if (this->data == nullptr || (delete_ptr && (width * height) > this->width() * this->height())) {
 						delete[] this->data;
 						this->data = new T[width * height];
 					}
@@ -107,7 +109,7 @@ namespace bop {
 					}
 				}
 				
-				Matrix(Matrix<T>& mat) : Matrix() {
+				Matrix(const Matrix<T>& mat) : Matrix() {
 					/*
 						Copy constructor.
 					*/
@@ -147,14 +149,14 @@ namespace bop {
 					return this->handler;
 				}
 				
-				Matrix<T>& operator= (const Matrix<T>& mat) {
+				inline Matrix<T>& operator= (const Matrix<T>& mat) {
 					this->setData(mat.width(), mat.height());
 					memcpy(this->data, mat.data, this->width() * this->height() * sizeof(T));
 					return *this;
 				}
 				
 				//Boolean logic overloads
-				bool operator== (const Matrix<T>& mat) const {
+				inline bool operator== (const Matrix<T>& mat) const {
 					if (this->width() == mat.width() && this->height() == mat.height()) {
 						bool same = true;
 						for (uint_type row = 0; row < this->height() && same; row++) {
@@ -387,7 +389,7 @@ namespace bop {
 					Matrix<T> upper;
 				};
 				
-				LU decompose() {
+				LU decompose() const {
 					LU LU_pair;
 					
 					LU_pair.lower = Matrix<T>(this->width(), this->height());
@@ -417,37 +419,192 @@ namespace bop {
 					return LU_pair;
 				}
 				
-				T det() {
-					
+				T det(bool allow_recursive = true) const {
 					if (!this->square()) return 0;
 					else if (this->width() == 2) {
-						return (this->element() * this->element(1,1)) - (this->element(0,1) * this->element(1,0))
+						return (this->element(0,0) * this->element(1,1)) - (this->element(0,1) * this->element(1,0));
 					}
-					else if (this->width < 5) {
-						
+					else if (this->width() < 5 && allow_recursive) {
+						/*
+							start and launch recursive determinant.
+						*/
+						Vector<bool> allowed_cols(this->width(), true);
+						T deter = 0;
+						T multi = 1;
+						uint_type size = this->height() - 1;
+						for (uint_type i = 0; i < this->width(); i++) {
+							if (this->element(0,i) != 0) {
+								allowed_cols[i] = false;
+								deter += (multi * (this->element(0,i) * this->detCascade(allowed_cols, size)));
+								multi *= -1;
+								allowed_cols[i] = true;
+							}
+						}
+						return deter;
 					}
 					else {
-						
+						/*
+							As we are simply finding the product of the pivots
+							on an upper triangular matrix, we can generate just
+							the upper matrix as the determinant of the lower matrix
+							is always one, and the product of the lower and upper
+							matrix determinants is equal to the determinant of the
+							original matrix.
+						*/
+						Matrix<T> upper(*this);
+						for (uint_type ind_col = 0; ind_col < this->width() && ind_col < this->height(); ind_col++) {
+							for (uint_type row_red = ind_col + 1; row_red < this->height() && row_red < this->width(); row_red++) {
+								if (upper.element(row_red,ind_col) == 0) continue;
+								T temp = upper.element(row_red,ind_col) / upper.element(ind_col,ind_col);
+								for (uint_type elem = ind_col; elem < this->width(); elem++) {
+									upper.element(row_red,elem) -= temp * upper.element(ind_col,elem);
+								}
+							}
+						}
+						T deter = 1;
+						for (uint_type elem = 0; elem < this->height(); elem++) deter *= this->element(elem,elem);
+						return deter;
 					}
 				}
 				
 			private:
-				
-				T det_tailrec() {
-					
+			
+				T detCascade(Vector<bool>& allowed_cols, uint_type& size) const {							
+					if (size == 2) {
+						//the base case, finding the 2 by 2 matrix determinant
+						int c1 = -1, c2 = -1;
+						for (uint_type i = 0; i < this->width(); i++) {
+							if (allowed_cols[i]) {
+								if (c1 < 0) {
+									c1 = i;
+								}
+								else if (c2 < 0) {
+									c2 = i;
+									break;
+								}
+							}
+						}
+						return (this->element(this->height() - 2,c1) * this->element(this->height() - 1,c2)) - (this->element(this->height() - 2,c2) * this->element(this->height() - 1,c1));
+					}
+					else {
+						size--;
+						T deter = 0;
+						T multi = 1;
+						for (uint_type i = 0; i < this->width(); i++) {
+							if (!allowed_cols[i]) continue;
+							else {
+								allowed_cols[i] = false;
+								deter += (multi * (this->element(this->height() - size,i) * this->detCascade(allowed_cols, size)));
+								multi *= -1;
+								allowed_cols[i] = true;
+								
+							}
+						}
+						size++;
+						return deter;
+					}
 				}
 				
 			public:
 				
 				Matrix<T>& invert() {
-					
+					T deter = this->det();
+					if (deter != 0) {
+						if (this->height() == 2) {
+							std::swap(this->element(0,0), this->element(1,1));
+							this->element(0,1) *= -1;
+							this->element(1,0) *= -1;
+							(*this) /= deter;
+						}
+						else {
+							Matrix<T> inverse(this->height());
+							for (uint_type elem = 0; elem < this->height(); elem++) inverse.element(elem,elem) = 1;
+							/*
+								non-2x2 matrix inverse solution
+							*/
+							for (uint_type col = 0; col < this->width(); col++) {
+								uint_type row_index;
+								/*
+									Find the first row whose pivot index is the same as the
+									identity column (col) that needs representation. This is
+									the Pivot row.
+								*/
+								for (row_index = col; row_index < this->height() && (*this)[row_index].pivot() != col; row_index++);
+								/*
+									Simultaneously swap the rows in the given matrix and to-be
+									inverse matrix so that the Pivot row is at the index where
+									it's pivot index matches the row index.
+								*/
+								this->swapRows(col, row_index);
+								inverse.swapRows(col, row_index);
+								/*
+									Divide the row at the Pivot row's index in the to-be inverse
+									by the value at the Pivot row's pivot value. Then, divide the
+									Pivot row by it's pivot value, making the pivot value in the
+									Pivot row 1.
+								*/
+								T div_temp = this->element(col,col);
+								for (uint_type div_col = 0; div_col < this->width(); div_col++) {
+									inverse.element(col,div_col) /= div_temp;
+									this->element(col,div_col) /= div_temp;
+								}
+								
+								for (uint_type i = col + 1; i < this->height(); i++) {
+									if (i == col || (*this)[i].pivot() != col) continue;
+									else {
+										/*
+											For each row in the matrix with a pivot index identical to
+											the Pivot row's index, subtract the Pivot row multiplied by
+											their pivot's value from the row, leaving their pivot value
+											as 0. Mirror these actions on the to-be inverse Matrix.
+										*/
+										T temp = this->element(i,col);
+										for (uint_type elem = 0; elem < this->width(); elem++) {
+											this->element(i,elem) -= this->element(col,elem) * temp;
+											inverse.element(i,elem) -= inverse.element(col,elem) * temp;
+										}
+									}
+								}
+							}
+							for (uint_type col = this->height() - 1; col > 0; col--) {
+								for (uint_type sub_row = 0; sub_row < col; sub_row++) {
+									T temp = this->element(sub_row,col);
+									/*
+										Now the matrix is in row echelon form, reduce it to an 
+										identity matrix.
+									*/
+									for (uint_type elem = 0; elem < this->width(); elem++) {
+										this->element(sub_row,elem) -= this->element(col,elem) * temp;
+										inverse.element(sub_row,elem) -= inverse.element(col,elem) * temp;
+									}
+								}
+							}
+							std::swap(this->data, inverse.data);
+						}
+					}
 					return *this;
 				}
 				
-				Matrix<T> inverse() {
-					Matrix<T> mat(*this);
-					mat.invert();
-					return mat;
+				inline Matrix<T> inverted() const {
+					return Matrix<T>(*this).invert();
+				}
+				
+				inline Matrix<T>& transpose() {
+					if (this->width() == this->height()) {
+						for (uint_type row = 0; row < this->height(); row++) {
+							for (uint_type col = row; col < this->width(); col++) {
+								if (row != col) std::swap(this->element(row,col), this->element(col,row));
+							}
+						}
+					}
+					else {
+						std::swap(this->_width, this->_height);
+					}
+					return *this;
+				}
+				
+				inline Matrix<T> transposed() const {
+					return Matrix<T>(*this).transpose();
 				}
 				
 				//Matrix manipulation functions.
@@ -484,14 +641,14 @@ namespace bop {
 		//External arithmetic overloads
 		
 		template<class T, class A>
-		Matrix<T> operator* (Matrix<T> &mat, const A scalar) {
+		Matrix<T> operator* (Matrix<T>& mat, const A scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p *= scalar;
 			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator* (Matrix<T> &mat1, Matrix<T>& mat2) {
+		Matrix<T> operator* (Matrix<T>& mat1, Matrix<T>& mat2) {
 			Matrix<T> mat_p(mat1);
 			mat_p *= mat2;
 			return mat_p;
@@ -505,21 +662,21 @@ namespace bop {
 		}
 		
 		template<class T, class A>
-		Matrix<T> operator/ (Matrix<T> &mat, const A scalar) {
+		Matrix<T> operator/ (Matrix<T>& mat, const A scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p /= scalar;
 			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator+ (Matrix<T> &mat1, Matrix<T>& mat2) {
+		Matrix<T> operator+ (Matrix<T>& mat1, Matrix<T>& mat2) {
 			Matrix<T> mat_sum(mat1);
 			mat_sum += mat2;
 			return mat_sum;
 		}
 		
 		template<class T>
-		Matrix<T> operator- (Matrix<T> &mat1, Matrix<T>& mat2) {
+		Matrix<T> operator- (Matrix<T>& mat1, Matrix<T>& mat2) {
 			Matrix<T> mat_sum(mat1);
 			mat_sum -= mat2;
 			return mat_sum;
@@ -527,9 +684,79 @@ namespace bop {
 		
 		template<class T>
 		std::ostream& operator<< (std::ostream& stream, const Matrix<T>& mat) {
+			//c++ i/o overload, allowing "std::cout << Matrix<T> << std::endl;" behaviour.
 			stream << mat.string();
 			return stream;
 		}
+		
+		template<class T>
+		struct IdentityMatrix {
+			/*
+				Identity matrix factory
+			*/
+			static Matrix<T> make(uint_type size) {
+				return make(size,size);
+			}
+			
+			static Matrix<T> make(uint_type width, uint_type height) {
+				static std::unordered_map<uint_type,Matrix<T> > map;
+				/*
+					If the matrix is of a reasonable size, then the
+					width and height are stored in two halfs of a
+					uint_type that is used to index for the unordered 
+					map.
+					
+					eg. square matrix of size 6 where uint_type is 16 bit
+					|--width---|--height--|
+					|-00000110-|-00000110-| -> 1542 in decimal
+					
+					this value usually encapsulates a matrix in
+					an application.
+				*/
+				uint_type size_pair = 0;
+				if (width < (~size_pair)/2 && height < (~size_pair)/2) {
+					size_pair |= (width << minBits(~uint_type(0))/2);
+					size_pair |= height;
+					if (map[size_pair]) return map[size_pair];
+					else {
+						map[size_pair] = Matrix<T>(width,height);
+						for (uint_type elem = 0; elem < width && elem < height; elem += width + 1) {
+							map[size_pair].element(elem) = 1;
+						}
+						return map[size_pair];
+					}
+				}
+				else {
+					/*
+						Make matrix of unreasonable size.
+					*/
+					Matrix<T> identity(width,height);
+					for (uint_type elem = 0; elem < width * height; elem += width + 1) {
+						identity.element(elem) = 1;
+					}
+					return identity;
+				}
+				
+			}
+		};
+		
+		template<class T>
+		struct RotationMatrix {
+			/*
+				Rotation matrix factory.
+			*/
+			static Matrix<T> make(T angle, bool clockwise = false, bool rads = false) {
+				static std::unordered_map<T,Matrix<T> > map;
+				if (clockwise) angle -= 180;
+				if (!rads) angle = ((pi()/180.0) * angle); //Convert the degrees to radians manually
+				if (map[angle]) return map[angle];
+				else {
+					map[angle] = {{static_cast<T>(cos(angle)), static_cast<T>(-sin(angle))},
+								  {static_cast<T>(sin(angle)), static_cast<T>(cos(angle))}};
+					return map[angle];
+				}
+			}
+		};
 	}
 }
 

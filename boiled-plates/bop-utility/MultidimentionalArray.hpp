@@ -5,7 +5,7 @@
 	Class defining a multidimensional array of a template type 
 	represented by a one-dimensional array with the index calculations
 	passed down recursively to the base-case class that holds the data 
-	in an array	describing the multidimensional array in terms of 
+	in an array describing the multidimensional array in terms of 
 	row-major order for n dimensions.
 */
 
@@ -75,13 +75,13 @@ namespace bop {
 				/*
 					returns the data pointer held at the base class.
 				*/
-				return this->handler.getPtr();
+				return this->handler.ptr();
 			}
 			
 			private:
 			
 			template<typename param1, typename ...params>
-			void resize(bool _not_base_, param1 P1, params&&... PN) {
+			void nonbaseResize(bool _not_base_, param1 P1, params&&... PN) {
 				/*
 					Secondary resize function, first argument is simply to overload
 					to this function indicating this isn't the function called initially.
@@ -100,7 +100,7 @@ namespace bop {
 			size_t total_size;
 			T* data;
 			IndexHandler() {
-				this->passed_down_val = 1;
+				this->passed_down_val = 0;
 				this->dimension = 0;
 				this->total_size = 0;
 				this->data = nullptr;
