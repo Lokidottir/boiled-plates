@@ -720,7 +720,7 @@ namespace bop {
 					if (map[size_pair]) return map[size_pair];
 					else {
 						map[size_pair] = Matrix<T>(width,height);
-						for (uint_type elem = 0; elem < width && elem < height; elem += width + 1) {
+						for (uint_type elem = 0; elem < width * height; elem += width + 1) {
 							map[size_pair].element(elem) = 1;
 						}
 						return map[size_pair];
