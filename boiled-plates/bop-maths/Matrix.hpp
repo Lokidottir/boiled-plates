@@ -333,23 +333,6 @@ namespace bop {
 					return (this->width() == this->height());
 				}
 				
-				bool identity() const {
-					/*
-						Tests if the matrix is an identity matrix.
-					*/
-					if (this->width() == this->height()) {
-						bool identity = true;
-						for (uint_type row = 0; row < this->height() && identity; row++) {
-							for (uint_type col = 0; col < this->width() && identity; col++) {
-								if (row == col) identity = (this->element(row,col) == 1);
-								else identity = (this->element(row,col) == 0);
-							}
-						}
-						return identity;
-					}
-					else return false;
-				}
-				
 				std::string string(bool newlines = true) const {
 					/*
 						Similar to the maths::Vector::string function, returns 
