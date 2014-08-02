@@ -145,7 +145,7 @@ namespace bop {
 			
 			template<typename param1, typename ...params>
 			void resize(param1 P1, params&&... PN) {
-				if (this->total_size < (static_cast<size_t>(P1))) {
+				if (this->total_size < static_cast<size_t>(P1)) {
 					delete[] this->data;
 					this->data = new T[static_cast<size_t>(P1)];
 				}

@@ -572,6 +572,11 @@ namespace bop {
 					return Matrix<T>(*this).invert();
 				}
 				
+				#ifdef BOP_MATRIX_ALLOW_INVERSE_METHOD
+				//macro-enabled method name alternative.
+				inline Matrix<T> inverse() const {return Matrix<T>(*this).invert();}
+				#endif
+				
 				inline Matrix<T>& transpose() {
 					if (this->width() == this->height()) {
 						for (uint_type row = 0; row < this->height(); row++) {
