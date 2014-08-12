@@ -220,7 +220,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Vector<T>& operator*= (Vector<T>& vec) {
+				Vector<T>& operator*= (Vector<T>& vec) const {
 					/*
 						Seemingly counter-intuitive multiplication
 						operation, although *= is being used with the
@@ -258,7 +258,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Matrix<T>& operator+= (Matrix<T> &mat) {
+				Matrix<T>& operator+= (const Matrix<T> &mat) {
 					/*
 						Addition member operator, adds all the elements of a
 						given matrix to the matrix.
@@ -278,7 +278,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Matrix<T>& operator-= (Matrix<T> &mat) {
+				Matrix<T>& operator-= (const Matrix<T> &mat) {
 					/*
 						Subtraction member operator, subtracts the value of
 						each element in a given matrix from the matrix.
@@ -642,43 +642,43 @@ namespace bop {
 		
 		//External arithmetic overloads
 		
-		template<class T, class A>
-		Matrix<T> operator* (Matrix<T>& mat, const A scalar) {
+		template<class T>
+		Matrix<T> operator* (Matrix<T>& mat, const T scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p *= scalar;
 			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator* (Matrix<T>& mat1, Matrix<T>& mat2) {
+		Matrix<T> operator* (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 			Matrix<T> mat_p(mat1);
 			mat_p *= mat2;
 			return mat_p;
 		}
 		
 		template<class T>
-		Vector<T> operator* (Matrix<T>& mat, Vector<T>& vec) {
+		Vector<T> operator* (const Matrix<T>& mat, Vector<T>& vec) {
 			Vector<T> vec_p(vec);
 			mat *= vec_p;
 			return vec_p;
 		}
 		
-		template<class T, class A>
-		Matrix<T> operator/ (Matrix<T>& mat, const A scalar) {
+		template<class T>
+		Matrix<T> operator/ (const Matrix<T>& mat, const T scalar) {
 			Matrix<T> mat_p(mat);
 			mat_p /= scalar;
 			return mat_p;
 		}
 		
 		template<class T>
-		Matrix<T> operator+ (Matrix<T>& mat1, Matrix<T>& mat2) {
+		Matrix<T> operator+ (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 			Matrix<T> mat_sum(mat1);
 			mat_sum += mat2;
 			return mat_sum;
 		}
 		
 		template<class T>
-		Matrix<T> operator- (Matrix<T>& mat1, Matrix<T>& mat2) {
+		Matrix<T> operator- (const Matrix<T>& mat1, const Matrix<T>& mat2) {
 			Matrix<T> mat_sum(mat1);
 			mat_sum -= mat2;
 			return mat_sum;

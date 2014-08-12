@@ -239,7 +239,7 @@ namespace bop {
 					return *this;
 				}
 				
-				Vector<T> operator- () {
+				Vector<T> operator- () const {
 					/*
 						Member negation operator, returns a vector identical to
 						the vector but with all elements multiplied by -1.
@@ -307,7 +307,7 @@ namespace bop {
 				template <class T_>
 				friend std::ostream& operator<< (std::ostream& stream, const Vector<T_>& vec);
 				
-				T mag() {
+				T mag() const {
 					T magnitude = 0;
 					for (uint_type elem = 0; elem < this->size(); elem++) {
 						magnitude += (*this)[elem] * (*this)[elem];
@@ -348,7 +348,7 @@ namespace bop {
 					as Gauss-Jordan elimination, or whatever else may be in need
 					of the swapping of Vectors.
 				*/
-				void impose(Vector<T>& vec, uint_type offset = 0) {
+				void impose(const Vector<T>& vec, uint_type offset = 0) {
 					for (uint_type i = 0; i < vec.width && i + offset < this->width; i++) {
 						this->data[i + offset] = vec[i];
 					}
@@ -364,28 +364,28 @@ namespace bop {
 		*/
 		
 		template<class T>
-		Vector<T> operator* (Vector<T> &vec, const T scalar) {
+		Vector<T> operator* (const Vector<T>& vec, const T scalar) {
 			Vector<T> vec_p(vec);
 			vec_p *= scalar;
 			return vec_p;
 		}
 		
 		template<class T>
-		Vector<T> operator/ (Vector<T> &vec, const T scalar) {
+		Vector<T> operator/ (const Vector<T>& vec, const T scalar) {
 			Vector<T> vec_p(vec);
 			vec_p /= scalar;
 			return vec_p;
 		}
 		
 		template<class T>
-		Vector<T> operator+ (Vector<T> &vec1, Vector<T>& vec2) {
+		Vector<T> operator+ (const Vector<T>& vec1, const Vector<T>& vec2) {
 			Vector<T> vec_p(vec1);
 			vec_p += vec2;
 			return vec_p;
 		}
 		
 		template<class T>
-		Vector<T> operator- (Vector<T> &vec1, Vector<T>& vec2) {
+		Vector<T> operator- (const Vector<T>& vec1, const Vector<T>& vec2) {
 			Vector<T> vec_p(vec1);
 			vec_p -= vec2;
 			return vec_p;
