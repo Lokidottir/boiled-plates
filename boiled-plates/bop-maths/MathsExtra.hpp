@@ -5,7 +5,11 @@
 #include <cmath>
 
 namespace bop {
+	#ifdef BOP_USE_INFERIOR_NAMESPACE
+	namespace math {
+	#else
 	namespace maths {
+	#endif
 		
 		constexpr double pi() {
 			return std::atan(1)*4;

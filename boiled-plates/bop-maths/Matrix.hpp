@@ -16,7 +16,11 @@
 */
 
 namespace bop {
-	namespace maths{
+	#ifdef BOP_USE_INFERIOR_NAMESPACE
+	namespace math {
+	#else
+	namespace maths {
+	#endif
 		#ifndef BOP_MATHS_DEFAULT_TYPES
 		#define BOP_MATHS_DEFAULT_TYPES
 		typedef double prec_type;
@@ -31,8 +35,7 @@ namespace bop {
 				
 				inline void setData(uint_type width, uint_type height, bool delete_ptr = true) {
 					if (this->data == nullptr || (delete_ptr && (width * height) > this->width() * this->height())) {
-						delete[] this->data;
-						this->data = new T[width * height];
+						this->data = static_cast<T*>(realloc(this->data, width * height * sizeof(T)));
 					}
 					this->_width = width;
 					this->_height = height;
@@ -73,6 +76,8 @@ namespace bop {
 						Empty constructor.
 					*/
 					this->data = nullptr;
+					this->_width = 0;
+					this->_height = 0;
 				}
 				
 				Matrix(uint_type width, uint_type height, T fill = 0) : Matrix() {
@@ -580,12 +585,21 @@ namespace bop {
 				inline Matrix<T>& transpose() {
 					if (this->width() == this->height()) {
 						for (uint_type row = 0; row < this->height(); row++) {
-							for (uint_type col = row; col < this->width(); col++) {
-								if (row != col) std::swap(this->element(row,col), this->element(col,row));
+							for (uint_type col = row + 1; col < this->width(); col++) {
+								std::swap(this->element(row,col), this->element(col,row));
 							}
 						}
 					}
 					else {
+						T* temp = new T[this->width() * this->height()];
+						for (uint_type row = 0; row < this->height(); row++) {
+							for (uint_type col = 0; col < this->width(); col++) {
+								temp[(col * this->height()) + row] = this->element(row,col);
+							}
+						}
+						delete[] this->data;
+						this->data = temp;
+						temp = nullptr;
 						std::swap(this->_width, this->_height);
 					}
 					return *this;

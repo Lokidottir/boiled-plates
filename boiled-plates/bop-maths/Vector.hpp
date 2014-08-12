@@ -12,7 +12,11 @@
 */
 
 namespace bop {
+	#ifdef BOP_USE_INFERIOR_NAMESPACE
+	namespace math {
+	#else
 	namespace maths {
+	#endif
 		#ifndef BOP_MATHS_DEFAULT_TYPES
 		#define BOP_MATHS_DEFAULT_TYPES
 		typedef double prec_type;
@@ -36,12 +40,19 @@ namespace bop {
 					this->zero = 0;
 					return this->zero;
 				}
-				
+				T* data;
 				uint_type width;
 				int pivot_index;
 				
+				void setData(uint_type size, bool delete_ptr = true) {
+					if (this->data == nullptr || (this->width < size && delete_ptr)) {
+						this->data = static_cast<T*>(realloc(this->data, size * sizeof(T)));
+					}
+					this->width = size;
+				}
+				
 			public:
-				T* data;
+				
 				//Constructors
 				Vector(uint_type size, T fill = 0) : Vector() {
 					/*
@@ -50,8 +61,7 @@ namespace bop {
 						----pivot index is set as -1.
 					*/
 					this->pivot_index = -1;
-					this->data = new T[size];
-					this->width = size;
+					this->setData(size);
 					for (uint_type i = 0; i < this->width; i++) {
 						this->data[i] = fill;
 					}
@@ -64,9 +74,8 @@ namespace bop {
 						----pivot_index is determined during construction.
 						----width is determined from size of list.
 					*/
-					this->width = list.size();
+					this->setData(list.size());
 					this->pivot_index = -1;
-					this->data = new T[this->width];
 					int i = 0;
 					for (auto elem : list) {
 						this->data[i] = static_cast<T>(elem);
@@ -82,9 +91,8 @@ namespace bop {
 						Creates a new Vector from a Vector, a copy constructor.
 						----copies all data from the Vector, incl. deep copy of data array pointer.
 					*/
-					this->width = vec.width;
+					this->setData(vec.size());
 					this->pivot_index = vec.pivot_index;
-					this->data = new T[this->width];
 					memcpy(this->data, vec.data, vec.size() * sizeof(T));
 				}
 				
@@ -128,13 +136,10 @@ namespace bop {
 					/*
 						Copy assignment, synonymous to the copy constructor.
 					*/
-					if (this->size() < vec.size() || !this->valid()) {
-						delete[] this->data;
-						this->data = new T[vec.size()];
-					}
+					
+					this->setData(vec.size());
 					memcpy(this->data, vec.data, vec.size() * sizeof(T));
 					this->pivot_index = vec.pivot_index;
-					this->width = vec.width;
 					return *this;
 				}
 				
@@ -145,9 +150,8 @@ namespace bop {
 						with the constructor that takes the same argument.
 						----copied here so the list is not passed by value
 					*/
-					this->width = list.size();
+					this->setData(list.size());
 					this->pivot_index = -1;
-					this->data = new T[this->width];
 					int i = 0;
 					for (T elem : list) {
 						this->data[i] = static_cast<T>(elem);
