@@ -6,7 +6,7 @@ CC_FLAGS=-static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
 #3RDPARTY_LIBS=
 LD=-Iboiled-plates
 
-all: maths-test mat-benchmark
+all: maths-test mat-benchmark top-test
 
 maths-test: 
 	$(CC) $(CC_FLAGS) bop-tests/test_maths.cpp -o maths-test $(LD)
@@ -18,10 +18,14 @@ mat-benchmark:
 util-test:
 	$(CC) $(CC_FLAGS) bop-tests/test_util.cpp -o util-test $(LD)
 	
+top-test:
+	$(CC) $(CC_FLAGS) bop-tests/test_topology.cpp -o top-test $(LD)
+	
 profile:
 	$(CC_FLAGS) += -pg
 
 clean:
-	rm maths-test
-	rm mat-benchmark
-	rm mat-benchmark-opti
+	rm -f maths-test
+	rm -f mat-benchmark
+	rm -f mat-benchmark-opti
+	rm -f top-test
