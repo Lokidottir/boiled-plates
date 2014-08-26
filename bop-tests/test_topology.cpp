@@ -9,13 +9,16 @@ using namespace bop;
 
 int markovTesting() {
 	top::MarkovChain<std::string> markov1;
-	markov1.feed(util::loadIntoVector("hamlet.txt", ' '));
-	std::cout << "Loaded hamlet." << std::endl;
-	auto generated = markov1.generate(250);
+	auto file_vec = util::loadIntoVector("pg1342_out.txt", ' ');
+	markov1.feed(file_vec);
+	std::cout << "Loaded hamlet, chain at size: " << markov1.size() << std::endl;
+	auto generated = markov1.generate(3000, file_vec[int(top::probabilityFunction(file_vec.size()))]);
 	std::cout << "Generated list." << std::endl;
-	for (top::uint_type i = 0; i < generated.size(); i++) {
-		std::cout << generated[i];
+	for (top::uint_type i = 0; i < file_vec.size(); i++) {
+		std::cout << generated[i] << " ";
 	}
+	std::cout << std::endl;
+	//std::cout << "Chain summary:\n" << markov1.genChainDescriptor() << std::endl;
 	return 0;
 }
 

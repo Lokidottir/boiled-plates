@@ -4,6 +4,8 @@
 #include <map>
 #include <random>
 #include <utility>
+#include <sstream>
+#include <typeinfo>
 
 namespace bop {
 	namespace top {
@@ -83,19 +85,32 @@ namespace bop {
 					}
 				}
 				
-				std::vector<T> generate(uint_type size) {
-					std::cout << "called generate" << std::endl;
-					auto item = this->states.begin();
-					std::vector<T> data_generated = {std::string(item->first)};
-					while (data_generated.size() < size) {
-						std::cout << "Last item was " << data_generated[data_generated.size() - 1] << std::endl;
-						data_generated.push_back(this->states[data_generated[data_generated.size()-1]].getNext());
+				T* generate(uint_type data_size, const T& begin_with = T()) {
+					if (data_size != 0) {
+						T* generated = new T[data_size];
+						generated[0] = begin_with;
+						for (uint_type iter = 1; iter < data_size; iter++) {
+							generated[iter] = this->states[generated[iter - 1]].getNext();
+						}
+						return generated;
 					}
-					return data_generated;
+					else return nullptr;
 				}
 				
 				uint_type size() {
 					return this->states.size();
+				}
+				
+				std::string genChainDescriptor() {
+					std::stringstream descr;
+					descr << "Markov chain w/ type id: " << typeid(T).name() << " at address " << uint_type(this) << std::endl;
+						for (const auto& elem : this->states) {
+							descr << "element " << std::get<0>(*elem) << ":" << std::endl;
+							for (int i = 0; i < -1; i++) {
+								//std::cout << '\t' << std::get<0>(*connect) << "\n\t\t" << std::get<1>(*connect) << std::endl;
+							}
+						}
+					return descr.str();
 				}
 		};
 	}

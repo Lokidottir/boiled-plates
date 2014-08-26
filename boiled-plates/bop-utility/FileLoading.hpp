@@ -5,6 +5,7 @@
 
 namespace bop {
 	namespace util {
+		
 		std::string loadIntoString(std::string filename) {
 			std::fstream file_stream(filename.c_str(), std::ios::in);
 			if (file_stream.is_open()) {
@@ -23,7 +24,7 @@ namespace bop {
 		}
 		
 		std::vector<std::string> loadIntoVector(std::string filename, char delim = '\n') {
-			std::fstream file_stream(filename.c_str(), std::ios::in);
+			std::fstream file_stream(filename);
 			if (file_stream.is_open()) {
 				std::vector<std::string> strvec;
 				std::string temp_str;
@@ -33,6 +34,7 @@ namespace bop {
 				return strvec;
 			}
 			else {
+				std::cerr << "Error: could not load file: " << filename << std::endl;
 				file_stream.close();
 				return std::vector<std::string>();
 			}
