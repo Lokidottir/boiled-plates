@@ -15,9 +15,17 @@ namespace bop {
 		typedef uint64_t uint_type;
 		#endif
 		
+		/*
+			Random number function defined here for dependency sake.
+		*/
+		
 		prec_type probabilityFunction(prec_type multiplier = 1) {
 			return (prec_type(rand())/prec_type(RAND_MAX)) * multiplier;
 		}
+		
+		/*
+			ProbabilityState class.
+		*/
 		
 		template<class T>
 		class ProbabilityState {
