@@ -1,6 +1,6 @@
 #Boiled Plates makefile, primarily used for creating test programs.
 CC=g++
-CC_FLAGS=-static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
+CC_FLAGS= -static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
 #removed from repo
 #3RDPARTY_INCL=-I3rdparty/glm -I3rdparty/SDL2/include -I3rdparty/luaJIT/src -I3rdparty/SOIL
 #3RDPARTY_LIBS=

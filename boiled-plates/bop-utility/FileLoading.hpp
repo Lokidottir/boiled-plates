@@ -3,9 +3,11 @@
 #include <string>
 #include <vector>
 
+#define BOP_FILELOAD_ERR std::cerr << "(bop file loading) Error:"
+
 namespace bop {
 	namespace util {
-		
+
 		std::string loadIntoString(std::string filename) {
 			std::fstream file_stream(filename.c_str(), std::ios::in);
 			if (file_stream.is_open()) {
@@ -18,11 +20,12 @@ namespace bop {
 				return file_string;
 			}
 			else {
+				BOP_FILELOAD_ERR << "Could not load \"" << filename << "\", does the file exist?" << std::endl;
 				file_stream.close();
 				return "";
 			}
 		}
-		
+
 		std::vector<std::string> loadIntoVector(std::string filename, char delim = '\n') {
 			std::fstream file_stream(filename);
 			if (file_stream.is_open()) {
@@ -34,7 +37,7 @@ namespace bop {
 				return strvec;
 			}
 			else {
-				std::cerr << "Error: could not load file: " << filename << std::endl;
+				BOP_FILELOAD_ERR << "Could not load \"" << filename << "\", does the file exist?" << std::endl;
 				file_stream.close();
 				return std::vector<std::string>();
 			}
