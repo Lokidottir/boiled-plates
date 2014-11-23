@@ -2,12 +2,12 @@
 #define BOP_TREE_HPP
 
 namespace bop {
-	namespace top {
-		template<class T>
-		class Tree {
-			
-		}
-	}
+    namespace top {
+        template<class T>
+        class Tree {
+            
+        }
+    }
 }
 
 #endif
