@@ -10,7 +10,7 @@ using namespace bop::maths;
 using namespace bop::util;
 
 void bop_bench_construct() {
-    Matrix<double> mat1(3);
+    Matrix<double> mat1(3,3,0);
 }
 
 void bop_bench_constr_inlist() {
@@ -42,6 +42,19 @@ void bop_bench_multiply() {
     mat2 *= mat1;
 }
 
+void bop_bench_add_make() {
+    static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
+    static Matrix<double> mat2 = IdentityMatrix<double>::make(3);
+    mat1 + mat2;
+
+}
+
+void bop_bench_assign_copy() {
+    static Matrix<double> mat1 = IdentityMatrix<double>::make(3);
+    static Matrix<double> mat2 = IdentityMatrix<double>::make(3);
+    mat2 = mat1;
+}
+
 void bop_bench_inverse_2x2() {
     static Matrix<double> mat = {{2,4},{1,7}};
     mat.inverted();
@@ -57,7 +70,7 @@ void bop_bench_inverse() {
     mat.inverted();
 }
 
-void bop_bench_inverse_self() {
+void bop_bench_invert_self() {
     static Matrix<double> mat = {{3,2,4},{2,7,2},{-1,2,5}};
     mat.invert();
 }
@@ -128,6 +141,7 @@ int mat_tests() {
     std::cout << "Matrix construction: " << benchmark(TEST_COUNT, bop_bench_construct) << std::endl;
     std::cout << "Matrix construction by init list: " << benchmark(TEST_COUNT, bop_bench_constr_inlist) << std::endl;
     std::cout << "Matrix construction by copy: " << benchmark(TEST_COUNT, bop_bench_copy) << std::endl;
+    std::cout << "Matrix assign-copy: " << benchmark(TEST_COUNT, bop_bench_assign_copy) << std::endl;
     std::cout << "Vector (9) construction: " << benchmark(TEST_COUNT, bop_bench_construct_vec) << std::endl;
     std::cout << "Matrix multiplication: " << benchmark(TEST_COUNT, bop_bench_multiply) << std::endl;
     std::cout << "Matrix multiplication (15x15): " << benchmark(TEST_COUNT/10, bop_bench_largemat) << std::endl;
@@ -136,8 +150,9 @@ int mat_tests() {
     std::cout << "Matrix inverse (2x2): " << benchmark(TEST_COUNT, bop_bench_inverse_2x2) << std::endl;
     std::cout << "Matrix inverse (unit): " << benchmark(TEST_COUNT, bop_bench_inverse_unit) << std::endl;
     std::cout << "Matrix inverse: " << benchmark(TEST_COUNT, bop_bench_inverse) << std::endl;
-    std::cout << "Matrix invert self: " << benchmark(TEST_COUNT, bop_bench_inverse_self) << std::endl;
+    std::cout << "Matrix invert self: " << benchmark(TEST_COUNT, bop_bench_invert_self) << std::endl;
     std::cout << "Matrix addition: " << benchmark(TEST_COUNT, bop_bench_add) << std::endl;
+    std::cout << "Matrix add for new: " << benchmark(TEST_COUNT, bop_bench_add_make) << std::endl;
     std::cout << "Vector (9) addition: " << benchmark(TEST_COUNT, bop_bench_vector_add) << std::endl;
     std::cout << "Matrix subtraction: " << benchmark(TEST_COUNT, bop_bench_subtract) << std::endl;
     std::cout << "Matrix scalar multiplication: " << benchmark(TEST_COUNT, bop_bench_scalar) << std::endl;

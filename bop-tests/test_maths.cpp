@@ -95,7 +95,7 @@ int testMatrices() {
     Matrix<double> mat_withvec = {{2,0,0},{0,1,0},{0,0,2}};
     Vector<double> vec_mat3 = {4,2,1};
     std::cout << "Multiplying vector " << vec_mat3 << " by the matrix: " << std::endl << mat_withvec << "gives the vector " << (mat_withvec * vec_mat3) << std::endl;
-    
+
     /*
         Swap tests
     */
@@ -146,13 +146,13 @@ int testMatrices() {
     Matrix<double> mat_3_inverted = mat_3_toinvert.inverted();
     std::cout << "is:\n" << mat_3_inverted;
     std::cout << "when the matrix is multiplied by it's inverse:\n" << (mat_3_toinvert * mat_3_inverted) << std::endl;
-    
-    Matrix<double> mat_initbynum(5);
+
+    Matrix<double> mat_initbynum(5,5,0);
     std::cout << "matrix produced by size init\n" << mat_initbynum << std::endl;
-    
+
     Matrix<double> mat_nonsq = {{2,3,5},{6,1,9}};
     std::cout << "the transpose of " << std::endl << mat_nonsq << "is: " << std::endl << mat_nonsq.transposed() << std::endl;
-    
+
     Matrix<double> matrot_1 = RotationMatrix<double>::make(90);
     std::cout << "A rotation matrix for 90 degrees:\n" << matrot_1 << std::endl;
     Matrix<double> matrot_2 = { {2,5},
@@ -161,10 +161,10 @@ int testMatrices() {
     matrot_1 *= vec1;
     matrot_2 *= matrot_1;
     std::cout << "when applied to matrix" << std::endl << matrot_2 << "yeilds" << std::endl << (matrot_2 * matrot_1) << "and applied to vector " << vec1 << " yeilds " << (matrot_1 * vec1) << std::endl;
-    
+
     Matrix<double> mat_LU = {{3,4,5},{1,7,2},{6,6,13}};
     auto LU_decomp = mat_LU.decompose();
-    std::cout << "the matrix:\n" << mat_LU << "has the LU decomposition of\n" << LU_decomp.lower << "and\n" << LU_decomp.upper << std::endl; 
+    std::cout << "the matrix:\n" << mat_LU << "has the LU decomposition of\n" << LU_decomp.lower << "and\n" << LU_decomp.upper << std::endl;
     Matrix<double> LU_product = LU_decomp.lower * LU_decomp.upper;
     std::cout << "the product of the upper/lower matrices is:\n" << LU_product << std::endl;
     std::cout << "the determinant of the upper matrix is: " << LU_decomp.upper.det() << std::endl;

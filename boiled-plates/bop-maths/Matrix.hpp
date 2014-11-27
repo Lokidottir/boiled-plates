@@ -91,12 +91,6 @@ namespace bop {
                     }
                 }
 
-                Matrix(uint_type size, T fill = 0) : Matrix(size, size, fill)  {
-                    /*
-                        Square matrix constructor, calls Matrix(uint, uint, T).
-                    */
-                }
-
                 template<class A>
                 Matrix(std::initializer_list< std::initializer_list<A> > list) : Matrix() {
                     /*
@@ -508,7 +502,7 @@ namespace bop {
                             (*this) /= deter;
                         }
                         else {
-                            Matrix<T> inverse(this->height());
+                            Matrix<T> inverse(this->width(),this->height());
                             for (uint_type elem = 0; elem < this->height(); elem++) inverse.element(elem,elem) = 1;
                             /*
                                 non-2x2 matrix inverse solution
