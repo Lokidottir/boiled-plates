@@ -1,4 +1,4 @@
-boiled-plates
+boiled-plates ![Build status from Travis CI](https://travis-ci.org/Lokidottir/boiled-plates.svg)
 =============
 
 The Boiled Plates C++ library is a collection of hopefully helpful or interesting classes and helper functions that may make coding in the lovely but pedantic language of C++ a little more bearable.
