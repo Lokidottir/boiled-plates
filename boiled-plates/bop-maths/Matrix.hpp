@@ -764,7 +764,7 @@ namespace bop {
             static Matrix<T> make(T angle, bool clockwise = false, bool rads = false) {
                 static std::unordered_map<T,Matrix<T> > map;
                 if (clockwise) angle -= 180;
-                if (!rads) angle = ((pi()/180.0) * angle); //Convert the degrees to radians manually
+                if (!rads) angle = ((pi/180.0) * angle); //Convert the degrees to radians manually
                 if (map[angle]) return map[angle];
                 else {
                     map[angle] = {{static_cast<T>(cos(angle)), static_cast<T>(-sin(angle))},

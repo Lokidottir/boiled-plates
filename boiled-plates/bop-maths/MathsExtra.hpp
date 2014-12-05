@@ -10,15 +10,13 @@ namespace bop {
     #else
     namespace maths {
     #endif
-        
-        constexpr double pi() {
-            return std::atan(1)*4;
-        }
-        
+
+        const double pi = std::atan(1)*4;
+
         size_t minBits (const size_t num) {
             return static_cast<size_t>(log2(num));
         }
-        
+
         unsigned int factorial(unsigned int n) {
             unsigned int fact = n;
             for (n = n - 1; n > 1; n--) {
@@ -26,13 +24,13 @@ namespace bop {
             }
             return fact;
         }
-        
+
         #ifndef BOP_MATHS_DEFAULT_TYPES
         #define BOP_MATHS_DEFAULT_TYPES
         typedef double prec_type;
         typedef uint64_t uint_type;
         #endif
-        
+
     }
 }
 
