@@ -29,16 +29,16 @@ namespace bop {
         template<class T>
         class Matrix {
             protected:
-                uint_type _width;
-                uint_type _height;
+                uint_type matrix_width;
+                uint_type matrix_height;
                 T* data;
 
                 inline void setData(uint_type width, uint_type height, bool delete_ptr = true) {
                     if (this->data == nullptr || (delete_ptr && (width * height) > this->width() * this->height())) {
                         this->data = static_cast<T*>(realloc(this->data, width * height * sizeof(T)));
                     }
-                    this->_width = width;
-                    this->_height = height;
+                    this->matrix_width = width;
+                    this->matrix_height = height;
                 }
 
                 class MatrixIndexHandler {
@@ -76,8 +76,8 @@ namespace bop {
                         Empty constructor.
                     */
                     this->data = nullptr;
-                    this->_width = 0;
-                    this->_height = 0;
+                    this->matrix_width = 0;
+                    this->matrix_height = 0;
                 }
 
                 Matrix(uint_type width, uint_type height, T fill = 0) : Matrix() {
@@ -126,8 +126,8 @@ namespace bop {
                     /*
                         Move constructor.
                     */
-                    std::swap(this->_width, mat._width);
-                    std::swap(this->_height, mat._height);
+                    std::swap(this->matrix_width, mat.matrix_width);
+                    std::swap(this->matrix_height, mat.matrix_height);
                     std::swap(this->data, mat.data);
                 }
 
@@ -209,7 +209,7 @@ namespace bop {
                     */
                     delete[] this->data;
                     this->data = temp;
-                    this->_width = mat._width;
+                    this->matrix_width = mat.matrix_width;
                     return *this;
                 }
 
@@ -314,14 +314,14 @@ namespace bop {
                     /*
                         Returns the width of the Matrix.
                     */
-                    return this->_width;
+                    return this->matrix_width;
                 }
 
                 inline uint_type height() const {
                     /*
                         Returns the height of the Matrix.
                     */
-                    return this->_height;
+                    return this->matrix_height;
                 }
 
                 inline bool square() const {
@@ -332,7 +332,7 @@ namespace bop {
                 }
 
                 inline bool square(uint_type size) const {
-                    return (this->_width == size && this->_width == this->_height);
+                    return (this->matrix_width == size && this->matrix_width == this->matrix_height);
                 }
 
                 std::string string(bool newlines = true) const {
@@ -597,13 +597,30 @@ namespace bop {
                         delete[] this->data;
                         this->data = temp;
                         temp = nullptr;
-                        std::swap(this->_width, this->_height);
+                        std::swap(this->matrix_width, this->matrix_height);
                     }
                     return *this;
                 }
 
+                const static uint_type rowvec = 1;
+                const static uint_type colvec = 2;
+
                 inline Matrix<T> transposed() const {
                     return Matrix<T>(*this).transpose();
+                }
+
+                inline bool isVector() const {
+                    /*
+                        Returns true if either of the matrix's dimentions square
+                        1. Indicates if the matrix represents a Vector.
+                    */
+                    return (this->width() == 1 || this->height() == 1);
+                }
+
+                inline bool isVector(uint_type type) const {
+                    if (type == Matrix<T>::rowvec) return (this->height() == 1);
+                    else if (type == Matrix<T>::rowvec) return (this->width() == 1);
+                    else return false;
                 }
 
                 //Matrix manipulation functions.

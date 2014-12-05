@@ -5,7 +5,11 @@
 #include <cmath>
 
 #include "MathsExtra.hpp"
+#ifndef BOP_USE_NEW_VECTOR
 #include "OldVector.hpp"
+#else
+#include "Vector.hpp"
+#endif
 #include "Matrix.hpp"
 
 #endif

@@ -13,18 +13,29 @@ namespace bop {
                 BiDirNode<T>* cursor_node;
                 uint_type cursor_index;
                 uint_type ll_size;
-                
+
                 void scanCursor(uint_type index) {
-                    if (this->cursor_node == nullptr){
+                    if (this->cursor_node == nullptr) {
+                        /*
+                            If the list is empty, simply return.
+                        */
                         if (this->node == nullptr) return;
                         else {
+                            /*
+                                otherwise if the cursor isn't set, set it to the
+                                initial node and recurse the function.
+                            */
                             this->cursor_node = this->node;
                             this->cursor_index = 0;
+                            this->scanCursor(index);
                         }
                     }
-                    if (cursor_index == index) return;
+                    if (this->cursor_index == index) return; //If the cursor is already at the requested index, return.
                     else {
-                        if (index > cursor_index) while (index > cursor_index && cursor_node->next != nullptr) {
+                        if (index > this->cursor_index) while (index > this->cursor_index && this->cursor_node->next != nullptr) {
+                            /*
+                                If the requested index is 
+                            */
                             this->cursor_node = this->cursor_node->next;
                             cursor_index++;
                         }
@@ -34,18 +45,18 @@ namespace bop {
                         }
                     }
                 }
-                
+
             public:
-                
+
                 LinkedList() : node(nullptr), cursor_node(nullptr), cursor_index(0), ll_size(0) {
                 }
-                
+
                 LinkedList(const LinkedList<T>& copy) : LinkedList() {
                     this->node = new BiDirNode(copy.node);
                     this->ll_size = copy.ll_size;
                     this->scanCursor(copy.cursor_index);
                 }
-                
+
                 LinkedList(LinkedList<T>&& move) : LinkedList() {
                     std::swap(this->node,move.node);
                     std::swap(this->cursor_node,move.cursor_node);
@@ -61,7 +72,7 @@ namespace bop {
                         }
                     }
                 }
-                
+
                 void append(const T& data) {
                     if (this->size() == 0) {
                         this->node = new BiDirNode(data);
@@ -74,7 +85,7 @@ namespace bop {
                     }
                     this->ll_size++;
                 }
-                
+
                 bool remove(uint_type index, uint_type length = 1) {
                     if (length == 0 || index >= this->size() || index + length >= this->size()) return false;
                     else {
@@ -84,15 +95,15 @@ namespace bop {
                             this->scanCursor(length);
                             end_ptr = this->cursor_node;
                             this->scanCursor(length + 1);
-                            
-                            
+
+
                         }
                         else {
                             this->scanCursor(index - 1);
                         }
                     }
                 }
-                
+
                 uint_type size() {
                     return this->ll_size;
                 }
