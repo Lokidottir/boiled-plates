@@ -1,6 +1,6 @@
 #Boiled Plates makefile, primarily used for creating test programs.
 BP_CC?= g++
-BP_CC_FLAGS?= -static -static-libgcc -static-libstdc++ -Wall -std=c++11 -g
+BP_CC_FLAGS?= -static -static-libgcc -static-libstdc++ -Wall -std=c++1y -g
 BP_LD?= -Iboiled-plates
 
 all: maths-test mat-benchmark top-test

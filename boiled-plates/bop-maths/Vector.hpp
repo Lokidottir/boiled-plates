@@ -34,7 +34,7 @@ namespace bop {
 
                 }
 
-                Vector(const uint_type size, bool is_rowvector) : Vector() {
+                Vector(const uint_type size, bool is_row_vector) : Vector() {
                     if (is_row_vector) this->setData(size,1);
                     else this->setData(1,size);
                 }
