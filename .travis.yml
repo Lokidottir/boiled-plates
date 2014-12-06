@@ -18,6 +18,10 @@ script:
   - ./mat-benchmark
   - ./mat-benchmark-opti
   - ./maths-test
-  - ./top-test
-  - ./memory-test
+  - if [ -a top-test ]
+  -   then ./top-test;
+  - fi
+  - if [ -a memory-test ]
+  -   then ./memory-test;
+  - fi
   - make -B -f MAKE.mak clean
