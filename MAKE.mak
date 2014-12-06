@@ -3,7 +3,7 @@ BP_CC?= g++
 BP_CC_FLAGS?= -static -static-libgcc -static-libstdc++ -fdiagnostics-color=auto -Wall -std=c++1y -g
 BP_LD?= -Iboiled-plates
 
-all: maths-test mat-benchmark
+all: maths-test mat-benchmark memory-test
 
 maths-test:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/test_maths.cpp -o maths-test $(BP_LD)
