@@ -17,11 +17,6 @@ script:
   - make -B -f MAKE.mak
   - ./mat-benchmark
   - ./mat-benchmark-opti
-  - ./maths-test
-  - if [ -a top-test ]
-  -   then ./top-test;
-  - fi
-  - if [ -a memory-test ]
-  -   then ./memory-test;
-  - fi
+  - if [ -a top-test ]; then ./top-test; fi
+  - if [ -a memory-test ]; then ./memory-test; fi
   - make -B -f MAKE.mak clean
