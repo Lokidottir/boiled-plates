@@ -1,3 +1,5 @@
+#Travis CI build & test script
+
 language: cpp
 
 #Gracefully taken from http://gearchicken.com/wordpress/?p=105
@@ -11,4 +13,11 @@ install:
   - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-4.8 90
 #End of gearchicken code.
 
-script: ./buildtests.sh
+script:
+  - make -B -f MAKE.mak
+  - ./mat-benchmark
+  - ./mat-benchmark-opti
+  - ./maths-test
+  - ./top-test
+  - ./memory-test
+  - make -B -f MAKE.mak clean

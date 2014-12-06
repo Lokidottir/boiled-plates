@@ -34,7 +34,7 @@ namespace bop {
                     else {
                         if (index > this->cursor_index) while (index > this->cursor_index && this->cursor_node->next != nullptr) {
                             /*
-                                If the requested index is 
+                                If the requested index is
                             */
                             this->cursor_node = this->cursor_node->next;
                             cursor_index++;
@@ -100,6 +100,7 @@ namespace bop {
                         }
                         else {
                             this->scanCursor(index - 1);
+                            //todo
                         }
                     }
                 }

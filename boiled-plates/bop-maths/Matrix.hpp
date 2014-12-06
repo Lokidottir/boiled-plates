@@ -369,6 +369,13 @@ namespace bop {
                     return this->valid();
                 }
 
+                explicit operator std::string() const {
+                    /*
+                        Addditional way of getting a string from a Matrix object by casting.
+                    */
+                    return this->string();
+                }
+
                 struct LU {
                     Matrix<T> lower;
                     Matrix<T> upper;
