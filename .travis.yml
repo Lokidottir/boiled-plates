@@ -14,9 +14,9 @@ install:
 #End of gearchicken code.
 
 script:
-  - make -B -f MAKE.mak
+  - make
   - ./mat-benchmark
   - ./mat-benchmark-opti
   - if [ -a top-test ]; then ./top-test; fi
   - if [ -a memory-test ]; then ./memory-test; fi
-  - make -B -f MAKE.mak clean
+  - make clean
