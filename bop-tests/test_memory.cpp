@@ -6,6 +6,7 @@
 using namespace bop;
 using namespace mem;
 
+/*
 struct TestObj{
     int number;
     std::string str;
@@ -18,22 +19,14 @@ struct TestObj{
     }
 };
 
-int test_pointers() {
-    std::cout << "---Pointer testing---" << std::endl;
-    Pointer<int> ptr_1 = std::move(Pointer<int>(new int(6)));
-    return 0;
-}
-
 int test_recycler() {
     std::cout << "---Recycler testing---" << std::endl;
-    Recycler<TestObj> recycler;
+    Recycler<double> recycler;
     recycler.reserve(9,512);
 
     return 0;
 }
-
+*/
 int main() {
-    std::cout << "pointer testing returned " << test_pointers() << std::endl;
-    std::cout << "recycler testing returned " << test_recycler() << std::endl;
     return 0;
 }

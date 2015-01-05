@@ -17,15 +17,15 @@ namespace bop {
         }
 
         template<typename F, typename ...params>
-        int benchmark(uint_type test_count, F function, params&&... P) {
+        uint_type benchmark(uint_type test_count, F function, params&&... P) {
             /*
                 Returns nanoseconds taken to perform a function given
                 the parameters. The time taken to call the function is
                 subtracted from the result.
             */
-            #ifndef BOP_BENCHMARK_KEEP_CALLTIME
             //Get the time before empty function calling
             auto empty_funct_b = std::chrono::high_resolution_clock::now();
+            #ifdef BOP_BENCHMARK_KEEP_CALLTIME
             for (unsigned int i = 0; i < test_count; i++) {
                 /*
                     Call the empty function as many times as the function being
@@ -33,9 +33,9 @@ namespace bop {
                 */
                 nothing(P...);
             }
+            #endif
             //Get the time after the function calling
             auto empty_funct_a = std::chrono::high_resolution_clock::now();
-            #endif
             //Get the time before benchmarked function is called
             auto before = std::chrono::high_resolution_clock::now();
             for (unsigned int i = 0; i < test_count; i++) {

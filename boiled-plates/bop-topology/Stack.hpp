@@ -29,10 +29,6 @@ namespace bop {
                     std::swap(this->node,move.node);
                 }
 
-                Node(T* move) : Node() {
-                    (*move);
-                }
-
                 Node(const T& data) : Node() {
                     this->data = data;
                 }
@@ -52,12 +48,8 @@ namespace bop {
             Node* stk;
             uint_type logical_size;
 
-            Node* topNode() {
-                Node* ptr = this->stk;
-                if (ptr != nullptr) while(ptr->node != nullptr) {
-                    ptr = ptr->node;
-                }
-                return ptr;
+            inline Node* topNode() {
+                return this->stk;
             }
 
         public:
@@ -92,54 +84,60 @@ namespace bop {
                 return *this;
             }
 
+
             T& operator[] (uint_type index) const {
-                uint_type wrk_index = 0;
-                Node* ptr = this->stk;
-                if (ptr != nullptr) while (wrk_index < index && ptr->node != nullptr) {
-                    ptr = ptr->node;
+                /*
+                    std::vector<T> behaviour, return the nth value that was added,
+                    costly for items far from the top of the stack.
+                */
+                uint_type wrk_index = this->size() - 1;
+                Node* tmp_ptr = this->stk;
+                while (tmp_ptr != nullptr && wrk_index > index) {
+                    tmp_ptr = tmp_ptr->node;
+                    wrk_index--;
                 }
-                return ptr->data;
+                return tmp_ptr->data;
+
             }
 
             T pop() {
+                /*
+                    Pop the value from the top of the stack, returning it. If no
+                    item is present, return T().
+                */
                 T val;
-                Node* ptr = this->stk;
-                if (ptr == nullptr) {
+                Node* top_ptr = this->topNode();
+                if (top_ptr == nullptr) {
                     return T();
                 }
-                else if (ptr->node == nullptr) {
-                    std::swap(val,ptr->data);
-                }
                 else {
-                    while (ptr->node->node != nullptr) {
-                        ptr = ptr->node;
-                    }
-                    std::swap(val,ptr->node->data);
-                    delete ptr->node;
-                    ptr->node = nullptr;
+                    std::swap(top_ptr->data,val);
+                    this->stk = top_ptr->node;
+                    top_ptr->node = nullptr;
+                    return val;
                 }
-                if (this->logical_size > 0) this->logical_size--;
-                return val;
+
             }
 
             void push(const T& data) {
-                if (this->stk != nullptr) this->topNode()->node = new Node(data);
-                else this->stk = new Node(data);
-                this->logical_size++;
-            }
-
-            void givePush(T* move) {
                 /*
-                    Moves and pushes an element.
+                    Add an element to the stack so that the node at this->stk is
+                    now the top of the stack;
                 */
-                if (this->stk != nullptr) this->topNode()->node = new Node(move);
-                else this->stk = new Node(move);
+                if (this->topNode() == nullptr) {
+                    this->stk = new Node(data);
+                }
+                else {
+                    Node* tmp_ptr = this->stk;
+                    this->stk = new Node(data);
+                    this->stk->node = tmp_ptr;
+                }
                 this->logical_size++;
             }
 
             bool contains(const T& val) const {
                 Node* ptr = this->stk;
-                if (ptr != nullptr) while (ptr->node != nullptr) {
+                while (ptr != nullptr) {
                     if (ptr->data == val) return true;
                     ptr = ptr->node;
                 }
@@ -147,6 +145,9 @@ namespace bop {
             }
 
             operator std::vector<T> () const {
+                /*
+                    Cast to std::vector object
+                */
                 std::vector<T> vec(this->size());
                 for (uint_type i = 0; i < this->size(); i++) {
                     vec[i] = (*this)[i];

@@ -8,6 +8,7 @@
 #include <sstream>
 #include <cmath>
 #include <unordered_map>
+#include <type_traits>
 #include "MathsExtra.hpp"
 #include "Vector.hpp"
 
@@ -29,6 +30,9 @@ namespace bop {
         template<class T>
         class Matrix {
             protected:
+                #ifdef BOP_TYPE_TRAIT_CHECKS
+                static_assert(std::is_trivially_copyable<T>::value, "The class bop::maths::Matrix<T> can only have T be a trivially copyable type.");
+                #endif
                 uint_type matrix_width;
                 uint_type matrix_height;
                 T* data;
@@ -122,14 +126,23 @@ namespace bop {
                     for (uint_type elem = 0; elem < mat_tocast.width() * mat_tocast.height(); elem++) this->element(0,elem) = static_cast<T>(mat_tocast.element(0,elem));
                 }
 
+                #ifndef BOP_MATRIX_DEFAULT_MOVE
                 Matrix(Matrix<T>&& mat) : Matrix() {
                     /*
                         Move constructor.
                     */
+                    #ifdef BOP_MATRIX_SWAPMOVE
                     std::swap(this->matrix_width, mat.matrix_width);
                     std::swap(this->matrix_height, mat.matrix_height);
                     std::swap(this->data, mat.data);
+                    #else
+                    this->matrix_width = mat.matrix_width;
+                    this->matrix_height = mat.matrix_height;
+                    this->data = mat.data;
+                    mat.data = nullptr;
+                    #endif
                 }
+                #endif
 
                 //Destructor
                 ~Matrix() {

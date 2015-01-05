@@ -70,8 +70,12 @@ namespace bop {
                     return this->ptr[index];
                 }
 
-                T& operator= () {
+                T& operator= (Pointer<T> pointer) {
+                    /*
+                        
+                    */
 
+                    this->ptr =;
                 }
 
                 #ifdef BOP_MEM_POINTER_SIZECOMPARE

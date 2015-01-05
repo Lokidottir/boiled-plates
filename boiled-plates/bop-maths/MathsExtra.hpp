@@ -25,6 +25,13 @@ namespace bop {
             return fact;
         }
 
+        template<class T>
+        inline T log_n(T base, T val) {
+            return (log(val)/log(base));
+        }
+
+
+
         #ifndef BOP_MATHS_DEFAULT_TYPES
         #define BOP_MATHS_DEFAULT_TYPES
         typedef double prec_type;

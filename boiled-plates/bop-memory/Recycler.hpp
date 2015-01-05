@@ -2,39 +2,49 @@
 #define BOP_MEM_RECYCLER_HPP
 
 #include <map>
-#define BOP_MEM_POINTER_SIZECOMPARE
-#include "Pointer.hpp"
+#include <type_traits>
+#include "PrimativeArrayContainer.hpp"
 #include "../bop-topology/Stack.hpp"
 
 namespace bop {
     namespace mem {
         template<typename T>
-        class Recycler {
+        class PrimativeArrayRecycler {
             private:
-                std::map< uint_type,top::Stack<Pointer<T> > > pointers;
+                std::map< uint_type,top::Stack<T*> > arrays;
             public:
-                Recycler() : pointers() {
+                #ifdef BOP_TYPE_TRAIT_CHECKS
+                static_assert(std::is_fundamental<T>::value, "The bop::mem::PrimativeArrayRecycler<T> class can only have T as a primitive type.");
+                #endif
+                PrimativeArrayRecycler() : arrays() {
 
                 }
 
-                Pointer<T> request(uint_type req_size = 1, bool is_array = false) {
-                    if (req_size > 1) is_array = true;
-
-                }
-
-                void givePointer(Pointer<T>& pointer) {
-                    this->pointers[pointer.size()].push(Pointer<T>(std::move(pointer)));
+                T* request(uint_type size) {
+                    if (this->arrays[size].size() > 0) {
+                        return this->arrays[size].pop();
+                    }
+                    else {
+                        return new T[size];
+                    }
                 }
 
                 void reserve(uint_type size = 1, uint_type number = 1) {
                     for (uint_type i = 0; i < number; i++) {
-                        Pointer<T>* temp_ptr(new T[size],size,true,true);
-                        this->pointers[size].givePush(std::move(temp_ptr));
+                        this->arrays[size].push(new T[size]);
                     }
                 }
 
                 uint_type size() {
-                    return this->pointers->size();
+                    return this->arrays->size();
+                }
+
+                void give(T* pointer, uint_type size) {
+                    this->arrays[size].push(pointer);
+                }
+
+                bool hasReserves(uint_type size) {
+                    return (this->arrays[size].size() != 0);
                 }
         };
     }
