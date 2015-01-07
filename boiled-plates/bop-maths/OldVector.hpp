@@ -7,6 +7,7 @@
 #include <sstream>
 #include <iostream>
 #include <utility>
+#include "../bop-defaults/types.hpp"
 /*
     bop::maths::Vector Class file
 */
@@ -17,11 +18,6 @@ namespace bop {
     #else
     namespace maths {
     #endif
-        #ifndef BOP_MATHS_DEFAULT_TYPES
-        #define BOP_MATHS_DEFAULT_TYPES
-        typedef double prec_type;
-        typedef uint64_t uint_type;
-        #endif
         template<class T>
         class Matrix;
         template<class T>
@@ -29,7 +25,7 @@ namespace bop {
             protected:
                 friend class Matrix<T>;
                 T zero;
-                
+
                 inline T& checkZero() {
                     /*
                         Awful hack to get a reference to a value 0 for now.
@@ -43,16 +39,16 @@ namespace bop {
                 T* data;
                 uint_type width;
                 int pivot_index;
-                
+
                 void setData(uint_type size, bool delete_ptr = true) {
                     if (this->data == nullptr || (this->width < size && delete_ptr)) {
                         this->data = static_cast<T*>(realloc(this->data, size * sizeof(T)));
                     }
                     this->width = size;
                 }
-                
+
             public:
-                
+
                 //Constructors
                 Vector(uint_type size, T fill = 0) : Vector() {
                     /*
@@ -66,8 +62,8 @@ namespace bop {
                         this->data[i] = fill;
                     }
                 }
-                
-                
+
+
                 Vector(std::initializer_list<T> list) : Vector() {
                     /*
                         Creates a new Vector from an initializer list.
@@ -85,7 +81,7 @@ namespace bop {
                         i++;
                     }
                 }
-                
+
                 Vector(const Vector<T>& vec) : Vector() {
                     /*
                         Creates a new Vector from a Vector, a copy constructor.
@@ -95,7 +91,7 @@ namespace bop {
                     this->pivot_index = vec.pivot_index;
                     memcpy(this->data, vec.data, vec.size() * sizeof(T));
                 }
-                
+
                 Vector(Vector<T>&& vec) : Vector() {
                     /*
                         Move constructor.
@@ -104,7 +100,7 @@ namespace bop {
                     this->pivot_index = vec.pivot_index;
                     std::swap(this->data, vec.data);
                 }
-                
+
                 Vector() {
                     /*
                         Empty constructor.
@@ -114,16 +110,16 @@ namespace bop {
                     this->zero = 0;
                     this->width = 0;
                 }
-                
+
                 //Destructor
-                
+
                 ~Vector() {
                     //Manual deletion of data array.
                     if (this->data != nullptr) delete[] this->data;
                 }
-                
+
                 //Operator Overloads
-                
+
                 inline T& operator[] (const uint_type index) const {
                     /*
                         Index operator, returns the data at the given index.
@@ -131,18 +127,18 @@ namespace bop {
                     */
                     return this->data[index];
                 }
-                
+
                 Vector<T>& operator= (const Vector<T>& vec) {
                     /*
                         Copy assignment, synonymous to the copy constructor.
                     */
-                    
+
                     this->setData(vec.size());
                     memcpy(this->data, vec.data, vec.size() * sizeof(T));
                     this->pivot_index = vec.pivot_index;
                     return *this;
                 }
-                
+
                 template<class A>
                 Vector<T>& operator= (std::initializer_list<A> list) {
                     /*
@@ -162,9 +158,9 @@ namespace bop {
                     }
                     return *this;
                 }
-                
+
                 //Boolean Logic overloads
-                
+
                 bool operator== (const Vector<T>& vec) const {
                     if (this->width == vec.width) {
                         /*
@@ -179,13 +175,13 @@ namespace bop {
                     }
                     else return false;
                 }
-                
+
                 bool operator!= (const Vector<T>& vec) const {
                     return !(this->operator==(vec));
                 }
-                
+
                 //Arithmetic Operator Overloads
-                
+
                 Vector<T>& operator*= (const T scalar) {
                     /*
                         Member multiplication operator, multiplies all
@@ -197,10 +193,10 @@ namespace bop {
                     }
                     return *this;
                 }
-                
+
                 Vector<T>& operator/= (const T scalar) {
                     /*
-                        Member division operator, divides all 
+                        Member division operator, divides all
                         elements in a vector by the given scalar.
                         ----synonymous with "vec *= 1/scalar"
                     */
@@ -210,7 +206,7 @@ namespace bop {
                     }
                     return *this;
                 }
-                
+
                 Vector<T>& operator+= (const Vector<T>& vec) {
                     /*
                         Member addition operator, adds the elements of
@@ -224,11 +220,11 @@ namespace bop {
                     this->pivot_index = -1;
                     return *this;
                 }
-                
+
                 Vector<T>& operator-= (const Vector<T>& vec) {
                     /*
                         Member subtraction operator, subtracts the elements
-                        of a given vector from the corresponding elements of 
+                        of a given vector from the corresponding elements of
                         a subject vector.
                         ----sets the pivot as needing to be recalculated.
                     */
@@ -238,7 +234,7 @@ namespace bop {
                     this->pivot_index = -1;
                     return *this;
                 }
-                
+
                 Vector<T> operator- () const {
                     /*
                         Member negation operator, returns a vector identical to
@@ -250,9 +246,9 @@ namespace bop {
                     }
                     return vec;
                 }
-                
+
                 //Vector information functions
-                
+
                 int pivot(bool recalc = true) {
                     /*
                         Returns the position of the first non-zero element in
@@ -266,19 +262,19 @@ namespace bop {
                     }
                     return this->pivot_index;
                 }
-                
+
                 uint_type size() const {
                     /*
                         Returns the width of the vector.
                     */
                     return this->width;
                 }
-                
+
                 inline bool valid() const {
                     //Vector's validity determined by the pointer's value.
                     return (this->data != nullptr);
                 }
-                
+
                 explicit operator bool() const {
                     /*
                         Cast to bool as the validity of the vector. Allowing for "if (Vector) { ... }"
@@ -286,7 +282,7 @@ namespace bop {
                     */
                     return this->valid();
                 }
-                
+
                 std::string string(bool brackets = true) const {
                     /*
                         Returns a string that represents the data in the Vector
@@ -303,10 +299,10 @@ namespace bop {
                     }
                     return vec_str.str();
                 }
-                
+
                 template <class T_>
                 friend std::ostream& operator<< (std::ostream& stream, const Vector<T_>& vec);
-                
+
                 T mag() const {
                     T magnitude = 0;
                     for (uint_type elem = 0; elem < this->size(); elem++) {
@@ -314,12 +310,12 @@ namespace bop {
                     }
                     return static_cast<T>(sqrt(magnitude));
                 }
-                
+
                 /*
                     Coordinate functions, synonymous with Vector::operator[](0/1/2/3).
                     Checks that those indices exist before returning.
                 */
-                
+
                 inline T& x() {
                     if (this->width > 0) return this->data[0];
                     else {
@@ -327,22 +323,22 @@ namespace bop {
                         return this->checkZero();
                     }
                 }
-                
+
                 inline T& y() {
                     if (this->width > 1) return this->data[1];
                     else return this->checkZero();
                 }
-                
+
                 inline T& z() {
                     if (this->width > 2) return this->data[2];
                     else return this->checkZero();
                 }
-                
+
                 inline T& w() {
                     if (this->width > 3) return this->data[3];
                     else return this->checkZero();
                 }
-                
+
                 /*
                     Member swap function, intended for use in algorithms such
                     as Gauss-Jordan elimination, or whatever else may be in need
@@ -354,49 +350,49 @@ namespace bop {
                     }
                 }
         };
-        
-        
+
+
         typedef Vector<double> vector;
-        
+
         /*
             External arithmetic operators, return a vector separate from
             the given parameters.
         */
-        
+
         template<class T>
         Vector<T> operator* (const Vector<T>& vec, const T scalar) {
             Vector<T> vec_p(vec);
             vec_p *= scalar;
             return vec_p;
         }
-        
+
         template<class T>
         Vector<T> operator/ (const Vector<T>& vec, const T scalar) {
             Vector<T> vec_p(vec);
             vec_p /= scalar;
             return vec_p;
         }
-        
+
         template<class T>
         Vector<T> operator+ (const Vector<T>& vec1, const Vector<T>& vec2) {
             Vector<T> vec_p(vec1);
             vec_p += vec2;
             return vec_p;
         }
-        
+
         template<class T>
         Vector<T> operator- (const Vector<T>& vec1, const Vector<T>& vec2) {
             Vector<T> vec_p(vec1);
             vec_p -= vec2;
             return vec_p;
         }
-        
+
         template <class T>
         std::ostream& operator<< (std::ostream& stream, const Vector<T>& vec) {
             stream << vec.string();
             return stream;
         }
-        
+
     }
 }
 

@@ -6,11 +6,11 @@
 using namespace bop::maths;
 
 int testVectors() {
-    std::cout << "####\n####\nmaths::bop::Vector testing\n####\n####" << std::endl;
+    std::cout << "----\n----\nmaths::bop::Vector testing\n----\n----" << std::endl;
     /*
         Testing Operators
     */
-    std::cout << "\n####\nOperator Tests\n####" << std::endl;
+    std::cout << "\n----\nOperator Tests\n----" << std::endl;
     Vector<double> vec3 = {4,7,2};
     std::cout << "vector " << vec3 << " multiplied by 4: " << (vec3 * 4.0) << std::endl;
     std::cout << "vector " << vec3 << " divided by 4: " << (vec3 / 4.0) << std::endl;
@@ -20,7 +20,7 @@ int testVectors() {
     /*
         Testing Swap
     */
-    std::cout << "\n####\nSwap Tests\n####" << std::endl;
+    std::cout << "\n----\nSwap Tests\n----" << std::endl;
     std::cout << "I shall perform a magic trick! Watch as I change the positions of these vectors!" << std::endl;
     Vector<double> vec8 = {1,2,3,4,5,6,7,8};
     Vector<double> vec4 = {9,10,11,12};
@@ -31,18 +31,18 @@ int testVectors() {
     /*
         Testing coords
     */
-    std::cout << "\n####\nCoordinate Tests\n####" << std::endl;
+    std::cout << "\n----\nCoordinate Tests\n----" << std::endl;
     std::cout << "Coordinate vals of " << vec3 << " are x: " << vec3.x() << " y: " << vec3.y() << " z: " << vec3.z() << " with a w of: " << vec3.w() << std::endl;
     /*
         Pivot test
     */
-    std::cout << "\n####\nPivot Tests\n####" << std::endl;
+    std::cout << "\n----\nPivot Tests\n----" << std::endl;
     Vector<double> vec_pivot = {0,0,5,3};
     std::cout << "The pivot col of vector " << vec_pivot << " is: " << vec_pivot.pivot() << std::endl;
     /*
         Bool test
     */
-    std::cout << "\n####\nBoolean Tests\n####" << std::endl;
+    std::cout << "\n----\nBoolean Tests\n----" << std::endl;
     Vector<double> vec_bool_1 = {4,2,1};
     Vector<double> vec_bool_2 = {4,2,1};
     Vector<double> vec_bool_3 = {9,3,1};
@@ -54,13 +54,13 @@ int testVectors() {
     /*
         Size test
     */
-    std::cout << "\n####\nSize Tests\n####" << std::endl;
+    std::cout << "\n----\nSize Tests\n----" << std::endl;
     Vector<double> vec_size = {5,6,9,3,8,5,7,11,993,1232,-6,2,1.000005,2};
     std::cout << "Size of vector " << vec_size << " is " << vec_size.size() << std::endl;
     /*
         Other tests
     */
-    std::cout << "\n####\nOther Tests\n####" << std::endl;
+    std::cout << "\n----\nOther Tests\n----" << std::endl;
     Vector<double> vec_oth = vec_size;
     vec_size = vec_oth;
     vec_oth = vec_size;
@@ -78,11 +78,11 @@ int testVectors() {
 }
 
 int testMatrices() {
-    std::cout << "####\n####\nmaths::bop::Matrix testing\n####\n####" << std::endl;
+    std::cout << "----\n----\nmaths::bop::Matrix testing\n----\n----" << std::endl;
     /*
         Operator test
     */
-    std::cout << "\n####\nOperator Tests\n####" << std::endl;
+    std::cout << "\n----\nOperator Tests\n----" << std::endl;
     Matrix<double> mat1 = {{2,6,-1},{-1,9,6},{4,2,9}};
     Matrix<double> mat2 = {{3,7,2},{-1,-1,-1},{5,2,-6}};
     std::cout << "Matrix 1:" << std::endl << mat1 << std::endl;
@@ -99,7 +99,7 @@ int testMatrices() {
     /*
         Swap tests
     */
-    std::cout << "\n####\nSwap Tests\n####" << std::endl;
+    std::cout << "\n----\nSwap Tests\n----" << std::endl;
     std::cout << "Matrix 1:" << std::endl << mat1 << std::endl << "to be swapped with Matrix 2:" << std::endl << mat2 << std::endl;
     std::swap(mat1,mat2);
     std::cout << "Matrix 1:" << std::endl << mat1 << std::endl << "Matrix 2:" << std::endl << mat2 << std::endl;
@@ -109,7 +109,7 @@ int testMatrices() {
     /*
         Bool test
     */
-    std::cout << "\n####\nBoolean Tests\n####" << std::endl;
+    std::cout << "\n----\nBoolean Tests\n----" << std::endl;
     Matrix<double> bool_mat1 = {{3,7},{-1,2}};
     Matrix<double> bool_mat2 = {{3,7},{-1,2}};
     Matrix<double> bool_mat3 = {{10,3},{5,-7}};
@@ -123,7 +123,7 @@ int testMatrices() {
     /*
         Other tests
     */
-    std::cout << "\n####\nOther Tests\n####" << std::endl;
+    std::cout << "\n----\nOther Tests\n----" << std::endl;
     Matrix<double> mat3_impose = {{2,0,0},{0,2,0},{0,0,2}};
     Matrix<double> mat4_unit = IdentityMatrix<double>::make(4);
     std::cout << "imposing:\n" << mat3_impose << "on:\n" << mat4_unit << "yeilds:\n";
@@ -134,7 +134,7 @@ int testMatrices() {
     /*
         External function tests
     */
-    std::cout << "\n####\nNon-member function Tests\n####" << std::endl;
+    std::cout << "\n----\nNon-member function Tests\n----" << std::endl;
     Matrix<double> unit_m = IdentityMatrix<double>::make(3);
     std::cout << "Identity matrix: " << std::endl << unit_m;
     Matrix<double> mat_ex1 = {{4,8},{0,1}};
@@ -169,11 +169,19 @@ int testMatrices() {
     std::cout << "the product of the upper/lower matrices is:\n" << LU_product << std::endl;
     std::cout << "the determinant of the upper matrix is: " << LU_decomp.upper.det() << std::endl;
     std::cout << "the determinant of the original matrix is: " << mat_LU.det() << std::endl;
+    std::cout << "the offset matrix for a 3x4 matrix is:\n" << OffsetMatrix::make(3,4) << std::endl;
+    return 0;
+}
+
+int testMathsFunctions() {
+    std::cout << std::endl << "---Maths function testing---" << std::endl;
+    std::cout << "log_2 of 64 (expecting 6): " << log_n<int>(2,64) << std::endl;
     return 0;
 }
 
 int main() {
     std::cout << "Vector test returned " << testVectors() << std::endl;
     std::cout << "Matrix test returned " << testMatrices() << std::endl;
+    std::cout << "Functions test returned " << testMathsFunctions() << std::endl;
     return 0;
 }

@@ -79,7 +79,7 @@ namespace bop {
             }
 
             Stack<T>& operator=(const Stack<T>& copy) {
-                this->stk = new Node(*copy.stk);
+                if (copy->stk != nullptr)this->stk = new Node(*copy.stk);
                 this->logical_size = copy.logical_size;
                 return *this;
             }
@@ -111,9 +111,10 @@ namespace bop {
                     return T();
                 }
                 else {
-                    std::swap(top_ptr->data,val);
+                    val = std::move(top_ptr->data);
                     this->stk = top_ptr->node;
                     top_ptr->node = nullptr;
+                    this->logical_size--;
                     return val;
                 }
 
@@ -155,8 +156,17 @@ namespace bop {
                 return vec;
             }
 
-            uint_type size() const {
-                return this->logical_size;
+            uint_type size(bool compute_size = false) const {
+                if (!compute_size) return this->logical_size;
+                else {
+                    uint_type computed_size = 0;
+                    Node* node_ptr = this->stk;
+                    if (node_ptr != nullptr) while (node_ptr != nullptr) {
+                        computed_size++;
+                        node_ptr = node_ptr->node;
+                    }
+                    return computed_size;
+                }
             }
 
             T top() const {

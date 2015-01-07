@@ -6,11 +6,14 @@
 #include <initializer_list>
 #include <string>
 #include <sstream>
+#include <iostream>
 #include <cmath>
 #include <unordered_map>
+#include <map>
 #include <type_traits>
 #include "MathsExtra.hpp"
 #include "Vector.hpp"
+#include "../bop-defaults/types.hpp"
 
 /*
     bop::maths::Matrix class file
@@ -22,11 +25,6 @@ namespace bop {
     #else
     namespace maths {
     #endif
-        #ifndef BOP_MATHS_DEFAULT_TYPES
-        #define BOP_MATHS_DEFAULT_TYPES
-        typedef double prec_type;
-        typedef uint64_t uint_type;
-        #endif
         template<class T>
         class Matrix {
             protected:
@@ -354,8 +352,9 @@ namespace bop {
                         a human-readable representation of the Matrix.
                     */
                     std::ostringstream mat_str;
+                    if (newlines) mat_str << '\n';
                     for (uint_type row = 0; row < this->height(); row++) {
-                        mat_str << '[';
+                        mat_str << '[' << std::showpos;
                         for (uint_type col = 0; col < this->width(); col++) {
                             mat_str << this->element(row,col);
                             if (col + 1 < this->width()) mat_str << ',';
@@ -608,15 +607,13 @@ namespace bop {
                         }
                     }
                     else {
-                        T* temp = new T[this->width() * this->height()];
+                        Matrix<T> mat_transpose(this->height(),this->width());
                         for (uint_type row = 0; row < this->height(); row++) {
                             for (uint_type col = 0; col < this->width(); col++) {
-                                temp[(col * this->height()) + row] = this->element(row,col);
+                                mat_transpose.element(col,row) = this->element(row,col);
                             }
                         }
-                        delete[] this->data;
-                        this->data = temp;
-                        temp = nullptr;
+                        std::swap(this->data,mat_transpose.data);
                         std::swap(this->matrix_width, this->matrix_height);
                     }
                     return *this;
@@ -734,8 +731,7 @@ namespace bop {
                 return make(size,size);
             }
 
-            static Matrix<T> make(uint_type width, uint_type height) {
-                static std::unordered_map<uint_type,Matrix<T> > map;
+            static uint_type encodeMatrixDimentions(uint_type width, uint_type height) {
                 /*
                     If the matrix is of a reasonable size, then the
                     width and height are stored in two halfs of a
@@ -753,24 +749,20 @@ namespace bop {
                 if (width < (~size_pair)/2 && height < (~size_pair)/2) {
                     size_pair |= (width << minBits(~uint_type(0))/2);
                     size_pair |= height;
-                    if (map[size_pair]) return map[size_pair];
-                    else {
-                        map[size_pair] = Matrix<T>(width,height);
-                        for (uint_type elem = 0; elem < width * height; elem += width + 1) {
-                            map[size_pair].element(elem) = 1;
-                        }
-                        return map[size_pair];
-                    }
                 }
+                return size_pair;
+            }
+
+            static Matrix<T> make(uint_type width, uint_type height) {
+                static std::unordered_map<uint_type,Matrix<T> > map;
+                uint_type size_pair = encodeMatrixDimentions(width,height);
+                if (map[size_pair]) return map[size_pair];
                 else {
-                    /*
-                        Make matrix of unreasonable size.
-                    */
-                    Matrix<T> identity(width,height);
+                    map[size_pair] = Matrix<T>(width,height);
                     for (uint_type elem = 0; elem < width * height; elem += width + 1) {
-                        identity.element(elem) = 1;
+                        map[size_pair].element(elem) = 1;
                     }
-                    return identity;
+                    return map[size_pair];
                 }
 
             }
@@ -790,6 +782,48 @@ namespace bop {
                     map[angle] = {{static_cast<T>(cos(angle)), static_cast<T>(-sin(angle))},
                                   {static_cast<T>(sin(angle)), static_cast<T>(cos(angle))}};
                     return map[angle];
+                }
+            }
+        };
+        struct OffsetMatrix {
+            /*
+                Offset matrix factory. returns a constant matrix reference that
+                represents the index offset in the one-dimentional array representation
+                of the matrix during transposition.
+            */
+            static inline int_type offset(uint_type width, uint_type height, uint_type row, uint_type col) {
+                /*
+                    Returns the index offset caused by transposition
+                */
+                return (col * (height - 1)) - (row * (width - 1));
+            }
+
+            static inline uint_type rowOf(uint_type width, uint_type index) {
+                return (index - colOf(width,index)) / width;
+            }
+
+            static inline uint_type colOf(uint_type width, uint_type index) {
+                return index % width;
+            }
+
+            template<class T>
+            static const Matrix<int_type>& make(const Matrix<T>& matrix) {
+                return OffsetMatrix::make(matrix.width(),matrix.height());
+            }
+
+            static const Matrix<int_type>& make(uint_type width, uint_type height) {
+                static std::map<uint_type,Matrix<int_type> > map;
+                uint_type encoded = IdentityMatrix<uint_type>::encodeMatrixDimentions(width,height);
+                if (map[encoded]) return map[encoded];
+                else {
+                    Matrix<int_type> mat = Matrix<int_type>(width,height);
+                    for (uint_type row = 0; row < mat.height(); row++) {
+                        for (uint_type col = 0; col < mat.width(); col++) {
+                            mat[row][col] = OffsetMatrix::offset(width,height,row,col);
+                        }
+                    }
+                    map[encoded] = mat;
+                    return map[encoded];
                 }
             }
         };

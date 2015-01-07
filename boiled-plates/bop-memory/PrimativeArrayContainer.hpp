@@ -18,7 +18,10 @@ namespace bop {
                 T* data;
 
                 inline void setData(uint_type size) {
-                    if (this->data == nullptr || size > this->size()) {
+                    if (this->data == nullptr) {
+                        this->data = PrimativeArrayContainer::recycler.request(size);
+                    }
+                    else if (size > this->size()) {
                         this->data = static_cast<T*>(realloc(this->data, size * sizeof(T)));
                     }
                     this->array_size = size;
@@ -29,16 +32,14 @@ namespace bop {
                 static_assert(std::is_trivially_copyable<T>::value, "The bop::mem::PrimativeArrayContainer<T> class can only have T as a primitive type.");
                 #endif
 
-                PrimativeArrayContainer() {
-                    this->array_size = 0;
-                    this->data = nullptr;
+                PrimativeArrayContainer() : array_size(0), data(nullptr) {
                 }
 
-                PrimativeArrayContainer(uint_type size) {
+                PrimativeArrayContainer(uint_type size) : PrimativeArrayContainer() {
                     this->setData(size);
                 }
 
-                PrimativeArrayContainer(const PrimativeArrayContainer<T>& copy) {
+                PrimativeArrayContainer(const PrimativeArrayContainer<T>& copy) : PrimativeArrayContainer() {
                     this->setData(copy.size());
                     this->data = memcpy(this->data,copy.data, copy.size() * sizeof(T));
                 }
@@ -46,10 +47,6 @@ namespace bop {
                 ~PrimativeArrayContainer() {
                     if (this->data != nullptr) {
                         PrimativeArrayContainer::recycler.give(this->data,this->array_size);
-                        this->data = nullptr;
-                    }
-                    else {
-                        delete[] this->data;
                         this->data = nullptr;
                     }
                 }

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "../bop-defaults/types.hpp"
 
 #include "MathsExtra.hpp"
 #ifndef BOP_USE_NEW_VECTOR

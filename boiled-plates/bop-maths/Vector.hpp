@@ -8,6 +8,7 @@
 #include <iostream>
 #include <utility>
 #include "Matrix.hpp"
+#include "../bop-defaults/types.hpp"
 /*
     bop::maths::Vector Class file
 */
@@ -18,11 +19,6 @@ namespace bop {
     #else
     namespace maths {
     #endif
-        #ifndef BOP_MATHS_DEFAULT_TYPES
-        #define BOP_MATHS_DEFAULT_TYPES
-        typedef double prec_type;
-        typedef uint64_t uint_type;
-        #endif
         template<class T>
         class Vector : public Matrix<T> {
                 /*

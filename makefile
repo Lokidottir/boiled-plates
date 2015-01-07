@@ -5,7 +5,7 @@ BP_LD?= -Iboiled-plates
 
 
 
-all: maths-test mat-benchmark memory-test memory-benchmark
+all: maths-test mat-benchmark memory-test mem-benchmark
 
 maths-test:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/test_maths.cpp -o maths-test $(BP_LD)
@@ -14,7 +14,7 @@ mat-benchmark:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/matrix_benchmark.cpp -o mat-benchmark $(BP_LD)
 	$(BP_CC) $(BP_CC_FLAGS) -O3 bop-tests/matrix_benchmark.cpp -o mat-benchmark-opti $(BP_LD)
 
-memory-benchmark:
+mem-benchmark:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/memory_benchmark.cpp -o mem-benchmark $(BP_LD)
 	$(BP_CC) $(BP_CC_FLAGS) -O3 bop-tests/memory_benchmark.cpp -o mem-benchmark-opti $(BP_LD)
 

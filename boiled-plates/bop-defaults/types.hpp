@@ -3,7 +3,8 @@
 
 namespace bop {
     typedef double prec_type;
-    typedef uint64_t uint_type;
+    typedef uintmax_t uint_type;
+    typedef intmax_t int_type;
 }
 
 #endif

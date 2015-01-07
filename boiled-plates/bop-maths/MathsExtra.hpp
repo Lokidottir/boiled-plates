@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <cmath>
+#include "../bop-defaults/types.hpp"
 
 namespace bop {
     #ifdef BOP_USE_INFERIOR_NAMESPACE
@@ -29,15 +30,6 @@ namespace bop {
         inline T log_n(T base, T val) {
             return (log(val)/log(base));
         }
-
-
-
-        #ifndef BOP_MATHS_DEFAULT_TYPES
-        #define BOP_MATHS_DEFAULT_TYPES
-        typedef double prec_type;
-        typedef uint64_t uint_type;
-        #endif
-
     }
 }
 
