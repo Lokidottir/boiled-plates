@@ -3,7 +3,7 @@
 #include <vector>
 #include <bop-memory/memory.hpp>
 
-#define TEST_COUNT 10000000
+#define TEST_COUNT 1000000
 #define ALLOC_SIZE 9
 #define DIVERSE_RECYCLER
 
@@ -39,22 +39,21 @@ void bop_mem_vs_new() {
 
 int stack_tests() {
     std::cout << "Stack pushing:                      " << benchmark(TEST_COUNT, bop_mem_stackadd) << std::endl;
-    std::cout << "(stack size now at " << stack_to_add.size(true) << ")" << std::endl;
     std::cout << "Stack popping:                      " << benchmark(TEST_COUNT, bop_mem_stackpop) << std::endl;
-    std::cout << "Vector pushing:                     " << benchmark(TEST_COUNT, bop_mem_vs_vectoradd) << std::endl;
-    std::cout << "(vector size now at " << vector_to_add.size() << ")" << std::endl;
-    std::cout << "Vector popping:                     " << benchmark(TEST_COUNT, bop_mem_vs_vectorpop) << std::endl;
+    std::cout << "std::vector pushing:                " << benchmark(TEST_COUNT, bop_mem_vs_vectoradd) << std::endl;
+    std::cout << "std::vector popping:                " << benchmark(TEST_COUNT, bop_mem_vs_vectorpop) << std::endl;
     std::cout << "Recycled memory array construction: " << benchmark(TEST_COUNT, bop_mem_primarrcont) << std::endl;
+    #ifdef DIVERSE_RECYCLER
+    for (uint_type iter = 1; iter <= 1000; iter++) {
+        PrimativeArrayContainer<double>::recycler.reserve(iter,50);
+    }
+    std::cout << "Recycled memory with diverse set:   " << benchmark(TEST_COUNT, bop_mem_primarrcont) << " @ set diversity " << PrimativeArrayContainer<double>::recycler.size() << std::endl;
+    #endif
     std::cout << "Normal array construction:          " << benchmark(TEST_COUNT, bop_mem_vs_new) << std::endl;
     return 0;
 }
 
 int main() {
-    #ifdef DIVERSE_RECYCLER
-    for (uint_type iter = 1; iter <= 100000; iter++) {
-        PrimativeArrayContainer<double>::recycler.reserve(iter,50);
-    }
-    #endif
     stack_tests();
     return 0;
 }

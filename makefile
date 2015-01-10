@@ -17,6 +17,7 @@ mat-benchmark:
 mem-benchmark:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/memory_benchmark.cpp -o mem-benchmark $(BP_LD)
 	$(BP_CC) $(BP_CC_FLAGS) -O3 bop-tests/memory_benchmark.cpp -o mem-benchmark-opti $(BP_LD)
+	$(BP_CC) $(BP_CC_FLAGS) -DBOP_MATRIX_USE_RECYCLER -O3 bop-tests/matrix_benchmark.cpp -o mem-benchmark-matrix-recycled $(BP_LD)
 
 memory-test:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/test_memory.cpp -o memory-test $(BP_LD)

@@ -29,7 +29,7 @@ namespace bop {
             public:
                 static PrimativeArrayRecycler<T> recycler;
                 #ifdef BOP_TYPE_TRAIT_CHECKS
-                static_assert(std::is_trivially_copyable<T>::value, "The bop::mem::PrimativeArrayContainer<T> class can only have T as a primitive type.");
+                static_assert(std::is_trivially_destructable<T>::value, "The bop::mem::PrimativeArrayContainer<T> class can only have T as a trivially destructable type.");
                 #endif
 
                 PrimativeArrayContainer() : array_size(0), data(nullptr) {
@@ -49,6 +49,10 @@ namespace bop {
                         PrimativeArrayContainer::recycler.give(this->data,this->array_size);
                         this->data = nullptr;
                     }
+                }
+
+                void resize(uint_type size) {
+                    this->setData(size);
                 }
 
                 uint_type size() const {

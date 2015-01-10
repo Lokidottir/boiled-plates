@@ -14,6 +14,10 @@
 #include "MathsExtra.hpp"
 #include "Vector.hpp"
 #include "../bop-defaults/types.hpp"
+#ifdef BOP_MATRIX_USE_RECYCLER
+#include "../bop-memory/Recycler.hpp"
+#include "../bop-memory/PrimativeArrayContainer.hpp"
+#endif
 
 /*
     bop::maths::Matrix class file
@@ -30,6 +34,10 @@ namespace bop {
             protected:
                 #ifdef BOP_TYPE_TRAIT_CHECKS
                 static_assert(std::is_trivially_copyable<T>::value, "The class bop::maths::Matrix<T> can only have T be a trivially copyable type.");
+                static_assert(std::is_trivially_destructable<T>::value, "The class bop::maths::Matrix<T> can only have T be trivially destructable.");
+                #endif
+                #ifdef BOP_MATRIX_USE_RECYCLER
+                static mem::PrimativeArrayRecycler<T> recycler;
                 #endif
                 uint_type matrix_width;
                 uint_type matrix_height;
@@ -144,7 +152,11 @@ namespace bop {
 
                 //Destructor
                 ~Matrix() {
+                    #ifdef BOP_MATRIX_USE_RECYCLER
+                    if (this->data != nullptr) Matrix<T>::recycler.give(this->data, this->width() * this->height());
+                    #else
                     delete[] this->data;
+                    #endif
                     this->data = nullptr;
                 }
 
@@ -198,7 +210,11 @@ namespace bop {
                     /*
                         Naive matrix multiplication implementation
                     */
+                    #ifdef BOP_MATRIX_USE_RECYCLER
+                    T* temp = Matrix<T>::recycler.request(this->height() * mat.width());
+                    #else
                     T* temp = new T[this->height() * mat.width()];
+                    #endif
                     for (uint_type row = 0; row < this->height(); row++) {
                         for (uint_type col = 0; col < mat.width(); col++) {
                             temp[(row * mat.width()) + col] = 0;
@@ -218,7 +234,11 @@ namespace bop {
                         }
                     }
                     */
+                    #ifdef BOP_MATRIX_USE_RECYCLER
+                    Matrix<T>::recycler.give(this->data, this->width() * this->height());
+                    #else
                     delete[] this->data;
+                    #endif
                     this->data = temp;
                     this->matrix_width = mat.matrix_width;
                     return *this;
@@ -669,6 +689,10 @@ namespace bop {
                 }
         };
 
+        #ifdef BOP_MATRIX_USE_RECYCLER
+        template<class T>
+        mem::PrimativeArrayRecycler<T> Matrix<T>::recycler = mem::PrimativeArrayRecycler<T>();
+        #endif
         typedef Matrix<prec_type> matrix;
 
         //External arithmetic overloads
