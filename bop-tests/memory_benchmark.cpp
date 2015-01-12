@@ -30,7 +30,7 @@ void bop_mem_vs_vectorpop() {
 }
 
 void bop_mem_primarrcont() {
-    PrimativeArrayContainer<double> pri_array(ALLOC_SIZE);
+    PrimativeArrayContainer<double>::recycler.give(PrimativeArrayContainer<double>::recycler.request(ALLOC_SIZE), ALLOC_SIZE);
 }
 
 void bop_mem_vs_new() {

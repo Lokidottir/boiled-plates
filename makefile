@@ -31,7 +31,7 @@ top-test:
 	$(BP_CC) $(BP_CC_FLAGS) bop-tests/test_topology.cpp -o $(BP_TESTEXEC_LOC)top-test $(BP_LD)
 
 run:
-	
+	./run_all_tests
 
 clean:
 	rm -f $(BP_TESTEXEC_LOC)*

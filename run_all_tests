@@ -1,5 +1,8 @@
 #!/bin/bash
 for file in testbin/*
 do
+    echo
+    echo "TEST SCRIPT: now running '$file'"
+    echo
     $file
 done
