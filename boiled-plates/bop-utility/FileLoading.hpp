@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#define BOP_FILELOAD_ERR std::cerr << "(bop file loading) Error:"
+#define BOP_FILELOAD_ERR std::cerr << "(bop::util file loading) Error:"
 
 namespace bop {
     namespace util {

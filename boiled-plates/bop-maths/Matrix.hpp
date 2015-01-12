@@ -11,6 +11,7 @@
 #include <unordered_map>
 #include <map>
 #include <type_traits>
+#include <vector>
 #include "MathsExtra.hpp"
 #include "Vector.hpp"
 #include "../bop-defaults/types.hpp"
@@ -850,6 +851,27 @@ namespace bop {
                     return map[encoded];
                 }
             }
+        };
+
+        template<class T>
+        struct PrimeMatrix {
+            /*
+                Factory that creates a matrix comprised completely of
+                primes numbers that do no appear anywhere else in the
+                matrix.
+            */
+            /*
+            static Matrix<T> make(uint_type width, uint_type height) {
+                static std::vector<uint_type> prime_numbers = ([]() -> std::vector<uint_type> {
+                    std::vector<uint_type> vec(10000);
+                    for (uint_type iter = 0; iter < vec.size(); iter++) {
+                        vec[iter] = nth_prime(iter);
+                    }
+                    return vec;
+                })();
+
+            }
+            */
         };
     }
 }

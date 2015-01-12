@@ -1,8 +1,3 @@
 MAKEFILE.mak
 *out.txt
-*.exe
-mat-benchmark*
-maths-test*
-mat-benchmark-opti*
-top-test*
-memory-test*
+testbin/*

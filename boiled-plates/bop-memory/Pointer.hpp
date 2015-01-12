@@ -18,12 +18,8 @@ namespace bop {
                     */
                 }
 
-                /*  Copy constructor forever not allowed.
-                Pointer(const Pointer& copy) : Pointer() {
-                    this->ptr = copy->ptr;
-                    this->arr_size = copy->arr_size;
-                }
-                */
+                //Copy constructor forever not allowed.
+                Pointer(const Pointer& copy) = delete;
 
                 Pointer(Pointer&& move) : Pointer() {
                     /*
@@ -72,7 +68,7 @@ namespace bop {
 
                 T& operator= (Pointer<T> pointer) {
                     /*
-                        
+
                     */
 
                     this->ptr =;

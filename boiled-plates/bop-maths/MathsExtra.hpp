@@ -30,6 +30,10 @@ namespace bop {
         inline T log_n(T base, T val) {
             return (log(val)/log(base));
         }
+
+        int nth_prime() {
+            return 2;
+        }
     }
 }
 

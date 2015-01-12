@@ -15,8 +15,5 @@ install:
 
 script:
   - make
-  - ./mat-benchmark
-  - ./mat-benchmark-opti
-  - if [ -a top-test ]; then ./top-test; fi
-  - if [ -a memory-test ]; then ./memory-test; fi
-  - make clean 
+  - make run
+  - make clean
