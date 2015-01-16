@@ -2,6 +2,7 @@
 #define BOP_THREADPOOL_HPP
 #include <thread>
 #include <utility>
+#include <algorithm>
 #include <mutex>
 #include <queue>
 #include <functional>
@@ -17,17 +18,18 @@ namespace bop {
         class ThreadPool {
             private:
 
-                void thread_function() {
+                void thread_function(const uint_type thread_index) {
                     /*
                         Code that the threads run continously.
                     */
                     std::function<void()> current_function = nullptr;
-                    while(this->run_functions) {
+                    while(this->active) {
+                        this->thread_activity[thread_index] = false;
                         /*
                             Attempt to lock the task_queue mutex so that we may
-                            take a task from it without data races.
+                            take a task from it without data racing.
                         */
-                        if (this->task_queue_mutex.try_lock()) {
+                        if (this->run_functions && this->task_queue_mutex.try_lock()) {
                             /*
                                 If the mutex was successfully locked then we check
                                 for a task.
@@ -53,6 +55,7 @@ namespace bop {
                                     and set the current_function variable to an empty function
                                     so that the task is only run once.
                                 */
+                                this->thread_activity[thread_index] = true;
                                 current_function();
                                 current_function = nullptr;
                             }
@@ -73,18 +76,43 @@ namespace bop {
                 std::vector<std::thread> threads;
 
                 /*
+                    std::vector of booleans corresponding to threads
+                    in the member "threads", each index indicates the
+                    thread's current actvity.
+                */
+
+                std::vector<bool> thread_activity;
+                std::vector<std::mutex> thread_activity_mutex;
+
+                /*
                     boolean flag to prevent execution of further
-                    tasks.
+                    tasks until the flag is true again.
                 */
                 bool run_functions;
+
+                /*
+                    boolean flag that will break all threads after their next
+                    completed task if false.
+                */
+
+                bool active;
+
+
 
             public:
                 ThreadPool() = delete;
 
-                ThreadPool(uint_type reserve_threads) : task_queue(), run_functions(true) {
+                ThreadPool(uint_type reserve_threads) : task_queue(), run_functions(true), active(true) {
+                    this->thread_activity_mutex = std::vector<std::mutex>(reserve_threads);
                     for (uint_type iter = 0; iter < reserve_threads; iter++) {
+                        /*
+                            Push the thread activity flag first so if it
+                            may not be accessed by the thread before it
+                            exists.
+                        */
+                        this->thread_activity.push_back(false);
+                        this->threads.push_back(std::thread([this,iter]() -> void {this->thread_function(iter);}));
 
-                        this->threads.push_back(std::thread([this]() -> void {this->thread_function();}));
                     }
                 }
 
@@ -95,7 +123,7 @@ namespace bop {
                         function of type void() so that it may be appended
                         to the task queue.
                     */
-                    while(!this->task_queue_mutex.try_lock());
+                    this->task_queue_mutex.lock();
                     this->task_queue.push([&,function,arguments...]() -> void {
                         function(arguments...);
                     });
@@ -104,15 +132,16 @@ namespace bop {
 
                 ~ThreadPool() {
                     /*
-                        Set the run_functions variable to false, closing some
+                        Set the activation variables to false, closing some
                         threads as soon as possible.
                     */
                     this->run_functions = false;
+                    this->active = false;
                     /*
                         Lock the task queue mutex, preventing any more tasks from
                         being executed.
                     */
-                    while(!this->task_queue_mutex.try_lock());
+                    this->task_queue_mutex.lock();
                     /*
                         Finally wait for the rest of the threads by requesting them
                         to join this thread in order of construction.
@@ -124,9 +153,41 @@ namespace bop {
                 }
 
 
-                uint_type size() {
+                uint_type numberOfTasks() const {
                     return this->task_queue.size();
                 }
+
+                uint_type numberOfThreads() const {
+                    return this->threads.size();
+                }
+
+                bool hasRunning() {
+                    /*
+                        Returns true if there are any threads running a task,
+                        false otherwise.
+
+                        If this function were to indicate if I've overused lambdas
+                        a lot, and should probably stop but won't, it would return
+                        true at all instances.
+                    */
+                    return [this]() -> bool {
+                        bool has_running = false;
+                        for (uint_type iter = 0; iter < this->thread_activity.size() && !has_running; iter++) {
+
+                            has_running |= this->thread_activity[iter];
+                        }
+                        return has_running;
+                    }();
+                }
+
+                bool isActive() {
+                    return this->run_functions;
+                }
+
+                void toggleRunning() {
+                    this->run_functions = !this->run_functions;
+                }
+
 
         };
     }
