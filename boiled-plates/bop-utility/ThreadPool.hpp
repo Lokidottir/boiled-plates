@@ -55,8 +55,13 @@ namespace bop {
                                     and set the current_function variable to an empty function
                                     so that the task is only run once.
                                 */
+                                this->thread_activity_mutex[thread_index].lock();
                                 this->thread_activity[thread_index] = true;
+                                this->thread_activity_mutex[thread_index].unlock();
                                 current_function();
+                                this->thread_activity_mutex[thread_index].lock();
+                                this->thread_activity[thread_index] = false;
+                                this->thread_activity_mutex[thread_index].unlock();
                                 current_function = nullptr;
                             }
                         }
@@ -173,8 +178,9 @@ namespace bop {
                     return [this]() -> bool {
                         bool has_running = false;
                         for (uint_type iter = 0; iter < this->thread_activity.size() && !has_running; iter++) {
-
+                            this->thread_activity_mutex[iter].lock();
                             has_running |= this->thread_activity[iter];
+                            this->thread_activity_mutex[iter].unlock();
                         }
                         return has_running;
                     }();
