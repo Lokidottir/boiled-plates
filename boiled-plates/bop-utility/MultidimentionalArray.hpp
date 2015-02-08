@@ -1,5 +1,6 @@
 #ifndef BOP_MULTIDIMENSIONAL_ARRAY_HPP
 #define BOP_MULTIDIMENSIONAL_ARRAY_HPP
+#include "../bop-defaults/types.hpp"
 
 /*
     Class defining a multidimensional array of a template type
@@ -9,6 +10,45 @@
     row-major order for n dimensions.
 */
 
+namespace bop {
+    namespace util {
+        template<class T, uint_type D>
+        class MDArray {
+            private:
+                uint_type inherited_index;
+                uint_type length;
+                MDArray<T, D - 1> next_handler;
+            public:
+
+                MDArray() : inherited_index(0), length(0), next_handler() {
+
+                }
+
+                template<typename... LengthArgs>
+                MDArray(uint_type length_, LengthArgs... args) : length(length_), inherited_index(0), next_handler(args...) {
+                }
+
+
+        };
+
+        template<class T>
+        class MDArray<T, 1> {
+            private:
+                uint_type inherited_index;
+                uint_type length;
+            public:
+
+
+        };
+
+        template<class T>
+        class MDArray<T, 0> {
+
+        };
+    }
+}
+
+#ifdef USE_BROKEN_FOR_SOME_REASON
 namespace bop {
     namespace util {
         #ifndef BOP_UTIL_DEFAULT_TYPES
@@ -160,5 +200,6 @@ namespace bop {
         };
     };
 };
+#endif
 
 #endif

@@ -4,7 +4,7 @@ BP_CC_FLAGS?= -pthread -fdiagnostics-color=auto -Wall -std=c++1y -g
 OLD_STATIC_FLAGS= -static -static-libgcc -static-libstdc++
 BP_LD?= -Iboiled-plates
 BP_TESTEXEC_LOC=testbin/
-all: make-folder maths-test mat-benchmark memory-test mem-benchmark util-test
+all: make-folder maths-test mat-benchmark memory-test mem-benchmark
 
 make-folder:
 	-mkdir testbin

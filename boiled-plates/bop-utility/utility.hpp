@@ -6,5 +6,6 @@
 #include "ThreadPool.hpp"
 #include "FileLoading.hpp"
 #include "Benchmark.hpp"
+#include "MultidimentionalArray.hpp"
 
 #endif

@@ -728,16 +728,12 @@ namespace bop {
 
         template<class T>
         Matrix<T> operator+ (const Matrix<T>& mat1, const Matrix<T>& mat2) {
-            Matrix<T> mat_sum(mat1);
-            mat_sum += mat2;
-            return mat_sum;
+            return Matrix<T>(mat1) += mat2;
         }
 
         template<class T>
         Matrix<T> operator- (const Matrix<T>& mat1, const Matrix<T>& mat2) {
-            Matrix<T> mat_sum(mat1);
-            mat_sum -= mat2;
-            return mat_sum;
+            return Matrix<T>(mat1) -= mat2;
         }
 
         template<class T>
