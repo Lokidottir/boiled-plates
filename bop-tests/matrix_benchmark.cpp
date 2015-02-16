@@ -161,6 +161,12 @@ void bop_bench_access_offset_matrix() {
     const Matrix<int_type>& mat = OffsetMatrix::make(3,3);
 }
 
+uint_type num = 0;
+
+void bop_integer_incrementation() {
+    num++;
+}
+
 int mat_tests() {
     std::cout << "\nAll matrix operations are performed on a 3 by 3 matrix unless otherwise specified" << std::endl << std::fixed;
     std::cout << "The result is the average operation time in nanoseconds for " << TEST_COUNT << " iterations." << std::endl;
@@ -192,6 +198,8 @@ int mat_tests() {
     std::cout << "Vector on matrix imposition:      " << benchmark(TEST_COUNT, bop_bench_impose_vec) << std::endl;
     std::cout << "Matrix move:                      " << benchmark(TEST_COUNT, bop_bench_swap)/3 << std::endl;
     std::cout << "Get offset matrix:                " << benchmark(TEST_COUNT, bop_bench_access_offset_matrix) << std::endl;
+    std::cout << "Increment integer:                " << benchmark<double>(TEST_COUNT * 100, bop_integer_incrementation) << std::endl;
+    std::cout << num << std::endl;
     return 0;
 }
 

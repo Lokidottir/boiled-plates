@@ -16,8 +16,8 @@ namespace bop {
             */
         }
 
-        template<typename F, typename ...params>
-        uint_type benchmark(uint_type test_count, F function, params&&... P) {
+        template<class T = uint_type,typename F, typename ...params>
+        T benchmark(uint_type test_count, F function, params&&... P) {
             /*
                 Returns nanoseconds taken to perform a function given
                 the parameters. The time taken to call the function is
@@ -43,7 +43,7 @@ namespace bop {
             }
             //Get the time after
             auto after = std::chrono::high_resolution_clock::now();
-            return (std::chrono::duration_cast<std::chrono::nanoseconds>((after - before) - (empty_funct_b - empty_funct_a)).count()/test_count);
+            return (std::chrono::duration_cast<std::chrono::nanoseconds>((after - before) - (empty_funct_b - empty_funct_a)).count()/static_cast<T>(test_count));
         }
     }
 }
