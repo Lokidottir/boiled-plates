@@ -174,16 +174,9 @@ int testMatrices() {
 }
 
 int testMathsFunctions() {
-    auto count_to_end = []() -> bop::uint_type {
-        bop::uint_type num = 0;
-        const static bop::uint_type end = (~0) - 1;
-        while(num != end) num++;
-        return (num);
-    };
     std::cout << std::endl << "---Maths function testing---" << std::endl;
     std::cout << "log_2 of 64 (expecting 6): " << log_n<int>(2,64) << std::endl;
     std::cout << "the 1500th prime is: " << nth_prime(1500) << std::endl;
-    std::cout << "reached " << count_to_end() << std::endl;
     return 0;
 }
 

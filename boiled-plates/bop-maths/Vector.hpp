@@ -29,7 +29,8 @@ namespace bop {
                 Vector() : Matrix<T>() {
 
                 }
-                Vector(const uint_type size, bool is_row_vector) : Vector() {
+                
+                Vector(const uint_type size, bool is_row_vector = false) : Vector() {
                     if (is_row_vector) this->setData(size,1);
                     else this->setData(1,size);
                 }

@@ -177,6 +177,20 @@ namespace bop {
                     return *this;
                 }
 
+                inline Matrix<T>& operator= (Matrix<T>&& mat) {
+                    #ifdef BOP_MATRIX_SWAPMOVE
+                    std::swap(this->matrix_width, mat.matrix_width);
+                    std::swap(this->matrix_height, mat.matrix_height);
+                    std::swap(this->data, mat.data);
+                    #else
+                    this->matrix_width = mat.matrix_width;
+                    this->matrix_height = mat.matrix_height;
+                    this->data = mat.data;
+                    mat.data = nullptr;
+                    #endif
+                    return *this;
+                }
+
                 //Boolean logic overloads
                 inline bool operator== (const Matrix<T>& mat) const {
                     if (this->width() == mat.width() && this->height() == mat.height()) {
